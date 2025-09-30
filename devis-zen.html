@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 <head>
 <meta charset="utf-8"/>
@@ -238,7 +237,6 @@ select.form-control {
     text-align: center;
 }
 
-/* États de validation */
 .error-field {
     border-color: #dc3545 !important;
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
@@ -261,7 +259,6 @@ select.form-control {
     border-color: #28a745 !important;
 }
 
-/* Classes spécifiques pour le bloc disclaimer */
 .disclaimer-error {
     background-color: #ff9999 !important;
     border-color: #dc3545 !important;
@@ -387,6 +384,7 @@ select.form-control {
 </div>
 <div class="disclaimer-info" style="background-color: transparent; border: none;">
                     Même si le prix devrait être proche du TTC réel final, hors fournitures, il devra néanmoins être contrôlé et ajusté si nécessaire par l'auteur des travaux. Merci de votre compréhension.
+                </div>
                 </div>
 <div class="disclaimer-checkbox" id="disclaimerCheckbox">
 <label for="disclaimer">Je comprends que ce prix sera uniquement <strong><em>estimatif</em></strong></label>
@@ -542,6 +540,10 @@ select.form-control {
 <span><u>Déplacement :</u></span>
 <span id="tripsCount">-</span>
 </div>
+<div class="result-line">
+<span><u>Congés payés (10%) :</u></span>
+<span id="congesPayes">-</span>
+</div>
 <div class="result-line" data-options="">
 <span><u>Options supplémentaires :</u></span>
 <span id="optionsDetail">-</span>
@@ -566,312 +568,291 @@ select.form-control {
 </div>
 </div>
 <script>
-        // Variables globales
-        const serviceSelect = document.getElementById('service');
-        const hoursInput = document.getElementById('hours');
-        const hoursGroup = document.getElementById('hoursGroup');
-        const tripsInput = document.getElementById('trips');
-        const parkingDaysInput = document.getElementById('parking_days');
-        const parkingInputDiv = document.getElementById('parkingInput');
-        const materialsCheck = document.getElementById('materials');
-        const disclaimerCheck = document.getElementById('disclaimer');
-        const resultContainer = document.getElementById('resultContainer');
-        const devisAlert = document.getElementById('devisAlert');
+const serviceSelect = document.getElementById('service');
+const hoursInput = document.getElementById('hours');
+const hoursGroup = document.getElementById('hoursGroup');
+const tripsInput = document.getElementById('trips');
+const parkingDaysInput = document.getElementById('parking_days');
+const parkingInputDiv = document.getElementById('parkingInput');
+const materialsCheck = document.getElementById('materials');
+const disclaimerCheck = document.getElementById('disclaimer');
+const resultContainer = document.getElementById('resultContainer');
+const devisAlert = document.getElementById('devisAlert');
 
-        // Coûts fixes
-        const TRIP_COST = 30;
+const TRIP_COST = 30;
+const CREDIT_RATE = 0.50;
+
+function validateField(element, isValid) {
+    if (isValid) {
+        element.classList.remove('error-field');
+        element.classList.add('success-field');
+    } else {
+        element.classList.remove('success-field');
+        element.classList.add('error-field');
+    }
+}
+
+function validateOption(element, isValid) {
+    if (isValid) {
+        element.classList.remove('error-option');
+        element.classList.add('success-option');
+    } else {
+        element.classList.remove('success-option');
+        element.classList.add('error-option');
+    }
+}
+
+function validateCheckbox(element, isValid) {
+    if (isValid) {
+        element.classList.remove('error-checkbox');
+        element.classList.add('success-checkbox');
+    } else {
+        element.classList.remove('success-checkbox');
+        element.classList.add('error-checkbox');
+    }
+}
+
+function validateDisclaimerBlock() {
+    const disclaimerContainer = document.getElementById('disclaimerContainer');
+    const calculatorForm = document.getElementById('calculatorForm');
+    
+    if (disclaimerCheck.checked) {
+        disclaimerContainer.classList.remove('disclaimer-error');
+        disclaimerContainer.classList.add('disclaimer-success');
         
-        const CREDIT_RATE = 0.50;
-
-        // Fonction de validation des champs
-        function validateField(element, isValid) {
-            if (isValid) {
-                element.classList.remove('error-field');
-                element.classList.add('success-field');
-            } else {
-                element.classList.remove('success-field');
-                element.classList.add('error-field');
-            }
+        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+        if (selectedOption && selectedOption.dataset.special === 'devis') {
+            return;
         }
+        
+        calculatorForm.style.opacity = '1';
+        calculatorForm.style.pointerEvents = 'auto';
+    } else {
+        disclaimerContainer.classList.remove('disclaimer-success');
+        disclaimerContainer.classList.add('disclaimer-error');
+        
+        calculatorForm.style.opacity = '0.5';
+        calculatorForm.style.pointerEvents = 'none';
+    }
+}
 
-        // Fonction de validation des options
-        function validateOption(element, isValid) {
-            if (isValid) {
-                element.classList.remove('error-option');
-                element.classList.add('success-option');
-            } else {
-                element.classList.remove('success-option');
-                element.classList.add('error-option');
-            }
+function applyGlobalValidation() {
+    if (hoursGroup.style.display !== 'none') {
+        const hours = parseInt(hoursInput.value) || 0;
+        validateField(hoursInput, hours >= 1);
+    }
+    
+    const trips = parseInt(tripsInput.value) || 0;
+    validateField(tripsInput, trips >= 1);
+    
+    const parkingValue = document.querySelector('input[name="parking"]:checked')?.value;
+    if (parkingValue === 'oui') {
+        parkingInputDiv.style.display = 'block';
+        const parkingDays = parseInt(parkingDaysInput.value) || 0;
+        validateField(parkingDaysInput, parkingDays >= 1);
+    } else {
+        parkingInputDiv.style.display = 'none';
+        parkingDaysInput.classList.remove('error-field', 'success-field');
+    }
+    
+    const radioGroups = ['evening', 'difficult_access', 'parking', 'cleaning', 'waste_removal', 'long_distance'];
+    radioGroups.forEach(groupName => {
+        const selectedValue = document.querySelector(`input[name="${groupName}"]:checked`)?.value;
+        const optionElement = document.querySelector(`input[name="${groupName}"]`).closest('.option-item');
+        const isValid = selectedValue !== '-';
+        validateOption(optionElement, isValid);
+    });
+    
+    validateCheckbox(document.getElementById('materialsCheckbox'), materialsCheck.checked);
+    validateCheckbox(document.getElementById('disclaimerCheckbox'), disclaimerCheck.checked);
+    
+    const disclaimerContainer = document.getElementById('disclaimerContainer');
+    if (disclaimerCheck.checked) {
+        disclaimerContainer.classList.remove('error-checkbox');
+        disclaimerContainer.classList.add('success-checkbox');
+    } else {
+        disclaimerContainer.classList.remove('success-checkbox');
+        disclaimerContainer.classList.add('error-checkbox');
+    }
+}
+
+function updateCalculation() {
+    const serviceValid = serviceSelect.value !== "";
+    validateField(serviceSelect, serviceValid);
+
+    if (!serviceValid) {
+        resultContainer.style.display = 'none';
+        devisAlert.style.display = 'none';
+        return;
+    }
+
+    applyGlobalValidation();
+
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+
+    if (selectedOption.dataset.special === 'devis') {
+        devisAlert.style.display = 'block';
+        resultContainer.style.display = 'none';
+        
+        if (!disclaimerCheck.checked) {
+            return;
         }
-
-        // Fonction de validation des checkboxes
-        function validateCheckbox(element, isValid) {
-            if (isValid) {
-                element.classList.remove('error-checkbox');
-                element.classList.add('success-checkbox');
-            } else {
-                element.classList.remove('success-checkbox');
-                element.classList.add('error-checkbox');
-            }
-        }
-
-        // Fonction de validation immédiate du disclaimer principal
-        function validateDisclaimerBlock() {
-            const disclaimerContainer = document.getElementById('disclaimerContainer');
-            const calculatorForm = document.getElementById('calculatorForm');
-            
-            if (disclaimerCheck.checked) {
-                disclaimerContainer.classList.remove('disclaimer-error');
-                disclaimerContainer.classList.add('disclaimer-success');
-                
-                // Vérifier si un service "devis" est sélectionné
-                const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-                if (selectedOption && selectedOption.dataset.special === 'devis') {
-                    // Ne pas activer le formulaire, laisser la logique devis gérer
-                    return;
-                }
-                
-                // Activer le formulaire seulement si pas de service devis
-                calculatorForm.style.opacity = '1';
-                calculatorForm.style.pointerEvents = 'auto';
-            } else {
-                disclaimerContainer.classList.remove('disclaimer-success');
-                disclaimerContainer.classList.add('disclaimer-error');
-                
-                // Griser le formulaire
-                calculatorForm.style.opacity = '0.5';
-                calculatorForm.style.pointerEvents = 'none';
-            }
-        }
-
-        // Fonction de validation globale de TOUS les champs
-        function applyGlobalValidation() {
-            // 1. Validation champ heures (si visible)
-            if (hoursGroup.style.display !== 'none') {
-                const hours = parseInt(hoursInput.value) || 0;
-                validateField(hoursInput, hours >= 1);
-            }
-            
-            // 2. Validation champ déplacements
-            const trips = parseInt(tripsInput.value) || 0;
-            validateField(tripsInput, trips >= 1);
-            
-            // 3. Validation champ parking (si visible)
-            const parkingValue = document.querySelector('input[name="parking"]:checked')?.value;
-            if (parkingValue !== 'non') {
-                parkingInputDiv.style.display = 'block';
-                const parkingDays = parseInt(parkingDaysInput.value) || 0;
-                validateField(parkingDaysInput, parkingDays >= 1);
-            } else {
-                parkingInputDiv.style.display = 'none';
-                parkingDaysInput.classList.remove('error-field', 'success-field');
-            }
-            
-            // 4. Validation de TOUTES les options radio
-            const radioGroups = ['evening', 'difficult_access', 'parking', 'cleaning', 'waste_removal', 'long_distance'];
-            radioGroups.forEach(groupName => {
-                const selectedValue = document.querySelector(`input[name="${groupName}"]:checked`)?.value;
-                const optionElement = document.querySelector(`input[name="${groupName}"]`).closest('.option-item');
-                const isValid = selectedValue !== '-';
-                validateOption(optionElement, isValid);
-            });
-            
-            // 5. Validation des checkboxes
-            validateCheckbox(document.getElementById('materialsCheckbox'), materialsCheck.checked);
-            validateCheckbox(document.getElementById('disclaimerCheckbox'), disclaimerCheck.checked);
-            
-            // 6. Validation du conteneur disclaimer principal
-            const disclaimerContainer = document.getElementById('disclaimerContainer');
-            if (disclaimerCheck.checked) {
-                disclaimerContainer.classList.remove('error-checkbox');
-                disclaimerContainer.classList.add('success-checkbox');
-            } else {
-                disclaimerContainer.classList.remove('success-checkbox');
-                disclaimerContainer.classList.add('error-checkbox');
-            }
-        }
-
-        // Fonction principale de validation et calcul
-        function updateCalculation() {
-            // 1. Validation du service
-            const serviceValid = serviceSelect.value !== "";
-            validateField(serviceSelect, serviceValid);
-
-            if (!serviceValid) {
-                resultContainer.style.display = 'none';
-                devisAlert.style.display = 'none';
-                return;
-            }
-
-            // 2. Dès qu'un service est sélectionné, appliquer la validation globale
-            applyGlobalValidation();
-
-            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-
-            // 2. Vérifier si devis obligatoire
-            if (selectedOption.dataset.special === 'devis') {
-                devisAlert.style.display = 'block';
-                resultContainer.style.display = 'none';
-                
-                // Vérifier d'abord si le disclaimer est coché
-                if (!disclaimerCheck.checked) {
-                    // Si disclaimer pas coché, tout reste grisé
-                    return;
-                }
-                
-                // Si disclaimer coché, griser seulement les éléments du formulaire, pas l'alert
-                const formElements = document.querySelectorAll('#calculatorForm input, #calculatorForm select, #calculatorForm .option-item, #calculatorForm .materials-container');
-                formElements.forEach(element => {
-                    element.style.opacity = '0.5';
-                    element.style.pointerEvents = 'none';
-                });
-                
-                return;
-            } else {
-                devisAlert.style.display = 'none';
-                
-                // Vérifier si le disclaimer est coché avant de réactiver
-                if (!disclaimerCheck.checked) {
-                    // Si disclaimer pas coché, garder tout grisé
-                    return;
-                }
-                
-                // Réactiver tous les éléments du formulaire
-                const formElements = document.querySelectorAll('#calculatorForm input, #calculatorForm select, #calculatorForm .option-item, #calculatorForm .materials-container');
-                formElements.forEach(element => {
-                    element.style.opacity = '1';
-                    element.style.pointerEvents = 'auto';
-                });
-            }
-
-            // Calcul pour les services normaux
-            calculatePriceNormal();
-        }
-
-        // Fonction pour les services normaux
-        function calculatePriceNormal() {
-            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-            const hourlyRate = parseFloat(selectedOption.dataset.rate);
-            const hours = parseInt(hoursInput.value) || 0;
-            const trips = parseInt(tripsInput.value) || 0;
-
-            if (hours === 0 || trips === 0) {
-                resultContainer.style.display = 'none';
-                return;
-            }
-
-            // Récupération de TOUTES les options
-            const eveningValue = document.querySelector('input[name="evening"]:checked')?.value || 'non';
-            const difficultAccessValue = document.querySelector('input[name="difficult_access"]:checked')?.value || 'non';
-            const parkingValue = document.querySelector('input[name="parking"]:checked')?.value || 'non';
-            const cleaningValue = document.querySelector('input[name="cleaning"]:checked')?.value || 'non';
-            const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || 'non';
-            const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || 'non';
-
-            // Gestion affichage parking
-            if (parkingValue !== 'non') {
-                parkingInputDiv.style.display = 'block';
-            } else {
-                parkingInputDiv.style.display = 'none';
-            }
-
-            let finalHourlyRate = hourlyRate;
-            let optionsText = [];
-            let optionsCostHT = 0;
-            
-
-            // Supplément soirée
-            if (eveningValue === 'oui') {
-                finalHourlyRate = hourlyRate * 1.20;
-                optionsText.push('Intervention soirée (+20% sur le prix HT)');
-            }
-
-            // Options avec coût fixe TTC
-            if (difficultAccessValue === 'oui') {
-                optionsCostHT += 15;
-                optionsText.push('Accès difficile (+15€ TTC)');
-            }
-
-            if (cleaningValue === 'oui') {
-                optionsCostHT += 15;
-                optionsText.push('Nettoyage (+15€ TTC)');
-            }
-
-            if (wasteRemovalValue === 'oui') {
-                optionsCostHT += 20;
-                optionsText.push('Évacuation déchets (+20€ TTC)');
-            }
-
-            // Parking payant
-            if (parkingValue === 'oui') {
-                const parkingDays = parseInt(parkingDaysInput.value) || 0;
-                if (parkingDays > 0) {
-                    const parkingCost = parkingDays * 5;
-                    optionsCostHT += parkingCost;
-                    optionsText.push(`Parking payant (${parkingDays} utilisation${parkingDays > 1 ? 's' : ''}: +${parkingCost}€ TTC)`);
-                }
-            }
-
-            // Déplacement longue distance (HT)
-            if (longDistanceValue === 'oui') {
-                optionsCostHT += 30;
-                optionsText.push('Longue distance (+30€ HT)');
-            }
-
-            // Calculs finaux
-            const hoursCostHT = finalHourlyRate * hours;
-            const tripsCostHT = 30 * trips;
-            const subtotalHT = hoursCostHT + tripsCostHT + optionsCostHT;
-            const optionsCostHTFromTTC = optionsCostHT / (1 + TVA_RATE);
-            const totalHT = subtotalHT + optionsCostHTFromTTC;
-            
-            
-            const finalPrice = totalHT * CREDIT_RATE;
-
-            // Affichage
-            document.getElementById('selectedService').textContent = selectedOption.text;
-            document.getElementById('baseHourlyRate').textContent = `${hourlyRate.toFixed(2)}€/h HT`;
-            
-            if (eveningValue === 'oui') {
-                document.getElementById('hourlyRate').textContent = `${finalHourlyRate.toFixed(2)}€/h HT (base + 20% sur le prix HT)`;
-            } else {
-                document.getElementById('hourlyRate').textContent = `${finalHourlyRate.toFixed(2)}€/h HT`;
-            }
-            
-            document.getElementById('duration').textContent = `${hours}h`;
-            document.getElementById('tripsCount').textContent = trips === 1 ? 
-                `${trips} déplacement × 30€ = ${tripsCostHT}€ HT` : 
-                `${trips} déplacements × 30€ = ${tripsCostHT}€ HT`;
-            document.getElementById('optionsDetail').textContent = optionsText.length > 0 ? optionsText.join(' • ') : 'Aucune';
-            document.getElementById('subtotalHT').textContent = `${totalHT.toFixed(2)}€`;
-            document.getElementById('tva').textContent = `${tva.toFixed(2)}€`;
-            document.getElementById('totalHT').textContent = `${totalHT.toFixed(2)}€`;
-            document.getElementById('finalPrice').textContent = `${finalPrice.toFixed(2)}€`;
-
-            resultContainer.style.display = 'block';
-        }
-
-        // Event listeners
-        serviceSelect.addEventListener('change', updateCalculation);
-        hoursInput.addEventListener('input', updateCalculation);
-        tripsInput.addEventListener('input', updateCalculation);
-        parkingDaysInput.addEventListener('input', updateCalculation);
-        materialsCheck.addEventListener('change', updateCalculation);
-        disclaimerCheck.addEventListener('change', updateCalculation);
-
-        // Event listener spécifique pour validation immédiate du disclaimer principal
-        disclaimerCheck.addEventListener('change', validateDisclaimerBlock);
-
-        // Event listeners pour les options radio
-        const radioInputs = document.querySelectorAll('input[type="radio"]');
-        radioInputs.forEach(input => {
-            input.addEventListener('change', updateCalculation);
+        
+        const formElements = document.querySelectorAll('#calculatorForm input, #calculatorForm select, #calculatorForm .option-item, #calculatorForm .materials-container');
+        formElements.forEach(element => {
+            element.style.opacity = '0.5';
+            element.style.pointerEvents = 'none';
         });
+        
+        return;
+    } else {
+        devisAlert.style.display = 'none';
+        
+        if (!disclaimerCheck.checked) {
+            return;
+        }
+        
+        const formElements = document.querySelectorAll('#calculatorForm input, #calculatorForm select, #calculatorForm .option-item, #calculatorForm .materials-container');
+        formElements.forEach(element => {
+            element.style.opacity = '1';
+            element.style.pointerEvents = 'auto';
+        });
+    }
 
-        // Initialisation
-        validateDisclaimerBlock(); // Validation immédiate au chargement (grise le formulaire au départ)
-        updateCalculation();
-    </script>
+    calculatePriceNormal();
+}
+
+function calculatePriceNormal() {
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+    const hourlyRate = parseFloat(selectedOption.dataset.rate);
+    const hours = parseInt(hoursInput.value) || 0;
+    const trips = parseInt(tripsInput.value) || 0;
+
+    // Vérifier que les champs numériques sont valides
+    if (hours === 0 || trips === 0) {
+        resultContainer.style.display = 'none';
+        return;
+    }
+
+    const eveningValue = document.querySelector('input[name="evening"]:checked')?.value || '-';
+    const difficultAccessValue = document.querySelector('input[name="difficult_access"]:checked')?.value || '-';
+    const parkingValue = document.querySelector('input[name="parking"]:checked')?.value || '-';
+    const cleaningValue = document.querySelector('input[name="cleaning"]:checked')?.value || '-';
+    const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || '-';
+    const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || '-';
+
+    // VALIDATION COMPLÈTE : vérifier que TOUTES les options radio sont renseignées (pas "-")
+    if (eveningValue === '-' || difficultAccessValue === '-' || parkingValue === '-' || 
+        cleaningValue === '-' || wasteRemovalValue === '-' || longDistanceValue === '-') {
+        resultContainer.style.display = 'none';
+        return;
+    }
+
+    // Vérifier que les checkboxes sont cochées
+    if (!materialsCheck.checked || !disclaimerCheck.checked) {
+        resultContainer.style.display = 'none';
+        return;
+    }
+
+    // Si parking est "oui", vérifier que le nombre de jours est renseigné
+    if (parkingValue === 'oui') {
+        const parkingDays = parseInt(parkingDaysInput.value) || 0;
+        if (parkingDays === 0) {
+            resultContainer.style.display = 'none';
+            return;
+        }
+    }
+
+    // Gestion affichage parking
+    if (parkingValue === 'oui') {
+        parkingInputDiv.style.display = 'block';
+    } else {
+        parkingInputDiv.style.display = 'none';
+    }
+
+    // TOUTES LES VALIDATIONS SONT OK, on peut calculer le prix
+    let finalHourlyRate = hourlyRate;
+    let optionsText = [];
+    let optionsCostHT = 0;
+
+    if (eveningValue === 'oui') {
+        finalHourlyRate = hourlyRate * 1.20;
+        optionsText.push('Intervention soirée (+20% sur le prix HT)');
+    }
+
+    if (difficultAccessValue === 'oui') {
+        optionsCostHT += 15;
+        optionsText.push('Accès difficile (+15€ HT)');
+    }
+
+    if (cleaningValue === 'oui') {
+        optionsCostHT += 15;
+        optionsText.push('Nettoyage (+15€ HT)');
+    }
+
+    if (wasteRemovalValue === 'oui') {
+        optionsCostHT += 20;
+        optionsText.push('Évacuation déchets (+20€ HT)');
+    }
+
+    if (parkingValue === 'oui') {
+        const parkingDays = parseInt(parkingDaysInput.value) || 0;
+        if (parkingDays > 0) {
+            const parkingCost = parkingDays * 5;
+            optionsCostHT += parkingCost;
+            optionsText.push(`Parking payant (${parkingDays} utilisation${parkingDays > 1 ? 's' : ''}: +${parkingCost}€ HT)`);
+        }
+    }
+
+    if (longDistanceValue === 'oui') {
+        optionsCostHT += 30;
+        optionsText.push('Longue distance (+30€ HT)');
+    }
+
+    const hoursCostHT = finalHourlyRate * hours;
+    const congesPayes = hoursCostHT * 0.10;
+    const tripsCostHT = 30 * trips;
+    const totalHT = hoursCostHT + congesPayes + tripsCostHT + optionsCostHT;
+    const finalPrice = totalHT * CREDIT_RATE;
+
+    document.getElementById('selectedService').textContent = selectedOption.text;
+    document.getElementById('baseHourlyRate').textContent = `${hourlyRate.toFixed(2)}€/h HT`;
+    
+    if (eveningValue === 'oui') {
+        document.getElementById('hourlyRate').textContent = `${finalHourlyRate.toFixed(2)}€/h HT (base + 20% sur le prix HT)`;
+    } else {
+        document.getElementById('hourlyRate').textContent = `${finalHourlyRate.toFixed(2)}€/h HT`;
+    }
+    
+    document.getElementById('duration').textContent = `${hours}h`;
+    document.getElementById('tripsCount').textContent = trips === 1 ? 
+        `${trips} déplacement × 30€ = ${tripsCostHT}€ HT` : 
+        `${trips} déplacements × 30€ = ${tripsCostHT}€ HT`;
+    document.getElementById('congesPayes').textContent = `${congesPayes.toFixed(2)}€`;
+    document.getElementById('optionsDetail').textContent = optionsText.length > 0 ? optionsText.join(' • ') : 'Aucune';
+    document.getElementById('subtotalHT').textContent = `${totalHT.toFixed(2)}€`;
+    document.getElementById('totalHT').textContent = `${totalHT.toFixed(2)}€`;
+    document.getElementById('finalPrice').textContent = `${finalPrice.toFixed(2)}€`;
+
+    resultContainer.style.display = 'block';
+}
+
+serviceSelect.addEventListener('change', updateCalculation);
+hoursInput.addEventListener('input', updateCalculation);
+tripsInput.addEventListener('input', updateCalculation);
+parkingDaysInput.addEventListener('input', updateCalculation);
+materialsCheck.addEventListener('change', updateCalculation);
+disclaimerCheck.addEventListener('change', updateCalculation);
+
+disclaimerCheck.addEventListener('change', validateDisclaimerBlock);
+
+const radioInputs = document.querySelectorAll('input[type="radio"]');
+radioInputs.forEach(input => {
+    input.addEventListener('change', updateCalculation);
+});
+
+validateDisclaimerBlock();
+updateCalculation();
+</script>
 </body>
 </html>
