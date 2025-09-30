@@ -7,7 +7,6 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Belleza:wght@400&display=swap');
 
-/* Force Belleza partout */
 *, *::before, *::after {
     font-family: "Belleza", sans-serif !important;
 }
@@ -400,6 +399,7 @@ select.form-control {
                 <div class="disclaimer-info">
                     Même si le prix devrait être proche du TTC réel final, hors fournitures, il devra néanmoins être contrôlé et ajusté si nécessaire par l'auteur des travaux. Merci de votre compréhension.
                 </div>
+                </div>
                 <div class="disclaimer-checkbox" id="disclaimerCheckbox">
                     <label for="disclaimer">Je comprends que ce prix sera uniquement <strong><em>estimatif</em></strong></label>
                     <input type="checkbox" id="disclaimer" data-type="disclaimer">
@@ -499,7 +499,7 @@ select.form-control {
                             </div>
                         </div>
                         <div class="option-item" data-option="difficult_access">
-                            <label><strong>Accès difficile</strong> (≥3e étage sans ascenseur)<br><small class="option-detail">+15€ TTC</small></label>
+                            <label><strong>Accès difficile</strong> (≥3e étage sans ascenseur)<br><small class="option-detail">+15€ HT</small></label>
                             <div class="radio-group">
                                 <label><input type="radio" name="difficult_access" value="-" checked> -</label>
                                 <label><input type="radio" name="difficult_access" value="non"> Non</label>
@@ -507,7 +507,7 @@ select.form-control {
                             </div>
                         </div>
                         <div class="option-item" data-option="parking">
-                            <label><strong>Parking payant</strong><br><small class="option-detail">+5€ TTC par demi-journée</small></label>
+                            <label><strong>Parking payant</strong><br><small class="option-detail">+5€ HT par demi-journée</small></label>
                             <div class="radio-group">
                                 <label><input type="radio" name="parking" value="-" checked> -</label>
                                 <label><input type="radio" name="parking" value="non"> Non</label>
@@ -522,7 +522,7 @@ select.form-control {
                             </small>
                         </div>
                         <div class="option-item" data-option="cleaning">
-                            <label><strong>Nettoyage post-intervention</strong><br><small class="option-detail">+15€ TTC</small></label>
+                            <label><strong>Nettoyage post-intervention</strong><br><small class="option-detail">+15€ HT</small></label>
                             <div class="radio-group">
                                 <label><input type="radio" name="cleaning" value="-" checked> -</label>
                                 <label><input type="radio" name="cleaning" value="non"> Non</label>
@@ -530,7 +530,7 @@ select.form-control {
                             </div>
                         </div>
                         <div class="option-item" data-option="waste_removal">
-                            <label><strong>Évacuation déchets/gravats</strong><br><small class="option-detail">+20€ TTC</small></label>
+                            <label><strong>Évacuation déchets/gravats</strong><br><small class="option-detail">+20€ HT</small></label>
                             <div class="radio-group">
                                 <label><input type="radio" name="waste_removal" value="-" checked> -</label>
                                 <label><input type="radio" name="waste_removal" value="non"> Non</label>
@@ -698,11 +698,10 @@ select.form-control {
             validateField(tripsInput, trips >= 1);
             
             const parkingValue = document.querySelector('input[name="parking"]:checked')?.value;
-            if (parkingValue !== 'non') {
+            if (parkingValue === 'oui') {
                 parkingInputDiv.style.display = 'block';
-                const parkingDays = parseInt(parkingDaysInput.value) ||0;
-
-validateField(parkingDaysInput, parkingDays >= 1);
+                const parkingDays = parseInt(parkingDaysInput.value) || 0;
+                validateField(parkingDaysInput, parkingDays >= 1);
             } else {
                 parkingInputDiv.style.display = 'none';
                 parkingDaysInput.classList.remove('error-field', 'success-field');
@@ -790,15 +789,44 @@ validateField(parkingDaysInput, parkingDays >= 1);
 
         function calculatePriceVAE() {
             const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-            const trips = parseInt(tripsInput.value) || 1;
-            
-            const eveningValue = document.querySelector('input[name="evening"]:checked')?.value || 'non';
-            const difficultAccessValue = document.querySelector('input[name="difficult_access"]:checked')?.value || 'non';
-            const parkingValue = document.querySelector('input[name="parking"]:checked')?.value || 'non';
-            const cleaningValue = document.querySelector('input[name="cleaning"]:checked')?.value || 'non';
-            const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || 'non';
-            const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || 'non';
+            const trips = parseInt(tripsInput.value) || 0;
 
+            // VALIDATION COMPLÈTE pour VAE
+            if (trips === 0) {
+                resultContainer.style.display = 'none';
+                return;
+            }
+
+            const eveningValue = document.querySelector('input[name="evening"]:checked')?.value || '-';
+            const difficultAccessValue = document.querySelector('input[name="difficult_access"]:checked')?.value || '-';
+            const parkingValue = document.querySelector('input[name="parking"]:checked')?.value || '-';
+            const cleaningValue = document.querySelector('input[name="cleaning"]:checked')?.value || '-';
+            const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || '-';
+            const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || '-';
+
+            // Vérifier que toutes les options sont renseignées
+            if (eveningValue === '-' || difficultAccessValue === '-' || parkingValue === '-' || 
+                cleaningValue === '-' || wasteRemovalValue === '-' || longDistanceValue === '-') {
+                resultContainer.style.display = 'none';
+                return;
+            }
+
+            // Vérifier les checkboxes
+            if (!materialsCheck.checked || !disclaimerCheck.checked) {
+                resultContainer.style.display = 'none';
+                return;
+            }
+
+            // Si parking = oui, vérifier le nombre de jours
+            if (parkingValue === 'oui') {
+                const parkingDays = parseInt(parkingDaysInput.value) || 0;
+                if (parkingDays === 0) {
+                    resultContainer.style.display = 'none';
+                    return;
+                }
+            }
+
+            // Calculs pour VAE
             let electrificationCost, finitionsCost, hoursCostHT;
             
             if (eveningValue === 'oui') {
@@ -824,24 +852,24 @@ validateField(parkingDaysInput, parkingDays >= 1);
 
             if (difficultAccessValue === 'oui') {
                 optionsCostTotal += 15;
-                optionsText.push('Accès difficile (+15€)');
+                optionsText.push('Accès difficile (+15€ HT)');
             }
 
             if (cleaningValue === 'oui') {
                 optionsCostTotal += 15;
-                optionsText.push('Nettoyage (+15€)');
+                optionsText.push('Nettoyage (+15€ HT)');
             }
 
             if (wasteRemovalValue === 'oui') {
                 optionsCostTotal += 20;
-                optionsText.push('Évacuation déchets (+20€)');
+                optionsText.push('Évacuation déchets (+20€ HT)');
             }
 
             if (parkingValue === 'oui') {
-                const parkingDays = parseInt(parkingDaysInput.value) || 1;
+                const parkingDays = parseInt(parkingDaysInput.value) || 0;
                 const parkingCost = parkingDays * 5;
                 optionsCostTotal += parkingCost;
-                optionsText.push(`Parking payant (${parkingDays} utilisation${parkingDays > 1 ? 's' : ''}: +${parkingCost}€)`);
+                optionsText.push(`Parking payant (${parkingDays} utilisation${parkingDays > 1 ? 's' : ''}: +${parkingCost}€ HT)`);
                 parkingInputDiv.style.display = 'block';
             } else {
                 parkingInputDiv.style.display = 'none';
@@ -892,24 +920,49 @@ validateField(parkingDaysInput, parkingDays >= 1);
             const hours = parseInt(hoursInput.value) || 0;
             const trips = parseInt(tripsInput.value) || 0;
 
+            // VALIDATION COMPLÈTE
             if (hours === 0 || trips === 0) {
                 resultContainer.style.display = 'none';
                 return;
             }
 
-            const eveningValue = document.querySelector('input[name="evening"]:checked')?.value || 'non';
-            const difficultAccessValue = document.querySelector('input[name="difficult_access"]:checked')?.value || 'non';
-            const parkingValue = document.querySelector('input[name="parking"]:checked')?.value || 'non';
-            const cleaningValue = document.querySelector('input[name="cleaning"]:checked')?.value || 'non';
-            const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || 'non';
-            const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || 'non';
+            const eveningValue = document.querySelector('input[name="evening"]:checked')?.value || '-';
+            const difficultAccessValue = document.querySelector('input[name="difficult_access"]:checked')?.value || '-';
+            const parkingValue = document.querySelector('input[name="parking"]:checked')?.value || '-';
+            const cleaningValue = document.querySelector('input[name="cleaning"]:checked')?.value || '-';
+            const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || '-';
+            const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || '-';
 
-            if (parkingValue !== 'non') {
+            // Vérifier que TOUTES les options radio sont renseignées (pas "-")
+            if (eveningValue === '-' || difficultAccessValue === '-' || parkingValue === '-' || 
+                cleaningValue === '-' || wasteRemovalValue === '-' || longDistanceValue === '-') {
+                resultContainer.style.display = 'none';
+                return;
+            }
+
+            // Vérifier que les checkboxes sont cochées
+            if (!materialsCheck.checked || !disclaimerCheck.checked) {
+                resultContainer.style.display = 'none';
+                return;
+            }
+
+            // Si parking est "oui", vérifier que le nombre de jours est renseigné
+            if (parkingValue === 'oui') {
+                const parkingDays = parseInt(parkingDaysInput.value) || 0;
+                if (parkingDays === 0) {
+                    resultContainer.style.display = 'none';
+                    return;
+                }
+            }
+
+            // Gestion affichage parking
+            if (parkingValue === 'oui') {
                 parkingInputDiv.style.display = 'block';
             } else {
                 parkingInputDiv.style.display = 'none';
             }
 
+            // TOUTES LES VALIDATIONS SONT OK, on peut calculer le prix
             let finalHourlyRate = hourlyRate;
             let optionsText = [];
             let optionsCostHT = 0;
@@ -922,17 +975,17 @@ validateField(parkingDaysInput, parkingDays >= 1);
 
             if (difficultAccessValue === 'oui') {
                 optionsCostTotal += 15;
-                optionsText.push('Accès difficile (+15€)');
+                optionsText.push('Accès difficile (+15€ HT)');
             }
 
             if (cleaningValue === 'oui') {
                 optionsCostTotal += 15;
-                optionsText.push('Nettoyage (+15€)');
+                optionsText.push('Nettoyage (+15€ HT)');
             }
 
             if (wasteRemovalValue === 'oui') {
                 optionsCostTotal += 20;
-                optionsText.push('Évacuation déchets (+20€)');
+                optionsText.push('Évacuation déchets (+20€ HT)');
             }
 
             if (parkingValue === 'oui') {
@@ -940,7 +993,7 @@ validateField(parkingDaysInput, parkingDays >= 1);
                 if (parkingDays > 0) {
                     const parkingCost = parkingDays * 5;
                     optionsCostTotal += parkingCost;
-                    optionsText.push(`Parking payant (${parkingDays} utilisation${parkingDays > 1 ? 's' : ''}: +${parkingCost}€)`);
+                    optionsText.push(`Parking payant (${parkingDays} utilisation${parkingDays > 1 ? 's' : ''}: +${parkingCost}€ HT)`);
                 }
             }
 
@@ -1000,5 +1053,4 @@ validateField(parkingDaysInput, parkingDays >= 1);
         updateCalculation();
     </script>
 </body>
-
 </html>
