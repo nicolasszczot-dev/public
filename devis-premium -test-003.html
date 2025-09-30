@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculateur de Tarifs PREMIUM - Nico-LA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Belleza:wght@400&display=swap');
+
+/* Force Belleza partout */
+*, *::before, *::after {
+    font-family: "Belleza", sans-serif !important;
+}
+
+select, option, optgroup {
+    font-family: "Belleza", sans-serif !important;
+}
+
+input, textarea, button {
+    font-family: "Belleza", sans-serif !important;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Belleza", sans-serif;
+    background-color: #f0f4f7;
+    color: #000000;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.calculator-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.calculator-header {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.calculator-header h1 {
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    font-family: "Belleza", sans-serif;
+}
+
+.calculator-header p {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+.calculator-body {
+    padding: 40px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    font-family: "Belleza", sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #E3B100;
+    box-shadow: 0 0 0 3px rgba(227, 177, 0, 0.1);
+}
+
+select.form-control {
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.input-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.input-group .form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.option-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.option-item:hover {
+    background-color: #f8f9fa;
+    border-color: #E3B100;
+}
+
+.option-item label:first-child {
+    flex-grow: 1;
+    margin: 0;
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.radio-group input[type="radio"] {
+    accent-color: #E3B100;
+}
+
+.parking-input {
+    margin-left: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.option-detail {
+    color: #666;
+    font-style: italic;
+    display: block;
+    margin-top: 3px;
+}
+
+.materials-container {
+    background-color: #f8f9fa;
+    border: 2px solid #E3B100;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.materials-header {
+    font-size: 1.1em;
+    color: #B0780B;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.materials-info {
+    background-color: #e8f4fd;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.materials-checkbox, .disclaimer-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.materials-checkbox input[type="checkbox"], .disclaimer-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #E3B100;
+}
+
+.materials-checkbox label, .disclaimer-checkbox label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.disclaimer-note {
+    background-color: #ff9999;
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+}
+
+.disclaimer-header {
+    font-size: 1.1em;
+    color: #495057;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.disclaimer-info {
+    background-color: transparent;
+    border: none;
+    color: #0c5460;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.error-field {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
+    background-color: #fff5f5 !important;
+}
+
+.success-field {
+    border-color: #28a745 !important;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15) !important;
+    background-color: #f8fff8 !important;
+}
+
+.error-checkbox, .error-option {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+}
+
+.success-checkbox, .success-option {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+}
+
+.disclaimer-error {
+    background-color: #ff9999 !important;
+    border-color: #dc3545 !important;
+}
+
+.disclaimer-success {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+}
+
+.alert {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    display: none;
+}
+
+.alert-warning {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.result-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 30px;
+    border: 2px solid #E3B100;
+    display: none;
+}
+
+.result-title {
+    font-size: 1.5em;
+    color: #B0780B;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.result-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid #dee2e6;
+    gap: 15px;
+}
+
+.result-line:last-child {
+    border-bottom: none;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #B0780B;
+    border-top: 2px solid #E3B100;
+    padding-top: 15px;
+    margin-top: 10px;
+}
+
+.result-line[data-options] {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.result-line[data-options] span:last-child {
+    margin-top: 5px;
+    margin-left: 20px;
+    font-style: italic;
+}
+
+.price-highlight {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.price-highlight .final-price {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.price-highlight .credit-info {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .calculator-body {
+        padding: 20px;
+    }
+    
+    .input-group {
+        flex-direction: column;
+    }
+    
+    .input-group .form-group {
+        min-width: 100%;
+    }
+    
+    .calculator-header h1 {
+        font-size: 1.8em;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator-header">
+            <h1>Calculateur de Tarifs PREMIUM*</h1>
+            <p>Obtenez une estimation personnalisée en quelques clics<br>
+            et recommencez autant que vous voulez - Actualisez la page</p>
+        </div>
+        
+        <div class="calculator-body">
+            <div class="disclaimer-note" id="disclaimerContainer">
+                <div class="disclaimer-header">
+                    <strong>* Outil mis à disposition du Client</strong>
+                </div>
+                <div class="disclaimer-info">
+                    Même si le prix devrait être proche du TTC réel final, il devra néanmoins être contrôlé et ajusté si nécessaire par l'auteur des travaux. Merci de votre compréhension.
+                </div>
+                <div class="disclaimer-checkbox" id="disclaimerCheckbox">
+                    <label for="disclaimer">Je comprends que ce prix sera uniquement <strong><em>estimatif</em></strong></label>
+                    <input type="checkbox" id="disclaimer" data-type="disclaimer">
+                </div>
+            </div>
+
+            <form id="calculatorForm">
+                <div class="form-group">
+                    <label for="service">Choisissez votre service :</label>
+                    <select id="service" class="form-control" required>
+                        <option value="">-- Sélectionnez un service --</option>
+                        <optgroup label="FORMULE PREMIUM - 50€/h HT">
+                            <option value="electrification_velo" data-rate="50" data-special="vae">Électrification d'un vélo (étape 1/2)</option>
+                            <option value="motoculture_difficile" data-rate="50">Panne Motoculture (difficile)</option>
+                            <option value="debarras_gros" data-rate="50">Débarras de caves, greniers ou garages ( physique )</option>
+                            <option value="demolition" data-rate="50">Dépose cloisons/démolition intérieure</option>
+                            <option value="montage_cuisine" data-rate="50">Montage cuisines équipées/gros meubles</option>
+                        </optgroup>
+                        <optgroup label="FORMULE PREMIUM - 60€/h HT">
+                            <option value="vehicule_difficile" data-rate="60">Moto/Scooter/Voiture (difficile)</option>
+                            <option value="toiture" data-rate="60">Réparation toitures/gouttières/bardages</option>
+                            <option value="taches_complexes" data-rate="60" data-special="devis">Tout travail physique/technique/complexe. Ex: système domotique, creuser une tranchée, etc...</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="alert alert-warning" id="devisAlert">
+                    <strong>Devis personnalisé obligatoire.</strong><br>
+                    Ce type de prestation nécessite une évaluation personnalisée. Le calculateur peut donner une estimation indicative pour d'autres prestations, mais pour celle-ci, un devis détaillé sera établi en collaboration avec vous selon vos besoins spécifiques.
+                    <br><br>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <a href="https://nico-la-contact.carrd.co/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%); color: white; padding: 15px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1em; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+                            Contactez Nico pour un devis personnalisé
+                        </a>
+                    </div>
+                </div>
+
+                <div class="alert" id="vaeAlert" style="background-color: #e8f4fd; border: 2px solid #0c5460; color: #0c5460; display: none;">
+                    <strong>Information importante sur l'électrification d'un vélo</strong><br><br>
+                    
+                    <strong>Réglementation française et européenne :</strong><br>
+                    La réglementation française (et européenne, directive 2002/24/CE puis règlement UE 168/2013) encadre très précisément ce qui peut devenir un <strong>vélo à assistance électrique (VAE)</strong>.<br><br>
+                    
+                    Un <strong>VAE homologué</strong> doit obligatoirement répondre à la norme <strong>EN 15194</strong> :<br>
+                    • assistance uniquement quand on pédale (pas de poignée d'accélérateur seule)<br>
+                    • moteur ≤ 250 W<br>
+                    • assistance qui se coupe à 25 km/h<br>
+                    • conformité technique (freinage, éclairage, marquages CE, etc.)<br><br>
+                    
+                    <strong>Cela exclut d'emblée certains types de vélos :</strong><br><br>
+                    
+                    <strong>1. Vélos déjà motorisés autrement</strong><br>
+                    Vélos équipés d'un moteur thermique (cyclomoteurs, solex, etc.) → ne peuvent pas être homologués comme VAE.<br><br>
+                    
+                    <strong>2. Vélos conçus sans pédales</strong><br>
+                    Trottinettes, draisiennes électriques, engins assimilés EDPM → pas de pédalage = impossible de les faire homologuer comme VAE.<br><br>
+                    
+                    <strong>3. Vélos trop puissants ou trop rapides</strong><br>
+                    Si le kit dépasse 250 W ou que l'assistance va au-delà de 25 km/h → ce n'est plus un VAE mais un <strong>speed bike</strong> (cyclomoteur) → immatriculation, assurance, casque homologué, etc.<br><br>
+                    
+                    <strong>4. Vélos inadaptés structurellement</strong><br>
+                    Cadres trop anciens ou fragiles qui ne supporteraient pas l'ajout d'un kit moteur/batterie → en pratique, ils ne pourraient pas passer l'homologation.<br><br>
+                    
+                    <strong>5. Vélos modifiés sans respect des normes CE</strong><br>
+                    Si le montage d'un kit n'est pas certifié conforme à la norme EN 15194 → le vélo perd sa conformité et n'a plus le statut légal de VAE.<br><br>
+                    
+                    <strong>En résumé :</strong><br>
+                    Seuls les vélos à pédales, non motorisés à l'origine, transformés avec un kit conforme et limité (250 W / 25 km/h / coupure à l'arrêt du pédalage) peuvent devenir des VAE légaux.<br><br>
+                    
+                    <strong>Notre prestation comprend :</strong><br>
+                    • 3h d'électrification (50€/h HT)<br>
+                    • 2h de finitions/réglages (35€/h HT)<br>
+                    • Total : 5h de travail spécialisé
+                </div>
+
+                <div class="input-group">
+                    <div class="form-group" id="hoursGroup">
+                        <label for="hours">Nombre d'heures estimées :</label>
+                        <input type="number" id="hours" class="form-control" min="1" step="1" value="" placeholder="Ex: 3" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="trips">Nombre de déplacements chez le client :</label>
+                        <input type="number" id="trips" class="form-control" min="1" value="" placeholder="Ex: 1" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Options supplémentaires :</label>
+                    <div class="options-grid">
+                        <div class="option-item" data-option="evening">
+                            <label><strong>Intervention soirée</strong> (après 18h)<br><small class="option-detail">+20% sur le taux horaire</small></label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="evening" value="-" checked> -</label>
+                                <label><input type="radio" name="evening" value="non"> Non</label>
+                                <label><input type="radio" name="evening" value="oui"> Oui</label>
+                            </div>
+                        </div>
+                        <div class="option-item" data-option="difficult_access">
+                            <label><strong>Accès difficile</strong> (≥3e étage sans ascenseur)<br><small class="option-detail">+15€ TTC</small></label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="difficult_access" value="-" checked> -</label>
+                                <label><input type="radio" name="difficult_access" value="non"> Non</label>
+                                <label><input type="radio" name="difficult_access" value="oui"> Oui</label>
+                            </div>
+                        </div>
+                        <div class="option-item" data-option="parking">
+                            <label><strong>Parking payant</strong><br><small class="option-detail">+5€ TTC par demi-journée</small></label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="parking" value="-" checked> -</label>
+                                <label><input type="radio" name="parking" value="non"> Non</label>
+                                <label><input type="radio" name="parking" value="oui"> Oui</label>
+                            </div>
+                        </div>
+                        <div class="parking-input" id="parkingInput" style="display: none;">
+                            <label for="parking_days"><strong>Nombre de fois où le parking payant sera utilisé :</strong></label>
+                            <input type="number" id="parking_days" class="form-control" min="1" step="1" value="" placeholder="Entrez un nombre ≥ 1" style="width: 340px; display: inline-block; margin-left: 10px;">
+                            <small style="display: block; color: #666; margin-top: 5px; font-style: italic;">
+                                Indiquez le nombre total de fois où le parking payant sera utilisé (minimum 1)
+                            </small>
+                        </div>
+                        <div class="option-item" data-option="cleaning">
+                            <label><strong>Nettoyage post-intervention</strong><br><small class="option-detail">+15€ TTC</small></label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="cleaning" value="-" checked> -</label>
+                                <label><input type="radio" name="cleaning" value="non"> Non</label>
+                                <label><input type="radio" name="cleaning" value="oui"> Oui</label>
+                            </div>
+                        </div>
+                        <div class="option-item" data-option="waste_removal">
+                            <label><strong>Évacuation déchets/gravats</strong><br><small class="option-detail">+20€ TTC</small></label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="waste_removal" value="-" checked> -</label>
+                                <label><input type="radio" name="waste_removal" value="non"> Non</label>
+                                <label><input type="radio" name="waste_removal" value="oui"> Oui</label>
+                            </div>
+                        </div>
+                        <div class="option-item" data-option="long_distance">
+                            <label><strong>Déplacement longue distance</strong> (>50km)<br><small class="option-detail">+30€ HT</small></label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="long_distance" value="-" checked> -</label>
+                                <label><input type="radio" name="long_distance" value="non"> Non</label>
+                                <label><input type="radio" name="long_distance" value="oui"> Oui</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="materials-container">
+                        <div class="materials-header">
+                            <strong>Si matériel acheté pour le chantier</strong>
+                        </div>
+                        <div class="materials-info">
+                            <strong>Information importante :</strong> Conformément à la réglementation des services à la personne, tout matériel acheté pour votre chantier est facturé au prix coûtant, sans aucune marge.
+                        </div>
+                        <div class="materials-checkbox" id="materialsCheckbox">
+                            <label for="materials">J'ai compris : Si matériel acheté - matériel facturé à prix coûtant (sans marge)</label>
+                            <input type="checkbox" id="materials" data-type="note">
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="result-container" id="resultContainer">
+                <div class="result-title">Estimation de votre devis</div>
+                <div class="result-line">
+                    <span><u>Service sélectionné :</u></span>
+                    <span id="selectedService">-</span>
+                </div>
+                <div class="result-line">
+                    <span><u>Tarif horaire de base :</u></span>
+                    <span id="baseHourlyRate">-</span>
+                </div>
+                <div class="result-line">
+                    <span><u>Tarif horaire final :</u></span>
+                    <span id="hourlyRate">-</span>
+                </div>
+                <div class="result-line">
+                    <span><u>Durée :</u></span>
+                    <span id="duration">-</span>
+                </div>
+                <div class="result-line">
+                    <span><u>Déplacement :</u></span>
+                    <span id="tripsCount">-</span>
+                </div>
+                <div class="result-line">
+                    <span><u>Congés payés (10%) :</u></span>
+                    <span id="congesPayes">-</span>
+                </div>
+                <div class="result-line" data-options>
+                    <span><u>Options supplémentaires :</u></span>
+                    <span id="optionsDetail">-</span>
+                </div>
+                <div class="result-line">
+                    <span><u>Sous-total HT :</u></span>
+                    <span id="subtotalHT">-</span>
+                </div>
+                <div class="result-line" style="font-size: 1.4em; font-weight: bold;">
+                    <span><u>Total HT :</u></span>
+                    <span id="totalTTC">-</span>
+                </div>
+                
+                <div class="price-highlight">
+                    <div class="final-price" id="finalPrice">-</div>
+                    <div class="credit-info">Prix final après crédit d'impôt 50%**</div>
+                </div>
+                <div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666;">
+                    ** Sous réserve d'éligibilité aux services à la personne
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background-color: #e8f4fd; border: 2px solid #0c5460; border-radius: 8px; text-align: center;">
+                    <strong>TVA non applicable, article 293 B du CGI</strong><br>
+                    <small>Micro-entrepreneur en franchise en base de TVA</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const serviceSelect = document.getElementById('service');
+        const hoursInput = document.getElementById('hours');
+        const hoursGroup = document.getElementById('hoursGroup');
+        const tripsInput = document.getElementById('trips');
+        const parkingDaysInput = document.getElementById('parking_days');
+        const parkingInputDiv = document.getElementById('parkingInput');
+        const materialsCheck = document.getElementById('materials');
+        const disclaimerCheck = document.getElementById('disclaimer');
+        const resultContainer = document.getElementById('resultContainer');
+        const devisAlert = document.getElementById('devisAlert');
+        const vaeAlert = document.getElementById('vaeAlert');
+
+        const TRIP_COST = 30;
+        const CREDIT_RATE = 0.50;
+
+        function validateField(element, isValid) {
+            if (isValid) {
+                element.classList.remove('error-field');
+                element.classList.add('success-field');
+            } else {
+                element.classList.remove('success-field');
+                element.classList.add('error-field');
+            }
+        }
+
+        function validateOption(element, isValid) {
+            if (isValid) {
+                element.classList.remove('error-option');
+                element.classList.add('success-option');
+            } else {
+                element.classList.remove('success-option');
+                element.classList.add('error-option');
+            }
+        }
+
+        function validateCheckbox(element, isValid) {
+            if (isValid) {
+                element.classList.remove('error-checkbox');
+                element.classList.add('success-checkbox');
+            } else {
+                element.classList.remove('success-checkbox');
+                element.classList.add('error-checkbox');
+            }
+        }
+
+        function validateDisclaimerBlock() {
+            const disclaimerContainer = document.getElementById('disclaimerContainer');
+            const calculatorForm = document.getElementById('calculatorForm');
+            
+            if (disclaimerCheck.checked) {
+                disclaimerContainer.classList.remove('disclaimer-error');
+                disclaimerContainer.classList.add('disclaimer-success');
+                
+                const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+                if (selectedOption && selectedOption.dataset.special === 'devis') {
+                    return;
+                }
+                
+                calculatorForm.style.opacity = '1';
+                calculatorForm.style.pointerEvents = 'auto';
+            } else {
+                disclaimerContainer.classList.remove('disclaimer-success');
+                disclaimerContainer.classList.add('disclaimer-error');
+                
+                calculatorForm.style.opacity = '0.5';
+                calculatorForm.style.pointerEvents = 'none';
+            }
+        }
+
+        function applyGlobalValidation() {
+            if (hoursGroup.style.display !== 'none') {
+                const hours = parseInt(hoursInput.value) || 0;
+                validateField(hoursInput, hours >= 1);
+            }
+            
+            const trips = parseInt(tripsInput.value) || 0;
+            validateField(tripsInput, trips >= 1);
+            
+            const parkingValue = document.querySelector('input[name="parking"]:checked')?.value;
+            if (parkingValue !== 'non') {
+                parkingInputDiv.style.display = 'block';
+                const parkingDays = parseInt(parkingDaysInput.value) ||0;
+
+validateField(parkingDaysInput, parkingDays >= 1);
+            } else {
+                parkingInputDiv.style.display = 'none';
+                parkingDaysInput.classList.remove('error-field', 'success-field');
+            }
+            
+            const radioGroups = ['evening', 'difficult_access', 'parking', 'cleaning', 'waste_removal', 'long_distance'];
+            radioGroups.forEach(groupName => {
+                const selectedValue = document.querySelector(`input[name="${groupName}"]:checked`)?.value;
+                const optionElement = document.querySelector(`input[name="${groupName}"]`).closest('.option-item');
+                const isValid = selectedValue !== '-';
+                validateOption(optionElement, isValid);
+            });
+            
+            validateCheckbox(document.getElementById('materialsCheckbox'), materialsCheck.checked);
+            validateCheckbox(document.getElementById('disclaimerCheckbox'), disclaimerCheck.checked);
+            
+            const disclaimerContainer = document.getElementById('disclaimerContainer');
+            if (disclaimerCheck.checked) {
+                disclaimerContainer.classList.remove('error-checkbox');
+                disclaimerContainer.classList.add('success-checkbox');
+            } else {
+                disclaimerContainer.classList.remove('success-checkbox');
+                disclaimerContainer.classList.add('error-checkbox');
+            }
+        }
+
+        function updateCalculation() {
+            const serviceValid = serviceSelect.value !== "";
+            validateField(serviceSelect, serviceValid);
+
+            if (!serviceValid) {
+                resultContainer.style.display = 'none';
+                vaeAlert.style.display = 'none';
+                devisAlert.style.display = 'none';
+                return;
+            }
+
+            applyGlobalValidation();
+
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+
+            if (selectedOption.dataset.special === 'vae') {
+                vaeAlert.style.display = 'block';
+                hoursGroup.style.display = 'none';
+                devisAlert.style.display = 'none';
+                
+                calculatePriceVAE();
+                return;
+            } else {
+                vaeAlert.style.display = 'none';
+                hoursGroup.style.display = 'block';
+            }
+
+            if (selectedOption.dataset.special === 'devis') {
+                devisAlert.style.display = 'block';
+                resultContainer.style.display = 'none';
+                
+                if (!disclaimerCheck.checked) {
+                    return;
+                }
+                
+                const formElements = document.querySelectorAll('#calculatorForm input, #calculatorForm select, #calculatorForm .option-item, #calculatorForm .materials-container');
+                formElements.forEach(element => {
+                    element.style.opacity = '0.5';
+                    element.style.pointerEvents = 'none';
+                });
+                
+                return;
+            } else {
+                devisAlert.style.display = 'none';
+                
+                if (!disclaimerCheck.checked) {
+                    return;
+                }
+                
+                const formElements = document.querySelectorAll('#calculatorForm input, #calculatorForm select, #calculatorForm .option-item, #calculatorForm .materials-container');
+                formElements.forEach(element => {
+                    element.style.opacity = '1';
+                    element.style.pointerEvents = 'auto';
+                });
+            }
+
+            calculatePriceNormal();
+        }
+
+        function calculatePriceVAE() {
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+            const trips = parseInt(tripsInput.value) || 1;
+            
+            const eveningValue = document.querySelector('input[name="evening"]:checked')?.value || 'non';
+            const difficultAccessValue = document.querySelector('input[name="difficult_access"]:checked')?.value || 'non';
+            const parkingValue = document.querySelector('input[name="parking"]:checked')?.value || 'non';
+            const cleaningValue = document.querySelector('input[name="cleaning"]:checked')?.value || 'non';
+            const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || 'non';
+            const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || 'non';
+
+            let electrificationCost, finitionsCost, hoursCostHT;
+            
+            if (eveningValue === 'oui') {
+                electrificationCost = 3 * (50 * 1.20);
+                finitionsCost = 2 * (35 * 1.20);
+                hoursCostHT = electrificationCost + finitionsCost;
+            } else {
+                electrificationCost = 3 * 50;
+                finitionsCost = 2 * 35;
+                hoursCostHT = electrificationCost + finitionsCost;
+            }
+
+            const congesPayes = hoursCostHT * 0.10;
+            const tripsCostHT = TRIP_COST * trips;
+
+            let optionsText = [];
+            let optionsCostHT = 0;
+            let optionsCostTotal = 0;
+
+            if (eveningValue === 'oui') {
+                optionsText.push('Intervention soirée (+20% sur le prix HT)');
+            }
+
+            if (difficultAccessValue === 'oui') {
+                optionsCostTotal += 15;
+                optionsText.push('Accès difficile (+15€)');
+            }
+
+            if (cleaningValue === 'oui') {
+                optionsCostTotal += 15;
+                optionsText.push('Nettoyage (+15€)');
+            }
+
+            if (wasteRemovalValue === 'oui') {
+                optionsCostTotal += 20;
+                optionsText.push('Évacuation déchets (+20€)');
+            }
+
+            if (parkingValue === 'oui') {
+                const parkingDays = parseInt(parkingDaysInput.value) || 1;
+                const parkingCost = parkingDays * 5;
+                optionsCostTotal += parkingCost;
+                optionsText.push(`Parking payant (${parkingDays} utilisation${parkingDays > 1 ? 's' : ''}: +${parkingCost}€)`);
+                parkingInputDiv.style.display = 'block';
+            } else {
+                parkingInputDiv.style.display = 'none';
+            }
+
+            if (longDistanceValue === 'oui') {
+                optionsCostHT += 30;
+                optionsText.push('Longue distance (+30€ HT)');
+            }
+
+            const totalHT = hoursCostHT + congesPayes + tripsCostHT + optionsCostHT + optionsCostTotal;
+            const finalPrice = totalHT * CREDIT_RATE;
+
+            document.getElementById('selectedService').textContent = selectedOption.text;
+            document.getElementById('baseHourlyRate').textContent = "Électrification: 50€/h HT • Finitions: 35€/h HT";
+            
+            if (eveningValue === 'oui') {
+                document.getElementById('hourlyRate').textContent = "3h électrification (60€/h HT) + 2h finitions (42€/h HT) = 264€ HT (base + 20%)";
+            } else {
+                document.getElementById('hourlyRate').textContent = "3h électrification (50€/h HT) + 2h finitions (35€/h HT) = 220€ HT";
+            }
+            
+            document.getElementById('duration').textContent = "5h (fixe pour transformation complète)";
+            document.getElementById('tripsCount').textContent = trips === 1 ? 
+                `${trips} déplacement × 30€ = ${tripsCostHT}€ HT` : 
+                `${trips} déplacements × 30€ = ${tripsCostHT}€ HT`;
+            document.getElementById('congesPayes').textContent = `${congesPayes.toFixed(2)}€`;
+            document.getElementById('optionsDetail').textContent = optionsText.length > 0 ? optionsText.join(' • ') : 'Aucune';
+            document.getElementById('subtotalHT').textContent = `${totalHT.toFixed(2)}€`;
+            document.getElementById('totalTTC').textContent = `${totalHT.toFixed(2)}€`;
+            document.getElementById('finalPrice').textContent = `${finalPrice.toFixed(2)}€`;
+
+            const existingDisclaimer = document.querySelector('.vae-disclaimer');
+            if (!existingDisclaimer) {
+                const disclaimer = document.createElement('div');
+                disclaimer.className = 'vae-disclaimer';
+                disclaimer.style.cssText = 'background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.9em;';
+                disclaimer.innerHTML = '<strong>Moteur, batteries, accessoires et fournitures non-inclus dans cette estimation. À rajouter sur devis car les modèles varient selon les projets. Prix moyen de tout cet équipement de marque VARSTROM = 700€</strong>';
+                resultContainer.appendChild(disclaimer);
+            }
+
+            resultContainer.style.display = 'block';
+        }
+
+        function calculatePriceNormal() {
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+            const hourlyRate = parseFloat(selectedOption.dataset.rate);
+            const hours = parseInt(hoursInput.value) || 0;
+            const trips = parseInt(tripsInput.value) || 0;
+
+            if (hours === 0 || trips === 0) {
+                resultContainer.style.display = 'none';
+                return;
+            }
+
+            const eveningValue = document.querySelector('input[name="evening"]:checked')?.value || 'non';
+            const difficultAccessValue = document.querySelector('input[name="difficult_access"]:checked')?.value || 'non';
+            const parkingValue = document.querySelector('input[name="parking"]:checked')?.value || 'non';
+            const cleaningValue = document.querySelector('input[name="cleaning"]:checked')?.value || 'non';
+            const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || 'non';
+            const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || 'non';
+
+            if (parkingValue !== 'non') {
+                parkingInputDiv.style.display = 'block';
+            } else {
+                parkingInputDiv.style.display = 'none';
+            }
+
+            let finalHourlyRate = hourlyRate;
+            let optionsText = [];
+            let optionsCostHT = 0;
+            let optionsCostTotal = 0;
+
+            if (eveningValue === 'oui') {
+                finalHourlyRate = hourlyRate * 1.20;
+                optionsText.push('Intervention soirée (+20% sur le prix HT)');
+            }
+
+            if (difficultAccessValue === 'oui') {
+                optionsCostTotal += 15;
+                optionsText.push('Accès difficile (+15€)');
+            }
+
+            if (cleaningValue === 'oui') {
+                optionsCostTotal += 15;
+                optionsText.push('Nettoyage (+15€)');
+            }
+
+            if (wasteRemovalValue === 'oui') {
+                optionsCostTotal += 20;
+                optionsText.push('Évacuation déchets (+20€)');
+            }
+
+            if (parkingValue === 'oui') {
+                const parkingDays = parseInt(parkingDaysInput.value) || 0;
+                if (parkingDays > 0) {
+                    const parkingCost = parkingDays * 5;
+                    optionsCostTotal += parkingCost;
+                    optionsText.push(`Parking payant (${parkingDays} utilisation${parkingDays > 1 ? 's' : ''}: +${parkingCost}€)`);
+                }
+            }
+
+            if (longDistanceValue === 'oui') {
+                optionsCostHT += 30;
+                optionsText.push('Longue distance (+30€ HT)');
+            }
+
+            const hoursCostHT = finalHourlyRate * hours;
+            const congesPayes = hoursCostHT * 0.10;
+            const tripsCostHT = TRIP_COST * trips;
+
+            const totalHT = hoursCostHT + congesPayes + tripsCostHT + optionsCostHT + optionsCostTotal;
+            const finalPrice = totalHT * CREDIT_RATE;
+
+            document.getElementById('selectedService').textContent = selectedOption.text;
+            document.getElementById('baseHourlyRate').textContent = `${hourlyRate.toFixed(2)}€/h HT`;
+            
+            if (eveningValue === 'oui') {
+                document.getElementById('hourlyRate').textContent = `${finalHourlyRate.toFixed(2)}€/h HT (base + 20%)`;
+            } else {
+                document.getElementById('hourlyRate').textContent = `${finalHourlyRate.toFixed(2)}€/h HT`;
+            }
+            
+            document.getElementById('duration').textContent = `${hours}h`;
+            document.getElementById('tripsCount').textContent = trips === 1 ? 
+                `${trips} déplacement × 30€ = ${tripsCostHT}€ HT` : 
+                `${trips} déplacements × 30€ = ${tripsCostHT}€ HT`;
+            document.getElementById('congesPayes').textContent = `${congesPayes.toFixed(2)}€`;
+            document.getElementById('optionsDetail').textContent = optionsText.length > 0 ? optionsText.join(' • ') : 'Aucune';
+            document.getElementById('subtotalHT').textContent = `${totalHT.toFixed(2)}€`;
+            document.getElementById('totalTTC').textContent = `${totalHT.toFixed(2)}€`;
+            document.getElementById('finalPrice').textContent = `${finalPrice.toFixed(2)}€`;
+
+            const existingDisclaimer = document.querySelector('.vae-disclaimer');
+            if (existingDisclaimer) {
+                existingDisclaimer.remove();
+            }
+
+            resultContainer.style.display = 'block';
+        }
+
+        serviceSelect.addEventListener('change', updateCalculation);
+        hoursInput.addEventListener('input', updateCalculation);
+        tripsInput.addEventListener('input', updateCalculation);
+        parkingDaysInput.addEventListener('input', updateCalculation);
+        materialsCheck.addEventListener('change', updateCalculation);
+        disclaimerCheck.addEventListener('change', updateCalculation);
+        disclaimerCheck.addEventListener('change', validateDisclaimerBlock);
+
+        const radioInputs = document.querySelectorAll('input[type="radio"]');
+        radioInputs.forEach(input => {
+            input.addEventListener('change', updateCalculation);
+        });
+
+        validateDisclaimerBlock();
+        updateCalculation();
+    </script>
+</body>
+</html>
