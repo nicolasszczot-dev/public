@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calculateur de Tarifs - Nico-LA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Belleza:wght@400&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Belleza", sans-serif;
+    background-color: #f0f4f7;
+    color: #000000;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.calculator-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.calculator-header {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.calculator-header h1 {
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    font-family: "Belleza", sans-serif;
+}
+
+.calculator-header p {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+.calculator-body {
+    padding: 40px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    font-family: "Belleza", sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #E3B100;
+    box-shadow: 0 0 0 3px rgba(227, 177, 0, 0.1);
+}
+
+select.form-control {
+    cursor: pointer;
+}
+
+.input-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.input-group .form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.option-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.option-item:hover {
+    background-color: #f8f9fa;
+    border-color: #E3B100;
+}
+
+.option-item label:first-child {
+    flex-grow: 1;
+    margin: 0;
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.radio-group input[type="radio"] {
+    accent-color: #E3B100;
+}
+
+.parking-input {
+    margin-left: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.option-detail {
+    color: #666;
+    font-style: italic;
+    display: block;
+    margin-top: 3px;
+}
+
+.materials-container {
+    background-color: #f8f9fa;
+    border: 2px solid #E3B100;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.materials-header {
+    font-size: 1.1em;
+    color: #B0780B;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.materials-info {
+    background-color: #e8f4fd;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.materials-checkbox, .disclaimer-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.materials-checkbox input[type="checkbox"], .disclaimer-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #E3B100;
+}
+
+.materials-checkbox label, .disclaimer-checkbox label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.disclaimer-note {
+    background-color: #ff8080;
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+}
+
+.disclaimer-header {
+    font-size: 1.1em;
+    color: #495057;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.disclaimer-info {
+    background-color: #e8f4fd;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.error-field {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
+    background-color: #fff5f5 !important;
+}
+
+.success-field {
+    border-color: #28a745 !important;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15) !important;
+    background-color: #f8fff8 !important;
+}
+
+.error-checkbox, .error-option {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+}
+
+.success-checkbox, .success-option {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+}
+
+.disclaimer-error {
+    background-color: #ff9999 !important;
+    border-color: #dc3545 !important;
+}
+
+.disclaimer-success {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+}
+
+.alert {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    display: none;
+}
+
+.alert-warning {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.result-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 30px;
+    border: 2px solid #E3B100;
+    display: none;
+}
+
+.result-title {
+    font-size: 1.5em;
+    color: #B0780B;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.result-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid #dee2e6;
+    gap: 15px;
+}
+
+.result-line:last-child {
+    border-bottom: none;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #B0780B;
+    border-top: 2px solid #E3B100;
+    padding-top: 15px;
+    margin-top: 10px;
+}
+
+.result-line[data-options] {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.result-line[data-options] span:last-child {
+    margin-top: 5px;
+    margin-left: 20px;
+    font-style: italic;
+}
+
+.price-highlight {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.price-highlight .final-price {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.price-highlight .credit-info {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .calculator-body {
+        padding: 20px;
+    }
+    
+    .input-group {
+        flex-direction: column;
+    }
+    
+    .input-group .form-group {
+        min-width: 100%;
+    }
+    
+    .calculator-header h1 {
+        font-size: 1.8em;
+    }
+}
+</style>
+</head>
+<body>
+<div class="calculator-container">
+<div class="calculator-header">
+<h1>Calculateur de Tarifs ZEN*</h1>
+<p>Votre estimation "ZEN" personnalisée (hors fournitures), en quelques clics 😃!<br/>
+            Recommencez autant que vous voulez! Actualisez la page!</p>
+</div>
+<div class="calculator-body">
+<div class="disclaimer-note" id="disclaimerContainer">
+<div class="disclaimer-header">
+<strong>* Outil mis à disposition du Client</strong>
+</div>
+<div class="disclaimer-info" style="background-color: transparent; border: none;">
+                    Même si le prix devrait être proche du TTC réel final, hors fournitures, il devra néanmoins être contrôlé et ajusté si nécessaire par l'auteur des travaux. Merci de votre compréhension.
+                </div>
+                </div>
+<div class="disclaimer-checkbox" id="disclaimerCheckbox">
+<label for="disclaimer">Je comprends que ce prix sera uniquement <strong><em>estimatif</em></strong></label>
+<input data-type="disclaimer" id="disclaimer" type="checkbox"/>
+</div>
+</div>
+<form id="calculatorForm">
+<div class="form-group">
+<label for="service">Choisissez votre service :</label>
+<select class="form-control" id="service" required="">
+<option value="">-- Sélectionnez un service --</option>
+<optgroup label="FORMULE ZEN - 30€/h HT">
+<option data-rate="30" value="assistance_admin">Assistance administrative</option>
+<option data-rate="30" value="depannage_info">Dépannage informatique</option>
+<option data-rate="30" value="rondes_domicile">Rondes pendant votre absence / contrôle du domicile</option>
+<option data-rate="30" value="livraison_courses">Livraison de courses</option>
+<option data-rate="30" value="nettoyage">Nettoyage</option>
+</optgroup>
+<optgroup label="FORMULE ZEN - 35€/h HT">
+<option data-rate="35" value="pose_mobilier">Installation d'équipements intérieurs et extérieurs ( petit meuble / petit mobilier jardin )</option>
+<option data-rate="35" value="jardinage">Tonte/taille/désherbage/jardinage</option>
+<option data-rate="35" value="nettoyage_terrasses">Nettoyage terrasses et allées</option>
+<option data-rate="35" value="debarras_dechetterie">Débarrasser en déchetterie</option>
+</optgroup>
+<optgroup label="FORMULE ZEN - 40€/h HT">
+<option data-rate="40" data-special="devis" value="creation_site">Création site internet</option>
+<option data-rate="40" value="panne_electromenager">Panne Électroménager</option>
+<option data-rate="40" value="motoculture_simple">Panne Motoculture (simple)</option>
+<option data-rate="40" value="hygiene_cyclonique">Traitement Hygiène pro contre poussières et acariens</option>
+<option data-rate="40" value="electricite_simple">Électricité (simple)</option>
+<option data-rate="40" value="plomberie_simple">Plomberie (simple)</option>
+<option data-rate="40" value="vehicule_simple">Moto/Scooter/Voiture (simple)</option>
+<option data-rate="40" value="dashcam">Installation DashCam</option>
+<option data-rate="40" value="cameras_surveillance">Installation caméras surveillance</option>
+<option data-rate="40" value="volet_roulant">Volet roulant</option>
+<option data-rate="40" value="moustiquaire">Moustiquaire</option>
+<option data-rate="40" value="portail_electrique">Portail électrique</option>
+</optgroup>
+</select>
+</div>
+<div class="alert alert-warning" id="devisAlert">
+<strong>Devis personnalisé obligatoire.</strong><br/>
+                    Ce type de prestation nécessite une évaluation personnalisée. Le calculateur peut donner une estimation indicative pour d'autres prestations, mais pour celle-ci, un devis détaillé sera établi en collaboration avec vous selon vos besoins spécifiques.
+                    <br/><br/>
+<div style="text-align: center; margin-top: 15px;">
+<a href="https://nico-la-contact.carrd.co/" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" style="display: inline-block; background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%); color: white; padding: 15px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1em; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;" target="_blank">
+                            Contactez Nico pour un devis personnalisé
+                        </a>
+</div>
+</div>
+<div class="input-group">
+<div class="form-group" id="hoursGroup">
+<label for="hours">Nombre d'heures estimées :</label>
+<input class="form-control" id="hours" min="1" placeholder="Ex: 3" required="" step="1" type="number" value=""/>
+</div>
+<div class="form-group">
+<label for="trips">Nombre de déplacements chez le client :</label>
+<input class="form-control" id="trips" min="1" placeholder="Ex: 1" required="" type="number" value=""/>
+</div>
+</div>
+<div class="form-group">
+<label>Options supplémentaires :</label>
+<div class="options-grid">
+<div class="option-item" data-option="evening">
+<label><strong>Intervention soirée</strong> (après 18h)<br/><small class="option-detail">+20% sur le taux horaire</small></label>
+<div class="radio-group">
+<label><input checked="" name="evening" type="radio" value="-"/> -</label>
+<label><input name="evening" type="radio" value="non"/> Non</label>
+<label><input name="evening" type="radio" value="oui"/> Oui</label>
+</div>
+</div>
+<div class="option-item" data-option="difficult_access">
+<label><strong>Accès difficile</strong> (≥3e étage sans ascenseur)<br/><small class="option-detail">+15€ HT</small></label>
+<div class="radio-group">
+<label><input checked="" name="difficult_access" type="radio" value="-"/> -</label>
+<label><input name="difficult_access" type="radio" value="non"/> Non</label>
+<label><input name="difficult_access" type="radio" value="oui"/> Oui</label>
+</div>
+</div>
+<div class="option-item" data-option="parking">
+<label><strong>Parking payant</strong><br/><small class="option-detail">+5€ HT par demi-journée</small></label>
+<div class="radio-group">
+<label><input checked="" name="parking" type="radio" value="-"/> -</label>
+<label><input name="parking" type="radio" value="non"/> Non</label>
+<label><input name="parking" type="radio" value="oui"/> Oui</label>
+</div>
+</div>
+<div class="parking-input" id="parkingInput" style="display: none;">
+<label for="parking_days"><strong>Nombre de fois où le parking payant sera utilisé :</strong></label>
+<input class="form-control" id="parking_days" min="1" placeholder="Entrez un nombre ≥ 1" step="1" style="width: 340px; display: inline-block; margin-left: 10px;" type="number" value=""/>
+<small style="display: block; color: #666; margin-top: 5px; font-style: italic;">
+                                Indiquez le nombre total de fois où le parking payant sera utilisé (minimum 1)
+                            </small>
+</div>
+<div class="option-item" data-option="cleaning">
+<label><strong>Nettoyage post-intervention</strong><br/><small class="option-detail">+15€ HT</small></label>
+<div class="radio-group">
+<label><input checked="" name="cleaning" type="radio" value="-"/> -</label>
+<label><input name="cleaning" type="radio" value="non"/> Non</label>
+<label><input name="cleaning" type="radio" value="oui"/> Oui</label>
+</div>
+</div>
+<div class="option-item" data-option="waste_removal">
+<label><strong>Évacuation déchets/gravats</strong><br/><small class="option-detail">+20€ HT</small></label>
+<div class="radio-group">
+<label><input checked="" name="waste_removal" type="radio" value="-"/> -</label>
+<label><input name="waste_removal" type="radio" value="non"/> Non</label>
+<label><input name="waste_removal" type="radio" value="oui"/> Oui</label>
+</div>
+</div>
+<div class="option-item" data-option="long_distance">
+<label><strong>Déplacement longue distance</strong> (&gt;50km)<br/><small class="option-detail">+30€ HT</small></label>
+<div class="radio-group">
+<label><input checked="" name="long_distance" type="radio" value="-"/> -</label>
+<label><input name="long_distance" type="radio" value="non"/> Non</label>
+<label><input name="long_distance" type="radio" value="oui"/> Oui</label>
+</div>
+</div>
+</div>
+<div class="materials-container">
+<div class="materials-header">
+<strong>Si matériel acheté pour le chantier</strong>
+</div>
+<div class="materials-info">
+<strong>Information importante :</strong> Conformément à la réglementation des services à la personne, tout matériel acheté pour votre chantier est facturé au prix coûtant, sans aucune marge.
+                        </div>
+<div class="materials-checkbox" id="materialsCheckbox">
+<label for="materials">J'ai compris : Si matériel acheté - matériel facturé à prix coûtant (sans marge)</label>
+<input data-type="note" id="materials" type="checkbox"/>
+</div>
+</div>
+</div>
+</form>
+<div class="result-container" id="resultContainer">
+<div class="result-title">Estimation de votre devis</div>
+<div class="result-line">
+<span><u>Service sélectionné :</u></span>
+<span id="selectedService">-</span>
+</div>
+<div class="result-line">
+<span><u>Tarif horaire de base :</u></span>
+<span id="baseHourlyRate">-</span>
+</div>
+<div class="result-line">
+<span><u>Tarif horaire final :</u></span>
+<span id="hourlyRate">-</span>
+</div>
+<div class="result-line">
+<span><u>Durée :</u></span>
+<span id="duration">-</span>
+</div>
+<div class="result-line">
+<span><u>Déplacement :</u></span>
+<span id="tripsCount">-</span>
+</div>
+<div class="result-line">
+<span><u>Congés payés (10%) :</u></span>
+<span id="congesPayes">-</span>
+</div>
+<div class="result-line" data-options="">
+<span><u>Options supplémentaires :</u></span>
+<span id="optionsDetail">-</span>
+</div>
+<div class="result-line">
+<span><u>Sous-total HT :</u></span>
+<span id="subtotalHT">-</span>
+</div>
+
+<div class="result-line" style="font-size: 1.4em; font-weight: bold;">
+<span>Total HT</span>
+<span id="totalHT">-</span>
+</div>
+<div class="price-highlight">
+<div class="final-price" id="finalPrice">-</div>
+<div class="credit-info">Prix final après crédit d'impôt 50%**</div>
+</div>
+<div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666;">
+                    ** Sous réserve d'éligibilité aux services à la personne
+                </div>
+<div style="margin-top: 20px; padding: 15px; background-color: #e8f4fd; border: 2px solid #0c5460; border-radius: 8px; text-align: center;">TVA non applicable, article 293 B du CGI<br/><small>Micro-entrepreneur en franchise en base de TVA</small></div></div>
+</div>
+</div>
+<script>
+const serviceSelect = document.getElementById('service');
+const hoursInput = document.getElementById('hours');
+const hoursGroup = document.getElementById('hoursGroup');
+const tripsInput = document.getElementById('trips');
+const parkingDaysInput = document.getElementById('parking_days');
+const parkingInputDiv = document.getElementById('parkingInput');
+const materialsCheck = document.getElementById('materials');
+const disclaimerCheck = document.getElementById('disclaimer');
+const resultContainer = document.getElementById('resultContainer');
+const devisAlert = document.getElementById('devisAlert');
+
+const TRIP_COST = 30;
+const CREDIT_RATE = 0.50;
+
+function validateField(element, isValid) {
+    if (isValid) {
+        element.classList.remove('error-field');
+        element.classList.add('success-field');
+    } else {
+        element.classList.remove('success-field');
+        element.classList.add('error-field');
+    }
+}
+
+function validateOption(element, isValid) {
+    if (isValid) {
+        element.classList.remove('error-option');
+        element.classList.add('success-option');
+    } else {
+        element.classList.remove('success-option');
+        element.classList.add('error-option');
+    }
+}
+
+function validateCheckbox(element, isValid) {
+    if (isValid) {
+        element.classList.remove('error-checkbox');
+        element.classList.add('success-checkbox');
+    } else {
+        element.classList.remove('success-checkbox');
+        element.classList.add('error-checkbox');
+    }
+}
+
+function validateDisclaimerBlock() {
+    const disclaimerContainer = document.getElementById('disclaimerContainer');
+    const calculatorForm = document.getElementById('calculatorForm');
+    
+    if (disclaimerCheck.checked) {
+        disclaimerContainer.classList.remove('disclaimer-error');
+        disclaimerContainer.classList.add('disclaimer-success');
+        
+        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+        if (selectedOption && selectedOption.dataset.special === 'devis') {
+            return;
+        }
+        
+        calculatorForm.style.opacity = '1';
+        calculatorForm.style.pointerEvents = 'auto';
+    } else {
+        disclaimerContainer.classList.remove('disclaimer-success');
+        disclaimerContainer.classList.add('disclaimer-error');
+        
+        calculatorForm.style.opacity = '0.5';
+        calculatorForm.style.pointerEvents = 'none';
+    }
+}
+
+function applyGlobalValidation() {
+    if (hoursGroup.style.display !== 'none') {
+        const hours = parseInt(hoursInput.value) || 0;
+        validateField(hoursInput, hours >= 1);
+    }
+    
+    const trips = parseInt(tripsInput.value) || 0;
+    validateField(tripsInput, trips >= 1);
+    
+    const parkingValue = document.querySelector('input[name="parking"]:checked')?.value;
+    if (parkingValue === 'oui') {
+        parkingInputDiv.style.display = 'block';
+        const parkingDays = parseInt(parkingDaysInput.value) || 0;
+        validateField(parkingDaysInput, parkingDays >= 1);
+    } else {
+        parkingInputDiv.style.display = 'none';
+        parkingDaysInput.classList.remove('error-field', 'success-field');
+    }
+    
+    const radioGroups = ['evening', 'difficult_access', 'parking', 'cleaning', 'waste_removal', 'long_distance'];
+    radioGroups.forEach(groupName => {
+        const selectedValue = document.querySelector(`input[name="${groupName}"]:checked`)?.value;
+        const optionElement = document.querySelector(`input[name="${groupName}"]`).closest('.option-item');
+        const isValid = selectedValue !== '-';
+        validateOption(optionElement, isValid);
+    });
+    
+    validateCheckbox(document.getElementById('materialsCheckbox'), materialsCheck.checked);
+    validateCheckbox(document.getElementById('disclaimerCheckbox'), disclaimerCheck.checked);
+    
+    const disclaimerContainer = document.getElementById('disclaimerContainer');
+    if (disclaimerCheck.checked) {
+        disclaimerContainer.classList.remove('error-checkbox');
+        disclaimerContainer.classList.add('success-checkbox');
+    } else {
+        disclaimerContainer.classList.remove('success-checkbox');
+        disclaimerContainer.classList.add('error-checkbox');
+    }
+}
+
+function updateCalculation() {
+    const serviceValid = serviceSelect.value !== "";
+    validateField(serviceSelect, serviceValid);
+
+    if (!serviceValid) {
+        resultContainer.style.display = 'none';
+        devisAlert.style.display = 'none';
+        return;
+    }
+
+    applyGlobalValidation();
+
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+
+    if (selectedOption.dataset.special === 'devis') {
+        devisAlert.style.display = 'block';
+        resultContainer.style.display = 'none';
+        
+        if (!disclaimerCheck.checked) {
+            return;
+        }
+        
+        const formElements = document.querySelectorAll('#calculatorForm input, #calculatorForm select, #calculatorForm .option-item, #calculatorForm .materials-container');
+        formElements.forEach(element => {
+            element.style.opacity = '0.5';
+            element.style.pointerEvents = 'none';
+        });
+        
+        return;
+    } else {
+        devisAlert.style.display = 'none';
+        
+        if (!disclaimerCheck.checked) {
+            return;
+        }
+        
+        const formElements = document.querySelectorAll('#calculatorForm input, #calculatorForm select, #calculatorForm .option-item, #calculatorForm .materials-container');
+        formElements.forEach(element => {
+            element.style.opacity = '1';
+            element.style.pointerEvents = 'auto';
+        });
+    }
+
+    calculatePriceNormal();
+}
+
+function calculatePriceNormal() {
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+    const hourlyRate = parseFloat(selectedOption.dataset.rate);
+    const hours = parseInt(hoursInput.value) || 0;
+    const trips = parseInt(tripsInput.value) || 0;
+
+    // Vérifier que les champs numériques sont valides
+    if (hours === 0 || trips === 0) {
+        resultContainer.style.display = 'none';
+        return;
+    }
+
+    const eveningValue = document.querySelector('input[name="evening"]:checked')?.value || '-';
+    const difficultAccessValue = document.querySelector('input[name="difficult_access"]:checked')?.value || '-';
+    const parkingValue = document.querySelector('input[name="parking"]:checked')?.value || '-';
+    const cleaningValue = document.querySelector('input[name="cleaning"]:checked')?.value || '-';
+    const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || '-';
+    const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || '-';
+
+    // VALIDATION COMPLÈTE : vérifier que TOUTES les options radio sont renseignées (pas "-")
+    if (eveningValue === '-' || difficultAccessValue === '-' || parkingValue === '-' || 
+        cleaningValue === '-' || wasteRemovalValue === '-' || longDistanceValue === '-') {
+        resultContainer.style.display = 'none';
+        return;
+    }
+
+    // Vérifier que les checkboxes sont cochées
+    if (!materialsCheck.checked || !disclaimerCheck.checked) {
+        resultContainer.style.display = 'none';
+        return;
+    }
+
+    // Si parking est "oui", vérifier que le nombre de jours est renseigné
+    if (parkingValue === 'oui') {
+        const parkingDays = parseInt(parkingDaysInput.value) || 0;
+        if (parkingDays === 0) {
+            resultContainer.style.display = 'none';
+            return;
+        }
+    }
+
+    // Gestion affichage parking
+    if (parkingValue === 'oui') {
+        parkingInputDiv.style.display = 'block';
+    } else {
+        parkingInputDiv.style.display = 'none';
+    }
+
+    // TOUTES LES VALIDATIONS SONT OK, on peut calculer le prix
+    let finalHourlyRate = hourlyRate;
+    let optionsText = [];
+    let optionsCostHT = 0;
+
+    if (eveningValue === 'oui') {
+        finalHourlyRate = hourlyRate * 1.20;
+        optionsText.push('Intervention soirée (+20% sur le prix HT)');
+    }
+
+    if (difficultAccessValue === 'oui') {
+        optionsCostHT += 15;
+        optionsText.push('Accès difficile (+15€ HT)');
+    }
+
+    if (cleaningValue === 'oui') {
+        optionsCostHT += 15;
+        optionsText.push('Nettoyage (+15€ HT)');
+    }
+
+    if (wasteRemovalValue === 'oui') {
+        optionsCostHT += 20;
+        optionsText.push('Évacuation déchets (+20€ HT)');
+    }
+
+    if (parkingValue === 'oui') {
+        const parkingDays = parseInt(parkingDaysInput.value) || 0;
+        if (parkingDays > 0) {
+            const parkingCost = parkingDays * 5;
+            optionsCostHT += parkingCost;
+            optionsText.push(`Parking payant (${parkingDays} utilisation${parkingDays > 1 ? 's' : ''}: +${parkingCost}€ HT)`);
+        }
+    }
+
+    if (longDistanceValue === 'oui') {
+        optionsCostHT += 30;
+        optionsText.push('Longue distance (+30€ HT)');
+    }
+
+    const hoursCostHT = finalHourlyRate * hours;
+    const congesPayes = hoursCostHT * 0.10;
+    const tripsCostHT = 30 * trips;
+    const totalHT = hoursCostHT + congesPayes + tripsCostHT + optionsCostHT;
+    const finalPrice = totalHT * CREDIT_RATE;
+
+    document.getElementById('selectedService').textContent = selectedOption.text;
+    document.getElementById('baseHourlyRate').textContent = `${hourlyRate.toFixed(2)}€/h HT`;
+    
+    if (eveningValue === 'oui') {
+        document.getElementById('hourlyRate').textContent = `${finalHourlyRate.toFixed(2)}€/h HT (base + 20% sur le prix HT)`;
+    } else {
+        document.getElementById('hourlyRate').textContent = `${finalHourlyRate.toFixed(2)}€/h HT`;
+    }
+    
+    document.getElementById('duration').textContent = `${hours}h`;
+    document.getElementById('tripsCount').textContent = trips === 1 ? 
+        `${trips} déplacement × 30€ = ${tripsCostHT}€ HT` : 
+        `${trips} déplacements × 30€ = ${tripsCostHT}€ HT`;
+    document.getElementById('congesPayes').textContent = `${congesPayes.toFixed(2)}€`;
+    document.getElementById('optionsDetail').textContent = optionsText.length > 0 ? optionsText.join(' • ') : 'Aucune';
+    document.getElementById('subtotalHT').textContent = `${totalHT.toFixed(2)}€`;
+    document.getElementById('totalHT').textContent = `${totalHT.toFixed(2)}€`;
+    document.getElementById('finalPrice').textContent = `${finalPrice.toFixed(2)}€`;
+
+    resultContainer.style.display = 'block';
+}
+
+serviceSelect.addEventListener('change', updateCalculation);
+hoursInput.addEventListener('input', updateCalculation);
+tripsInput.addEventListener('input', updateCalculation);
+parkingDaysInput.addEventListener('input', updateCalculation);
+materialsCheck.addEventListener('change', updateCalculation);
+disclaimerCheck.addEventListener('change', updateCalculation);
+
+disclaimerCheck.addEventListener('change', validateDisclaimerBlock);
+
+const radioInputs = document.querySelectorAll('input[type="radio"]');
+radioInputs.forEach(input => {
+    input.addEventListener('change', updateCalculation);
+});
+
+validateDisclaimerBlock();
+updateCalculation();
+</script>
+<!-- Bouton Contact -->
+<div id="contactButtonContainer" style="
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 999;
+  display: none;
+">
+  <div id="contactButtons" style="
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+  ">
+  </div>
+</div>
+
+<script>
+// Détection du type de device et affichage du bouton contact
+function initContactButton() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const container = document.getElementById('contactButtonContainer');
+  const buttonsDiv = document.getElementById('contactButtons');
+  
+  // Déterminer si on est sur devis-premium ou devis-zen
+  const isPremium = document.title.includes('PREMIUM');
+  const formulaType = isPremium ? 'PREMIUM' : 'ZEN';
+  
+  // Messages pré-remplis
+  const emailSubject = encodeURIComponent(`Demande de contact suite au devis ${formulaType} réalisé sur Nico-LA`);
+  const emailBody = encodeURIComponent(`Bonjour Nico,
+
+J'ai réalisé une estimation sur votre calculateur de devis ${formulaType} et le tarif proposé correspond à mon budget.
+
+Je souhaiterais discuter plus en détail de mon projet avec vous afin d'organiser une intervention.
+
+Pourriez-vous me recontacter à votre convenance pour convenir d'un rendez-vous ?
+
+Merci d'avance pour votre retour.
+
+Cordialement`);
+  
+  const smsText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de devis ${formulaType}. Le prix me convient, pouvons-nous échanger sur mon projet ?`);
+  
+  const whatsappText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de devis ${formulaType}. Le prix me convient, pouvons-nous échanger sur mon projet ?`);
+  
+  const buttonStyle = `
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.95em;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Belleza', sans-serif;
+min-width: 220px;
+    justify-content: center;
+  `;
+  
+  if (isMobile) {
+    // Mobile : 4 boutons (Tel, Email, WhatsApp, SMS)
+    buttonsDiv.innerHTML = `
+      <a href="tel:+33614417061" style="${buttonStyle}" 
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+        📞 Appeler Nico
+      </a>
+      <a href="mailto:nicolas.szczot@gmail.com?subject=${emailSubject}&body=${emailBody}" style="${buttonStyle}"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+        📧 Envoyer un Email
+      </a>
+      <a href="https://wa.me/33614417061?text=${whatsappText}" target="_blank" style="${buttonStyle}"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+        💬 WhatsApp
+      </a>
+      <a href="sms:+33614417061&body=${smsText}" style="${buttonStyle}"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+        📲 SMS
+      </a>
+    `;
+  } else {
+    // Desktop : 2 boutons (Email, Formulaire)
+    buttonsDiv.innerHTML = `
+      <a href="mailto:nicolas.szczot@gmail.com?subject=${emailSubject}&body=${emailBody}" style="${buttonStyle}"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+        📧 Envoyer un Email
+      </a>
+      <a href="https://nico-la-contact.carrd.co/" target="_blank" style="${buttonStyle}"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+        🌐 Formulaire de Contact
+      </a>
+    `;
+  }
+  
+  // Afficher le bouton uniquement si le résultat est visible
+  const observer = new MutationObserver(function(mutations) {
+    const resultContainer = document.getElementById('resultContainer');
+    if (resultContainer && resultContainer.style.display === 'block') {
+      container.style.display = 'block';
+    } else {
+      container.style.display = 'none';
+    }
+  });
+  
+  const resultContainer = document.getElementById('resultContainer');
+  if (resultContainer) {
+    observer.observe(resultContainer, { attributes: true, attributeFilter: ['style'] });
+  }
+}
+
+// Initialiser au chargement
+document.addEventListener('DOMContentLoaded', initContactButton);
+</script>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/68dedba2243dae1952fee658/1j6j8jukp';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>
