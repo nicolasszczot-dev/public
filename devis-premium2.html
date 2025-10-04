@@ -36,7 +36,7 @@ body {
 .calculator-container {
     max-width: 650px;
     margin: 0 auto;
-    margin-left: 150px;
+    
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
@@ -85,7 +85,7 @@ body {
     border-radius: 8px;
     font-size: 1em;
     font-family: "Belleza", sans-serif;
-    transition: all 0.3s ease;
+   transition: all 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .form-control:focus {
@@ -123,7 +123,7 @@ select.form-control {
     padding: 15px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
     background-color: #fff;
 }
 
@@ -166,7 +166,7 @@ select.form-control {
 }
 
 .option-detail {
-    color: #666;
+    color: #333;
     font-style: italic;
     display: block;
     margin-top: 3px;
@@ -255,32 +255,38 @@ select.form-control {
     border-color: #dc3545 !important;
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
     background-color: #fff5f5 !important;
+    transition: all 0.3s ease !important;
 }
 
 .success-field {
     border-color: #28a745 !important;
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15) !important;
     background-color: #f8fff8 !important;
+    transition: all 0.3s ease !important;
 }
 
 .error-checkbox, .error-option {
     background-color: #f8d7da !important;
     border-color: #dc3545 !important;
+    transition: all 0.3s ease !important;
 }
 
 .success-checkbox, .success-option {
     background-color: #d4edda !important;
     border-color: #28a745 !important;
+    transition: all 0.3s ease !important;
 }
 
 .disclaimer-error {
     background-color: #ff9999 !important;
     border-color: #dc3545 !important;
+    transition: all 0.3s ease !important;
 }
 
 .disclaimer-success {
     background-color: #d4edda !important;
     border-color: #28a745 !important;
+    transition: all 0.3s ease !important;
 }
 
 .alert {
@@ -306,6 +312,18 @@ select.form-control {
     margin-top: 30px;
     border: 2px solid #E3B100;
     display: none;
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .result-title {
@@ -390,6 +408,50 @@ select.form-control {
         font-size: 1.8em;
     }
 }
+
+.print-button {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    font-family: "Belleza", sans-serif;
+}
+
+.print-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .result-container, .result-container * {
+        visibility: visible;
+    }
+    .result-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+        border: 2px solid #000;
+    }
+    .print-button, #contactButtonContainer {
+        display: none !important;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -487,12 +549,12 @@ select.form-control {
                 <div class="input-group">
                     <div class="form-group" id="hoursGroup">
                         <label for="hours">Nombre d'heures estimées :</label>
-                        <input type="number" id="hours" class="form-control" min="1" step="1" value="" placeholder="Ex: 3" required>
+                        <input type="number" id="hours" class="form-control" min="1" step="1" value="" placeholder="Ex: 3" required title="Indiquez le nombre d'heures nécessaires (minimum 1h) selon vous" aria-label="Nombre d'heures estimées pour la prestation, minimum 1 heure">
                     </div>
                     
                     <div class="form-group">
                         <label for="trips">Nombre de déplacements chez le client :</label>
-                        <input type="number" id="trips" class="form-control" min="1" value="" placeholder="Ex: 1" required>
+                        <input type="number" id="trips" class="form-control" min="1" value="" placeholder="Ex: 1" required title="Nombre de fois où je devrai me déplacer chez vous" aria-label="Nombre de déplacements nécessaires, minimum 1">
                     </div>
                 </div>
 
@@ -614,6 +676,11 @@ select.form-control {
                 <div class="price-highlight">
                     <div class="final-price" id="finalPrice">-</div>
                     <div class="credit-info">Prix final après crédit d'impôt 50%**</div>
+                </div>
+                <div style="text-align: center;">
+                    <button class="print-button" onclick="window.print()" type="button">
+                        🖨️ Imprimer ce devis
+                    </button>
                 </div>
                 <div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666;">
                     ** Sous réserve d'éligibilité aux services à la personne
@@ -1069,11 +1136,12 @@ if (!existingVaeBlock) {
 <!-- Bouton Contact -->
 <div id="contactButtonContainer" style="
   position: relative;
-  margin: 20px auto;
+  margin: 30px auto;
   padding: 20px 0;
   z-index: 999;
   display: none;
-  max-width: 700px;
+  max-width: 650px;
+  text-align: center;
 ">
   <div id="contactButtons" style="
     display: flex;
@@ -1118,6 +1186,7 @@ Cordialement`);
   const buttonStyle = `
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     padding: 12px 20px;
     background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
@@ -1131,13 +1200,18 @@ Cordialement`);
     cursor: pointer;
     border: none;
     font-family: 'Belleza', sans-serif;
-  min-width: 220px;
-    justify-content: center;
+    width: 100%;
+          max-width: 280px;    
   `;
   
   if (isMobile) {
     // Mobile : 4 boutons (Tel, Email, WhatsApp, SMS)
     buttonsDiv.innerHTML = `
+<a href="https://nico-la-tarifs.carrd.co/" target="_blank" style="${buttonStyle}"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+        ← Retour page tarif
+      </a>
       <a href="tel:+33614417061" style="${buttonStyle}" 
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
@@ -1162,6 +1236,11 @@ Cordialement`);
   } else {
     // Desktop : 2 boutons (Email, Formulaire)
     buttonsDiv.innerHTML = `
+<a href="https://nico-la-tarifs.carrd.co/" target="_blank" style="${buttonStyle}"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+        ← Retour page tarif
+      </a>
       <a href="mailto:nicolas.szczot@gmail.com?subject=${emailSubject}&body=${emailBody}" style="${buttonStyle}"
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
@@ -1210,7 +1289,6 @@ s0.parentNode.insertBefore(s1,s0);
 </body>
 
 </html>
-
 
 
 
