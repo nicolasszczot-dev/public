@@ -964,21 +964,12 @@ function initContactButton() {
   
   // Messages pré-remplis
   const emailSubject = encodeURIComponent(`Demande de contact suite au devis ${formulaType} réalisé sur Nico-LA`);
-  const emailBody = encodeURIComponent(`Bonjour Nico,
-
-J'ai réalisé une estimation sur votre calculateur de devis ${formulaType} et le tarif proposé correspond à mon budget.
-
-Je souhaiterais discuter plus en détail de mon projet avec vous afin d'organiser une intervention.
-
-Pourriez-vous me recontacter à votre convenance pour convenir d'un rendez-vous ?
-
-Merci d'avance pour votre retour.
-
-Cordialement`);
+  const emailBody = encodeURIComponent(`Bonjour Nico, j'ai réalisé une estimation (hors fournitures) sur votre calculateur de devis ${formulaType} et je souhaiterais discuter avec vous de mon projet.
+ Pourriez-vous me recontacter? Merci d'avance pour votre retour. Cordialement.`);
   
-  const smsText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de devis ${formulaType}. Le prix me convient, pouvons-nous échanger sur mon projet ?`);
+  const smsText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de devis ${formulaType}. Pouvons-nous échanger sur mon projet ?`);
   
-  const whatsappText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de devis ${formulaType}. Le prix me convient, pouvons-nous échanger sur mon projet ?`);
+  const whatsappText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de devis ${formulaType}. Pouvons-nous échanger sur mon projet ?`);
   
   const buttonStyle = `
     display: inline-flex;
@@ -1089,6 +1080,7 @@ s0.parentNode.insertBefore(s1,s0);
 </body>
 
 </html>
+
 
 
 
