@@ -1132,9 +1132,58 @@ if (!existingVaeBlock) {
         radioInputs.forEach(input => {
             input.addEventListener('change', updateCalculation);
         });
-
-        validateDisclaimerBlock();
+validateDisclaimerBlock();
         updateCalculation();
+
+        // Fonction pour réinitialiser le calculateur
+        function resetCalculator() {
+            // Réinitialiser le formulaire
+            document.getElementById('calculatorForm').reset();
+            
+            // Réinitialiser les checkboxes
+            disclaimerCheck.checked = false;
+            materialsCheck.checked = false;
+            
+            // Réinitialiser toutes les options radio à "-"
+            const radioGroups = ['evening', 'difficult_access', 'parking', 'cleaning', 'waste_removal', 'long_distance'];
+            radioGroups.forEach(groupName => {
+                const defaultRadio = document.querySelector(`input[name="${groupName}"][value="-"]`);
+                if (defaultRadio) defaultRadio.checked = true;
+            });
+            
+            // Masquer les conteneurs et alertes
+            resultContainer.style.display = 'none';
+            vaeAlert.style.display = 'none';
+            devisAlert.style.display = 'none';
+            parkingInputDiv.style.display = 'none';
+            
+            // Retirer toutes les classes de validation
+            document.querySelectorAll('.error-field, .success-field').forEach(el => {
+                el.classList.remove('error-field', 'success-field');
+            });
+            document.querySelectorAll('.error-option, .success-option').forEach(el => {
+                el.classList.remove('error-option', 'success-option');
+            });
+            document.querySelectorAll('.error-checkbox, .success-checkbox').forEach(el => {
+                el.classList.remove('error-checkbox', 'success-checkbox');
+            });
+            
+            // Réinitialiser le bloc disclaimer
+            const disclaimerContainer = document.getElementById('disclaimerContainer');
+            disclaimerContainer.classList.remove('disclaimer-error', 'disclaimer-success');
+            
+            // Supprimer le bloc VAE spécial s'il existe
+            const existingVaeBlock = document.querySelector('.vae-disclaimer');
+            if (existingVaeBlock) {
+                existingVaeBlock.remove();
+            }
+            
+            // Réappliquer les validations initiales
+            validateDisclaimerBlock();
+            
+            // Scroll vers le haut
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 <!-- Bouton Contact -->
 <div id="contactButtonContainer" style="
@@ -1285,6 +1334,7 @@ s0.parentNode.insertBefore(s1,s0);
 </body>
 
 </html>
+
 
 
 
