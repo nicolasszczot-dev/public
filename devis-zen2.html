@@ -978,7 +978,8 @@ validateDisclaimerBlock();
             validateDisclaimerBlock();
             
             // Scroll vers le haut
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.body.scrollTop = 0; // Pour Safari
+            document.documentElement.scrollTop = 0; // Pour Chrome, Firefox, IE et Opera
         }
     </script>
 
@@ -1132,6 +1133,7 @@ s0.parentNode.insertBefore(s1,s0);
 </body>
 
 </html>
+
 
 
 
