@@ -507,11 +507,11 @@ select.form-control {
 </div>
 <div class="input-group">
 <div class="form-group" id="hoursGroup">
-<label for="hours">Nombre d'heures estimées :</label>
+<label for="hours">Estimation du nombre total d'heures nécessaires au chantier :</label>
 <input class="form-control" id="hours" min="1" placeholder="Ex: 3" required="" step="1" type="number" value="" title="Indiquez le nombre d'heures nécessaires (minimum 1h) selon vous" aria-label="Nombre d'heures estimées pour la prestation, minimum 1 heure"/>
 </div>
 <div class="form-group">
-<label for="trips">Nombre de déplacements chez le client :</label>
+<label for="trips">En combien de déplacements selon vous ?</label>
 <input class="form-control" id="trips" min="1" placeholder="Ex: 1" required="" type="number" value="" title="Nombre de fois où je devrai me déplacer chez vous" aria-label="Nombre de déplacements nécessaires, minimum 1"/>
 </div>
 </div>
@@ -806,7 +806,6 @@ function calculatePriceNormal() {
     const hours = parseInt(hoursInput.value) || 0;
     const trips = parseInt(tripsInput.value) || 0;
 
-    // Vérifier que les champs numériques sont valides
     if (hours === 0 || trips === 0) {
         resultContainer.style.display = 'none';
         return;
@@ -819,20 +818,17 @@ function calculatePriceNormal() {
     const wasteRemovalValue = document.querySelector('input[name="waste_removal"]:checked')?.value || '-';
     const longDistanceValue = document.querySelector('input[name="long_distance"]:checked')?.value || '-';
 
-    // VALIDATION COMPLÈTE : vérifier que TOUTES les options radio sont renseignées (pas "-")
     if (eveningValue === '-' || difficultAccessValue === '-' || parkingValue === '-' || 
         cleaningValue === '-' || wasteRemovalValue === '-' || longDistanceValue === '-') {
         resultContainer.style.display = 'none';
         return;
     }
 
-    // Vérifier que les checkboxes sont cochées
     if (!materialsCheck.checked || !disclaimerCheck.checked) {
         resultContainer.style.display = 'none';
         return;
     }
 
-    // Si parking est "oui", vérifier que le nombre de jours est renseigné
     if (parkingValue === 'oui') {
         const parkingDays = parseInt(parkingDaysInput.value) || 0;
         if (parkingDays === 0) {
@@ -841,14 +837,12 @@ function calculatePriceNormal() {
         }
     }
 
-    // Gestion affichage parking
     if (parkingValue === 'oui') {
         parkingInputDiv.style.display = 'block';
     } else {
         parkingInputDiv.style.display = 'none';
     }
 
-    // TOUTES LES VALIDATIONS SONT OK, on peut calculer le prix
     let finalHourlyRate = hourlyRate;
     let optionsText = [];
     let optionsCostHT = 0;
@@ -930,60 +924,49 @@ radioInputs.forEach(input => {
 });
 
 validateDisclaimerBlock();
-        updateCalculation();
+updateCalculation();
 
-        // Fonction pour réinitialiser le calculateur
-        function resetCalculator() {
-            // Réinitialiser le formulaire
-            document.getElementById('calculatorForm').reset();
-            
-            // Réinitialiser les checkboxes
-            disclaimerCheck.checked = false;
-            materialsCheck.checked = false;
-            
-            // Réinitialiser toutes les options radio à "-"
-            const radioGroups = ['evening', 'difficult_access', 'parking', 'cleaning', 'waste_removal', 'long_distance'];
-            radioGroups.forEach(groupName => {
-                const defaultRadio = document.querySelector(`input[name="${groupName}"][value="-"]`);
-                if (defaultRadio) defaultRadio.checked = true;
-            });
-            
-            // Masquer les conteneurs et alertes
-            resultContainer.style.display = 'none';
-            devisAlert.style.display = 'none';
-            parkingInputDiv.style.display = 'none';
-            
-            // Retirer toutes les classes de validation
-            document.querySelectorAll('.error-field, .success-field').forEach(el => {
-                el.classList.remove('error-field', 'success-field');
-            });
-            document.querySelectorAll('.error-option, .success-option').forEach(el => {
-                el.classList.remove('error-option', 'success-option');
-            });
-            document.querySelectorAll('.error-checkbox, .success-checkbox').forEach(el => {
-                el.classList.remove('error-checkbox', 'success-checkbox');
-            });
-            
-            // Réinitialiser le bloc disclaimer
-            const disclaimerContainer = document.getElementById('disclaimerContainer');
-            disclaimerContainer.classList.remove('disclaimer-error', 'disclaimer-success');
-            
-            // Supprimer le bloc VAE spécial s'il existe
-            const existingVaeBlock = document.querySelector('.vae-disclaimer');
-            if (existingVaeBlock) {
-                existingVaeBlock.remove();
-            }
-            
-            // Réappliquer les validations initiales
-            validateDisclaimerBlock();
-            
-            // Scroll vers le haut
-            document.body.scrollTop = 0; // Pour Safari
-            document.documentElement.scrollTop = 0; // Pour Chrome, Firefox, IE et Opera
-        }
-    </script>
+function resetCalculator() {
+    document.getElementById('calculatorForm').reset();
+    
+    disclaimerCheck.checked = false;
+    materialsCheck.checked = false;
+    
+    const radioGroups = ['evening', 'difficult_access', 'parking', 'cleaning', 'waste_removal', 'long_distance'];
+    radioGroups.forEach(groupName => {
+        const defaultRadio = document.querySelector(`input[name="${groupName}"][value="-"]`);
+        if (defaultRadio) defaultRadio.checked = true;
+    });
+    
+    resultContainer.style.display = 'none';
+    devisAlert.style.display = 'none';
+    parkingInputDiv.style.display = 'none';
+    
+    document.querySelectorAll('.error-field, .success-field').forEach(el => {
+        el.classList.remove('error-field', 'success-field');
+    });
+    document.querySelectorAll('.error-option, .success-option').forEach(el => {
+        el.classList.remove('error-option', 'success-option');
+    });
+    document.querySelectorAll('.error-checkbox, .success-checkbox').forEach(el => {
+        el.classList.remove('error-checkbox', 'success-checkbox');
+    });
+    
+    const disclaimerContainer = document.getElementById('disclaimerContainer');
+    disclaimerContainer.classList.remove('disclaimer-error', 'disclaimer-success');
+    
+    const existingVaeBlock = document.querySelector('.vae-disclaimer');
+    if (existingVaeBlock) {
+        existingVaeBlock.remove();
+    }
+    
+    validateDisclaimerBlock();
+    
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+</script>
 
-<!-- Bouton Contact -->
 <div id="contactButtonContainer" style="
   position: relative;
   margin: 30px auto;
@@ -1005,31 +988,27 @@ validateDisclaimerBlock();
 </div>
 
 <script>
-// Détection du type de device et affichage du bouton contact
 function initContactButton() {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const container = document.getElementById('contactButtonContainer');
   const buttonsDiv = document.getElementById('contactButtons');
   
-  // Déterminer si on est sur devis-premium ou devis-zen
   const isPremium = document.title.includes('PREMIUM');
   const formulaType = isPremium ? 'PREMIUM' : 'ZEN';
   
-  // Messages pré-remplis
-  const emailSubject = encodeURIComponent(`Demande de contact suite au devis ${formulaType} réalisé sur Nico-LA`);
-  const emailBody = encodeURIComponent(`Bonjour Nico, j'ai réalisé une estimation (hors fournitures) sur votre calculateur de devis ${formulaType} et je souhaiterais discuter avec vous de mon projet.
- Pourriez-vous me recontacter? Merci d'avance pour votre retour. Cordialement.`);
+  const emailSubject = `Demande de contact suite au devis ${formulaType} realise sur Nico-LA`;
+  const emailBody = `Bonjour Nico, j'ai realise une estimation (hors fournitures) sur votre calculateur de devis ${formulaType} et je souhaiterais discuter avec vous de mon projet. Pourriez-vous me recontacter? Merci d'avance pour votre retour. Cordialement.`;
   
-  const smsText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de devis ${formulaType}. Pouvons-nous échanger sur mon projet ?`);
+  const smsText = encodeURIComponent(`Bonjour Nico, j'ai utilise votre calculateur de devis ${formulaType}. Pouvons-nous echanger sur mon projet ?`);
   
-  const whatsappText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de devis ${formulaType}. Pouvons-nous échanger sur mon projet ?`);
+  const whatsappText = encodeURIComponent(`Bonjour Nico, j'ai utilise votre calculateur de devis ${formulaType}. Pouvons-nous echanger sur mon projet ?`);
   
   const buttonStyle = `
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 20px;
+    padding: 15px 20px;
     background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
     color: white;
     text-decoration: none;
@@ -1043,10 +1022,10 @@ function initContactButton() {
     font-family: 'Belleza', sans-serif;
     width: 100%;
     max-width: 280px;
+    min-height: 52px;
   `;
   
   if (isMobile) {
-    // Mobile : 4 boutons (Tel, Email, WhatsApp, SMS)
     buttonsDiv.innerHTML = `
 <a href="https://nico-la-tarifs.carrd.co/" target="_blank" style="${buttonStyle}"
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
@@ -1058,7 +1037,7 @@ function initContactButton() {
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
         📱 Appeler Nico
       </a>
-      <a href="mailto:nicolas.szczot@gmail.com?subject=${emailSubject}&body=${emailBody}" style="${buttonStyle}"
+      <a href="mailto:nicolas.szczot@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}" style="${buttonStyle}"
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
         ✉️ Envoyer un Email
@@ -1070,21 +1049,20 @@ function initContactButton() {
 <path fill="#fff" d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"></path><path fill="#fff" d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"></path><path fill="#cfd8dc" d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"></path><path fill="#40c351" d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"></path><path fill="#fff" fill-rule="evenodd" d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z" clip-rule="evenodd"></path>
 </svg> WhatsApp
       </a>
-      <a href="sms:+33614417061&body=${smsText}" style="${buttonStyle}"
+      <a href="sms:+33614417061?body=${smsText}" style="${buttonStyle}"
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
         💬 SMS
       </a>
     `;
   } else {
-    // Desktop : 2 boutons (Email, Formulaire)
     buttonsDiv.innerHTML = `
 <a href="https://nico-la-tarifs.carrd.co/" target="_blank" style="${buttonStyle}"
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
         ← Retour page tarif
       </a>
-      <a href="mailto:nicolas.szczot@gmail.com?subject=${emailSubject}&body=${emailBody}" style="${buttonStyle}"
+      <a href="mailto:nicolas.szczot@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}" style="${buttonStyle}"
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
         ✉️ Envoyer un Email
@@ -1097,7 +1075,6 @@ function initContactButton() {
     `;
   }
   
-  // Afficher le bouton uniquement si le résultat est visible
   const observer = new MutationObserver(function(mutations) {
     const resultContainer = document.getElementById('resultContainer');
     if (resultContainer && resultContainer.style.display === 'block') {
@@ -1113,11 +1090,9 @@ function initContactButton() {
   }
 }
 
-// Initialiser au chargement
 document.addEventListener('DOMContentLoaded', initContactButton);
 </script>
 
-<!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 (function(){
@@ -1129,33 +1104,5 @@ s1.setAttribute('crossorigin','*');
 s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
-<!--End of Tawk.to Script-->
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
