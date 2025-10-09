@@ -87,13 +87,12 @@ select.form-control {
 
 .input-group {
     display: flex;
+    flex-direction: column;
     gap: 15px;
-    flex-wrap: wrap;
 }
 
 .input-group .form-group {
-    flex: 1;
-    min-width: 200px;
+    width: 100%;
 }
 
 .options-grid {
@@ -380,14 +379,6 @@ select.form-control {
 
     #contactButtons {
         flex-direction: column !important;
-    }
-    
-    .input-group {
-        flex-direction: column;
-    }
-    
-    .input-group .form-group {
-        min-width: 100%;
     }
     
     .calculator-header h1 {
