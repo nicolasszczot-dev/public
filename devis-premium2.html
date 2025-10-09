@@ -1233,9 +1233,9 @@ function initContactButton() {
   const isPremium = document.title.includes('PREMIUM');
   const formulaType = isPremium ? 'PREMIUM' : 'ZEN';
   
-  // Messages pré-remplis
- const emailSubject = `Demande de contact suite au devis ${formulaType} réalisé sur Nico-LA`;
-  const emailBody = `Bonjour Nico, j'ai réalisé une estimation (hors fournitures) sur votre calculateur de devis ${formulaType} et je souhaiterais discuter avec vous de mon projet. Pourriez-vous me recontacter? Merci d'avance pour votre retour. Cordialement.`;
+  // Messages pré-remplis - CORRECTION: encoder séparément subject et body
+const emailSubject = encodeURIComponent(`Demande de contact suite au devis ${formulaType} réalisé sur Nico-LA`);
+const emailBody = encodeURIComponent(`Bonjour Nico, j'ai réalisé une estimation (hors fournitures) sur votre calculateur de devis ${formulaType} et je souhaiterais discuter avec vous de mon projet. Pourriez-vous me recontacter? Merci d'avance pour votre retour. Cordialement.`);
   
   const smsText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de devis ${formulaType}. Pouvons-nous échanger sur mon projet ?`);
   
@@ -1275,7 +1275,7 @@ function initContactButton() {
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
         📱 Appeler Nico
       </a>
-      <a href="mailto:nicolas.szczot@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}" style="${buttonStyle}"
+      <a href="mailto:nicolas.szczot@gmail.com?subject=${emailSubject}&body=${emailBody}"
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
         ✉️ Envoyer un Email
@@ -1301,7 +1301,7 @@ function initContactButton() {
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
         ← Retour page tarif
       </a>
-      <a href="mailto:nicolas.szczot@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}" style="${buttonStyle}"
+      <a href="mailto:nicolas.szczot@gmail.com?subject=${emailSubject}&body=${emailBody}"
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
         ✉️ Envoyer un Email
@@ -1349,6 +1349,7 @@ s0.parentNode.insertBefore(s1,s0);
 </body>
 
 </html>
+
 
 
 
