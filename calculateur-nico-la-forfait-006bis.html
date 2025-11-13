@@ -1073,7 +1073,7 @@ input.quantity-input[type=number] {
             CALCULATEUR<sup style="font-size: 0.5em; margin-left: 5px;"><span class="tooltip-icon">ℹ
                 <span class="tooltip-text">Votre estimation personnalisée pour des prestations individuelles 😃! Montage mobilier, fixations, électricité, et bien plus...</span>
             </span></sup>
-            À LA CARTE
+            AU FORFAIT
         </h1>
     </div>
     
@@ -3541,12 +3541,12 @@ function showContactButtons() {
   const buttonsDiv = document.getElementById('contactButtonContainer');
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   
-  const emailSubject = encodeURIComponent('Demande de renseignements - Calculateur Nico-LA "A la Carte"');
-  const emailBody = encodeURIComponent(`Bonjour Nico, j'ai réalisé une estimation sur votre calculateur de tarif "À la Carte" et je souhaiterais discuter avec vous de mon projet. Pourriez-vous me recontacter? Merci d'avance pour votre retour. Cordialement.`);
+  const emailSubject = encodeURIComponent('Demande de renseignements - Calculateur Nico-LA "Au forfait"');
+  const emailBody = encodeURIComponent(`Bonjour Nico, j'ai réalisé une estimation sur votre calculateur de tarif "Au forfait" et je souhaiterais discuter avec vous de mon projet. Pourriez-vous me recontacter? Merci d'avance pour votre retour. Cordialement.`);
   
-  const smsText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de tarif "À la Carte". Pouvons-nous échanger sur mon projet ?`);
+  const smsText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de tarif "Au forfait". Pouvons-nous échanger sur mon projet ?`);
   
-  const whatsappText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de tarif "À la Carte". Pouvons-nous échanger sur mon projet ?`);
+  const whatsappText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de tarif "Au forfait". Pouvons-nous échanger sur mon projet ?`);
   
   const buttonStyle = `
     display: inline-flex;
@@ -3626,7 +3626,7 @@ function showContactButtons() {
 
 // Fonction pour réinitialiser le calculateur
 function resetCalculator() {
-    if (confirm('Voulez-vous vraiment faire un nouveau tarif "À la Carte" ?')) {
+    if (confirm('Voulez-vous vraiment faire un nouveau tarif "Au forfait" ?')) {
         location.reload(true);
     }
 }
@@ -4512,3 +4512,4 @@ function addSelectedToCart() {
 </script>
 
 </body></html>
+
