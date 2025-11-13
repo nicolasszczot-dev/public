@@ -1020,7 +1020,7 @@ input.quantity-input[type=number] {
   </div>
 </div>
 
-<div class="popup-overlay show" id="popupOverlay"></div>
+<div class="popup-overlay" id="popupOverlay"></div>
 
 <div class="success-popup" id="successPopup">
     <button class="popup-close" id="closePopup">×</button>
@@ -1078,9 +1078,9 @@ input.quantity-input[type=number] {
     </div>
     
     <div class="calculator-body">
-        <div class="disclaimer-note" style="background-color: rgb(212, 237, 218); border-color: rgb(40, 167, 69); border-width: 3px; opacity: 0.6; pointer-events: none;">
+        <div class="disclaimer-note">
             
-            <div class="disclaimer-checkbox validated" id="checkbox1Container">
+            <div class="disclaimer-checkbox" id="checkbox1Container">
                 <label for="disclaimer">
                     <span>Je comprends que ce prix sera uniquement <strong><em>estimatif.</em></strong></span>
                     <span class="tooltip-icon">ℹ
@@ -1089,11 +1089,11 @@ estimation devrait être proche du prix final, elle devra néanmoins être
 contrôlée et ajustée si nécessaire par l'auteur des travaux. Merci de 
 votre compréhension.</span>
                     </span>
-                    <input type="checkbox" id="disclaimer" autocomplete="off" disabled="disabled" checked="checked">
+                    <input type="checkbox" id="disclaimer" autocomplete="off">
                 </label>
             </div>
             
-            <div class="disclaimer-checkbox validated" id="checkbox2Container" style="opacity: 1; pointer-events: auto;">
+            <div class="disclaimer-checkbox" id="checkbox2Container">
                 <label for="materials_understood">
                     <span>Si matériel acheté → Matériel facturé prix coûtant.<br>J'ai compris.</span>
                     <span class="tooltip-icon">ℹ
@@ -1104,29 +1104,29 @@ fournitures, du matériel ou des produits nécessaires à l'intervention.
 Ces éléments sont donc facturés à leur prix coûtant, sans aucune marge, 
 conformément à la réglementation en vigueur.</span>
                     </span>
-                    <input type="checkbox" id="materials_understood" autocomplete="off" disabled="disabled" checked="checked">
+                    <input type="checkbox" id="materials_understood" autocomplete="off">
                 </label>
             </div>
             
             <div style="margin: 20px 0; text-align: center;">
-                <input class="form-control validated" id="userNom" name="user_name_field_unique" placeholder="Nom *" required="" type="text" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" style="opacity: 0.5; cursor: not-allowed;" disabled="disabled" value="ss">
-                <button class="print-button" id="okNomBtn" type="button" style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;" disabled="disabled">
+                <input class="form-control" id="userNom" name="user_name_field_unique" placeholder="Nom *" required="" type="text" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false">
+                <button class="print-button" id="okNomBtn" type="button" style="margin: 10px auto; display: block;">
                     OK, continuer
                 </button>
                 
-                <input class="form-control validated" id="userEmail" name="user_email_field_unique" placeholder="Email *" required="" type="email" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" style="opacity: 0.5; cursor: not-allowed;" disabled="disabled" value="ss@ss.fr">
-                <button class="print-button" id="okEmailBtn" type="button" style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;" disabled="disabled">
+                <input class="form-control" id="userEmail" name="user_email_field_unique" placeholder="Email *" required="" type="email" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false">
+                <button class="print-button" id="okEmailBtn" type="button" style="margin: 10px auto; display: block;">
                     OK, continuer
                 </button>
                 
                 <div id="phoneContainer" style="display: flex; gap: 5px; justify-content: center; align-items: center; max-width: 400px; margin: 5px auto;">
-                    <select class="form-control" id="countryCode" autocomplete="off" style="width: 100px; opacity: 1; cursor: pointer;" disabled="disabled">
+                    <select class="form-control" id="countryCode" autocomplete="off" style="width: 100px;">
                         <option value="+33" selected="selected">🇫🇷 +33</option>
                         <option value="+41">🇨🇭 +41</option>
                     </select>
-                    <input class="form-control validated" id="userTelephone" name="user_phone_field_unique" placeholder="Numéro(fixe/mobile) avec ou sans le 0 *" required="" type="tel" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" style="flex: 1 1 0%; opacity: 1; cursor: text;" disabled="disabled" value="666666666">
+                    <input class="form-control" id="userTelephone" name="user_phone_field_unique" placeholder="Numéro(fixe/mobile) avec ou sans le 0 *" required="" type="tel" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" style="flex: 1 1 0%;">
                 </div>
-                <button class="print-button" id="okTelephoneBtn" type="button" style="opacity: 1; cursor: pointer; margin: 10px auto; display: block; background: linear-gradient(135deg, rgb(40, 167, 69) 0%, rgb(32, 132, 58) 100%);" disabled="disabled">✓ Validé</button>
+                <button class="print-button" id="okTelephoneBtn" type="button" style="margin: 10px auto; display: block;">OK, continuer</button>
             </div>
             
             <p class="reassurance-text">
@@ -1146,7 +1146,7 @@ seront utilisées que pour créer un dossier à votre nom. *: obligatoire.
     </button>
 </div>
 
-<div class="prestations-modal show" id="prestationsModal">
+<div class="prestations-modal" id="prestationsModal">
     <div class="modal-header">
         <h2>📋 Mes Prestations</h2>
         <button class="modal-close" id="closePrestationsModal">×</button>
