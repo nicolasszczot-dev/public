@@ -1,0 +1,4508 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculateur de Tarifs - Nico-LA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Belleza:wght@400&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Belleza", sans-serif;
+    background-color: #f0f4f7;
+    color: #000000;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.calculator-container {
+    max-width: 650px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    overflow: visible;
+}
+
+.calculator-header {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.calculator-header h1 {
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    font-family: "Belleza", sans-serif;
+}
+
+.calculator-body {
+    padding: 40px;
+}
+
+.disclaimer-note {
+    background-color: #ff8080;
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.disclaimer-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+    margin: 10px auto;
+    width: 90%;
+    max-width: 600px;
+}
+
+.disclaimer-checkbox.validated {
+    border-color: #28a745 !important;
+    border-width: 3px;
+}
+
+.form-control.validated {
+    border-color: #28a745 !important;
+    border-width: 3px;
+}
+
+.phone-validation-icon {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(135deg, #28a745 0%, #20843a 100%);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-left: 5px;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    animation: popIn 0.3s ease-out;
+}
+
+.phone-validation-icon.show {
+    display: flex;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+select.form-control {
+    cursor: pointer;
+}
+
+.disclaimer-checkbox label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.disclaimer-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #E3B100;
+}
+
+.tooltip-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #E3B100, #B0780B);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: help;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.tooltip-icon:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 999999;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    width: 280px;
+    background: rgba(51, 51, 51, 1);
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+    padding: 12px 16px;
+    position: absolute;
+    z-index: 999998;
+    top: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.9);
+    font-size: 0.9em;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    border: 3px solid #E3B100;
+}
+ 
+
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent #333 transparent;
+}
+
+.tooltip-icon:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(5px);
+}
+
+.reassurance-text {
+    color: #666;
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.form-control {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    font-family: "Belleza", sans-serif;
+    transition: all 0.3s ease;
+    margin: 5px auto;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #E3B100;
+    box-shadow: 0 0 0 3px rgba(227, 177, 0, 0.1);
+}
+
+.print-button {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    font-family: "Belleza", sans-serif;
+    margin-top: 10px;
+}
+
+.print-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.print-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.success-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    z-index: 9999;
+    text-align: center;
+    font-family: "Belleza", sans-serif;
+    opacity: 0;
+    transition: all 0.5s ease;
+    max-width: 90%;
+    width: 500px;
+}
+
+.success-popup.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.success-popup h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.success-popup p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.popup-countdown {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.confirmation-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    z-index: 9999;
+    text-align: center;
+    font-family: "Belleza", sans-serif;
+    opacity: 0;
+    transition: all 0.5s ease;
+    max-width: 90%;
+    width: 550px;
+}
+
+.confirmation-popup.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.confirmation-popup h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.confirmation-popup p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.user-data-display {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.user-data-display p {
+    margin: 8px 0;
+    font-size: 1em;
+}
+
+.user-data-display strong {
+    color: #fff;
+}
+
+.confirmation-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.confirmation-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-family: "Belleza", sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #28a745 0%, #20843a 100%);
+    color: white;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+}
+
+.btn-correct {
+    background: white;
+    color: #B0780B;
+}
+
+.btn-correct:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+}
+
+.validation-prestations-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    z-index: 9999;
+    text-align: center;
+    font-family: "Belleza", sans-serif;
+    opacity: 0;
+    transition: all 0.5s ease;
+    max-width: 90%;
+    width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.validation-prestations-popup.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.validation-options-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    z-index: 9999;
+    text-align: center;
+    font-family: "Belleza", sans-serif;
+    opacity: 0;
+    transition: all 0.5s ease;
+    max-width: 90%;
+    width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.validation-options-popup.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.validation-list {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: left;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.validation-list-item {
+    padding: 10px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.popup-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.popup-close:hover {
+    background-color: #c82333;
+    transform: rotate(90deg) scale(1.1);
+}
+
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.popup-overlay.show {
+    display: block;
+    opacity: 1;
+}
+
+#prestationsSection {
+    display: none;
+    max-width: 650px;
+    margin: 30px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    padding: 40px;
+}
+
+.prestations-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    z-index: 99998;
+    width: 90%;
+    max-width: 650px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 30px;
+}
+
+.prestations-modal.show {
+    display: block;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.modal-header h2 {
+    color: #333;
+    font-size: 1.8em;
+    margin: 0;
+}
+
+.modal-close {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: #c82333;
+    transform: rotate(90deg);
+}
+
+.prestations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.prestation-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.prestation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    border-color: #E3B100;
+}
+
+.prestation-name {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.prestation-price {
+    font-size: 1.5em;
+    color: #E3B100;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.quantity-btn {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+    transform: scale(1.1);
+}
+
+input.quantity-input {
+    width: 50px;
+    text-align: center;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 1em;
+    padding: 5px;
+}
+
+/* Masquer les flèches des input number */
+input.quantity-input::-webkit-outer-spin-button,
+input.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input.quantity-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.add-to-cart-btn {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-family: "Belleza", sans-serif;
+}
+
+.add-to-cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(227, 177, 0, 0.4);
+}
+
+.open-modal-btn {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    margin: 20px auto;
+    display: block;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-family: "Belleza", sans-serif;
+}
+
+.open-modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(227, 177, 0, 0.4);
+}
+
+#cartContainer {
+    position: fixed;
+    right: -320px;
+    top: 80px;
+    width: 300px;
+    height: auto;
+    max-height: calc(100vh - 95px);
+    background: #dedede;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+    padding: 15px;
+    z-index: 999;
+    transition: right 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+#toggleCartBtn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    font-size: 1.4em;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    line-height: 1;
+}
+
+#cartCountBadge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.8em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .calculator-body {
+        padding: 20px;
+    }
+    .calculator-container {
+        margin: 0 10px;
+    }
+    .calculator-header h1 {
+        font-size: 1.8em;
+    }
+    .tooltip-text {
+        width: 220px;
+        font-size: 0.85em;
+        padding: 10px 12px;
+    }
+    .success-popup {
+        padding: 30px 25px;
+        width: 85%;
+    }
+    .success-popup h2 {
+        font-size: 1.6em;
+    }
+    .success-popup p {
+        font-size: 1em;
+    }
+    #cartContainer {
+        width: 100%;
+        right: -100%;
+    }
+    .prestations-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .calculator-header h1 {
+        font-size: 1.5em;
+    }
+}
+
+@media print {
+    /* Masquer tout le contenu de body sauf calculator-container */
+    body > *:not(.calculator-container) {
+        display: none !important;
+    }
+    
+    /* Dans calculator-container, masquer tout sauf prixfinal */
+    .calculator-container > *:not(.calculator-body) {
+        display: none !important;
+    }
+    
+    .calculator-body > *:not(#prixfinal) {
+        display: none !important;
+    }
+    
+    /* Masquer aussi ces éléments */
+    .prestations-modal,
+    .success-popup,
+    #popupOverlay,
+    .confirmation-popup,
+    .validation-prestations-popup,
+    .validation-options-popup,
+    #toggleCartBtn,
+    #cartContainer {
+        display: none !important;
+    }
+    
+    /* Configuration de base */
+    body {
+        background-color: white;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .calculator-container {
+        box-shadow: none;
+        max-width: 100%;
+        margin: 0;
+        padding: 20px;
+    }
+    
+    .calculator-body {
+        padding: 0;
+    }
+    
+    /* Forcer l'affichage du récapitulatif */
+    #prixfinal {
+        display: block !important;
+        visibility: visible !important;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Masquer les boutons dans prixfinal */
+    #prixfinal button,
+    #prixfinal .buttons-container,
+    #prixfinal #contactButtonContainer {
+        display: none !important;
+    }
+    
+    /* Logo en haut de la première page */
+    #prixfinal::before {
+        content: '';
+        display: block;
+        width: 2cm;
+        height: 2cm;
+        margin: 20px auto 30px;
+        background-image: url('https://nicolasszczot-dev.github.io/public/009.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    
+    #prixfinal h3 {
+        font-size: 1.5em;
+        text-align: center;
+        color: #B0780B;
+        border-bottom: 3px solid #E3B100;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        page-break-after: avoid;
+    }
+    
+    /* Sections détaillées - peuvent s'étendre sur plusieurs pages */
+    #prixfinal > div {
+        page-break-inside: avoid;
+        margin-bottom: 15px;
+    }
+    
+    #prestationsDetailList > div {
+        page-break-inside: avoid;
+    }
+    
+    /* Section totaux - TOUJOURS sur une nouvelle page */
+    .price-highlight {
+        page-break-before: always !important;
+        padding: 30px 20px;
+        text-align: center;
+    }
+    
+    /* Garantir que les totaux restent ensemble */
+    #prixfinal > div:nth-last-child(-n+3) {
+        page-break-before: auto;
+        page-break-inside: avoid;
+    }
+    
+    /* Conserver les couleurs */
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Style du prix final */
+    .final-price {
+        font-size: 2em !important;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .credit-info {
+        font-size: 1em;
+        font-style: italic;
+        margin-top: 10px;
+    }
+}
+
+/* Popup orientation - blocage portrait sur mobile */
+.orientation-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 999999;
+  justify-content: center;
+  align-items: center;
+}
+
+.orientation-popup {
+  background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+  color: white;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 80%;
+  font-family: "Belleza", sans-serif;
+}
+
+.orientation-popup h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.orientation-icon {
+  font-size: 4em;
+  margin: 20px 0;
+  animation: rotate-phone 2s infinite;
+}
+
+@keyframes rotate-phone {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(90deg); }
+}
+
+/* Adaptation pour mode PAYSAGE mobile */
+@media (orientation: landscape) and (max-width: 900px) {
+  body {
+    padding: 15px;
+  }
+  
+  .calculator-header {
+    padding: 20px;
+  }
+  
+  .calculator-header h1 {
+    font-size: 1.8em;
+  }
+  
+  .calculator-body {
+    padding: 25px;
+  }
+  
+  .prestations-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .options-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .success-popup {
+    width: 70%;
+    max-width: 500px;
+  }
+  
+  .confirmation-popup {
+    width: 70%;
+    max-width: 500px;
+  }
+  
+  /* Champ téléphone en colonne sur mobile */
+  #phoneContainer {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    max-width: 100% !important;
+  }
+  
+  #phoneContainer #countryCode {
+    width: 100% !important;
+    max-width: 100%;
+  }
+  
+  #phoneContainer #userTelephone {
+    width: 100% !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="orientation-overlay" id="orientationOverlay" style="display: none;">
+  <div class="orientation-popup">
+    <h2>Pour un meilleur confort</h2>
+    <div class="orientation-icon">📱 → 🔄</div>
+    <p>Veuillez passer en mode paysage</p>
+  </div>
+</div>
+
+<div class="popup-overlay show" id="popupOverlay"></div>
+
+<div class="success-popup" id="successPopup">
+    <button class="popup-close" id="closePopup">×</button>
+    <h2>🎉 Félicitations !</h2>
+    <p>Vos informations ont été enregistrées avec succès.</p>
+    <p>Vous pouvez maintenant accéder au calculateur de prestations.</p>
+    <p class="popup-countdown" id="popupCountdown">Fermeture automatique dans <strong>1</strong> seconde...</p>
+</div>
+
+<div class="confirmation-popup" id="confirmationPopup">
+    <h2>⚠️ Vérification de vos coordonnées</h2>
+    <p>Merci de vérifier que vos informations sont correctes :</p>
+    <div class="user-data-display">
+        <p><strong>Nom :</strong> <span id="displayNom">ss</span></p>
+        <p><strong>Email :</strong> <span id="displayEmail">ss@ss.fr</span></p>
+        <p><strong>Téléphone :</strong> <span id="displayTelephone">🇫🇷 0666666666</span></p>
+    </div>
+    <p>Avez-vous correctement renseigné vos coordonnées ?</p>
+    <div class="confirmation-buttons">
+        <button class="confirmation-btn btn-confirm" id="btnConfirmData">Oui, c'est correct</button>
+        <button class="confirmation-btn btn-correct" id="btnCorrectData">Non, je veux corriger</button>
+    </div>
+</div>
+
+<div class="validation-prestations-popup" id="validationPrestationsPopup">
+    <h2>📋 Validation de vos prestations</h2>
+    <p>Voici les prestations que vous avez sélectionnées :</p>
+    <div class="validation-list" id="prestationsValidationList"></div>
+    <p>Êtes-vous sûr de n'avoir rien oublié ? Vous pourrez modifier les quantités directement dans le panier!</p>
+    <div class="confirmation-buttons">
+        <button class="confirmation-btn btn-confirm" id="btnConfirmPrestations">Oui, c'est correct</button>
+        <button class="confirmation-btn btn-correct" id="btnCorrectPrestations">Non, je veux modifier</button>
+    </div>
+</div>
+
+<div class="validation-options-popup" id="validationOptionsPopup">
+    <h2>⚙️ Validation de vos options</h2>
+    <p>Voici les options que vous avez sélectionnées :</p>
+    <div class="validation-list" id="optionsValidationList"></div>
+    <p>Êtes-vous sûr de vos options ?</p>
+    <div class="confirmation-buttons">
+        <button class="confirmation-btn btn-confirm" id="btnConfirmOptions">Oui, c'est correct</button>
+        <button class="confirmation-btn btn-correct" id="btnCorrectOptions">Non, je veux recommencer</button>
+    </div>
+</div>
+
+<div class="calculator-container">
+    <div class="calculator-header">
+        <h1>
+            CALCULATEUR<sup style="font-size: 0.5em; margin-left: 5px;"><span class="tooltip-icon">ℹ
+                <span class="tooltip-text">Votre estimation personnalisée pour des prestations individuelles 😃! Montage mobilier, fixations, électricité, et bien plus...</span>
+            </span></sup>
+            À LA CARTE
+        </h1>
+    </div>
+    
+    <div class="calculator-body">
+        <div class="disclaimer-note" style="background-color: rgb(212, 237, 218); border-color: rgb(40, 167, 69); border-width: 3px; opacity: 0.6; pointer-events: none;">
+            
+            <div class="disclaimer-checkbox validated" id="checkbox1Container">
+                <label for="disclaimer">
+                    <span>Je comprends que ce prix sera uniquement <strong><em>estimatif.</em></strong></span>
+                    <span class="tooltip-icon">ℹ
+                        <span class="tooltip-text">Même si cette 
+estimation devrait être proche du prix final, elle devra néanmoins être 
+contrôlée et ajustée si nécessaire par l'auteur des travaux. Merci de 
+votre compréhension.</span>
+                    </span>
+                    <input type="checkbox" id="disclaimer" autocomplete="off" disabled="disabled" checked="checked">
+                </label>
+            </div>
+            
+            <div class="disclaimer-checkbox validated" id="checkbox2Container" style="opacity: 1; pointer-events: auto;">
+                <label for="materials_understood">
+                    <span>Si matériel acheté → Matériel facturé prix coûtant.<br>J'ai compris.</span>
+                    <span class="tooltip-icon">ℹ
+                        <span class="tooltip-text">🧾 Conformément à 
+l'article D7233-1 du Code du travail, les activités de services à la 
+personne (SAP) doivent distinguer le prix des prestations du coût des 
+fournitures, du matériel ou des produits nécessaires à l'intervention. 
+Ces éléments sont donc facturés à leur prix coûtant, sans aucune marge, 
+conformément à la réglementation en vigueur.</span>
+                    </span>
+                    <input type="checkbox" id="materials_understood" autocomplete="off" disabled="disabled" checked="checked">
+                </label>
+            </div>
+            
+            <div style="margin: 20px 0; text-align: center;">
+                <input class="form-control validated" id="userNom" name="user_name_field_unique" placeholder="Nom *" required="" type="text" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" style="opacity: 0.5; cursor: not-allowed;" disabled="disabled" value="ss">
+                <button class="print-button" id="okNomBtn" type="button" style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;" disabled="disabled">
+                    OK, continuer
+                </button>
+                
+                <input class="form-control validated" id="userEmail" name="user_email_field_unique" placeholder="Email *" required="" type="email" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" style="opacity: 0.5; cursor: not-allowed;" disabled="disabled" value="ss@ss.fr">
+                <button class="print-button" id="okEmailBtn" type="button" style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;" disabled="disabled">
+                    OK, continuer
+                </button>
+                
+                <div id="phoneContainer" style="display: flex; gap: 5px; justify-content: center; align-items: center; max-width: 400px; margin: 5px auto;">
+                    <select class="form-control" id="countryCode" autocomplete="off" style="width: 100px; opacity: 1; cursor: pointer;" disabled="disabled">
+                        <option value="+33" selected="selected">🇫🇷 +33</option>
+                        <option value="+41">🇨🇭 +41</option>
+                    </select>
+                    <input class="form-control validated" id="userTelephone" name="user_phone_field_unique" placeholder="Numéro(fixe/mobile) avec ou sans le 0 *" required="" type="tel" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" style="flex: 1 1 0%; opacity: 1; cursor: text;" disabled="disabled" value="666666666">
+                </div>
+                <button class="print-button" id="okTelephoneBtn" type="button" style="opacity: 1; cursor: pointer; margin: 10px auto; display: block; background: linear-gradient(135deg, rgb(40, 167, 69) 0%, rgb(32, 132, 58) 100%);" disabled="disabled">✓ Validé</button>
+            </div>
+            
+            <p class="reassurance-text">
+                En cliquant sur "OK pour continuer", vos données ne 
+seront utilisées que pour créer un dossier à votre nom. *: obligatoire.
+            </p>
+            
+        </div>
+    </div>
+</div>
+
+<div id="prestationsSection" style="display: block;">
+    <h1 style="text-align: center; color: #333;">🧑‍🔧 Toutes les prestations</h1>
+    
+    <button class="open-modal-btn" id="openPrestationsModal">
+        🛒 Ajouter au panier
+    </button>
+</div>
+
+<div class="prestations-modal show" id="prestationsModal">
+    <div class="modal-header">
+        <h2>📋 Mes Prestations</h2>
+        <button class="modal-close" id="closePrestationsModal">×</button>
+    </div>
+    
+    <div class="modal-content-wrapper" style="display: flex; gap: 30px; padding: 20px; min-height: 500px; align-items: flex-start;">
+        <!-- COLONNE GAUCHE : Barre de recherche + Boutons -->
+        <div class="left-column" style="flex: 1; display: flex; flex-direction: column; gap: 20px; justify-content: flex-start;">
+            <input type="text" id="prestationSearch" placeholder="🔍 Rechercher une prestation..." oninput="filterPrestations()">
+            
+            <button class="add-to-cart-btn" onclick="addSelectedToCart()" style="width: 100%; margin: 0;">🛒 Ajouter au panier</button>
+            
+            <button class="open-modal-btn" id="validatePrestationsBtn" style="margin: 0; width: 100%;">✔️ Fermer, j'ai fini</button>
+            
+            <p style="font-family: 'Belleza', sans-serif; color: #333; text-align: center; margin: 0; line-height: 1.2;">
+             Info Client:<br>
+             ✅signifie que la prestation ouvre droit au crédit d'impôt pour services à la personne (50 %).<br>
+             ❌signifie qu'elle n'y ouvre pas droit.
+            </p>
+        </div>
+        
+        <!-- COLONNE DROITE : Menu déroulant -->
+        <div class="right-column" style="flex: 1; display: flex; flex-direction: column;">
+
+<div class="custom-select-container">
+  <div class="custom-select-display open" id="selectedPrestation">
+    Choisissez une prestation...
+  </div>
+  <div class="custom-select-list show" id="customSelectList">
+
+    <!-- 🖥️ INFORMATIQUE -->
+    <div class="custom-group">🖥️ INFORMATIQUE</div>
+    <div class="custom-option" data-value="install_info_express|53">
+      <strong>Installation informatique EXPRESS</strong><br>
+      <span class="option-subtext">1h30 – 53 € ✅</span>
+    </div>
+    <div class="custom-note">→ Installation d'un ordi seul</div>
+
+    <div class="custom-option" data-value="install_info_complete|106">
+      <strong>Installation informatique COMPLÈTE</strong><br>
+      <span class="option-subtext">3h – 106 € ✅</span>
+    </div>
+    <div class="custom-note">→ Installation d'un ordi + ses périphériques (Imp/Scan etc...)</div>
+
+    <div class="custom-option" data-value="depannage_express|35">
+      <strong>Dépannage informatique EXPRESS</strong><br>
+      <span class="option-subtext">1h – 35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="depannage_complex|85">
+      <strong>Dépannage informatique COMPLEX</strong><br>
+      <span class="option-subtext">2h30 – 85 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="boost_nettoyage_pc|15">
+      <strong>↳ Boost &amp; nettoyage complet PC INT/EXT</strong><br>
+      <span class="option-subtext">15 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="formation_decouverte|80">
+      <strong>Formation numérique DÉCOUVERTE</strong><br>
+      <span class="option-subtext">2h – 80 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="formation_apprentissage|160">
+      <strong>Formation numérique APPRENTISSAGE</strong><br>
+      <span class="option-subtext">4h – 160 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="formation_maitrise|240">
+      <strong>Formation numérique MAÎTRISE</strong><br>
+      <span class="option-subtext">6h – 240 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="admin_simple|35">
+      <strong>Aide administrative DÉMARCHE SIMPLE</strong><br>
+      <span class="option-subtext">1h – 35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="admin_pack|70">
+      <strong>Aide administrative PACK DÉMARCHES</strong><br>
+      <span class="option-subtext">2h – 70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="admin_complet|140">
+      <strong>Aide administrative COMPLET</strong><br>
+      <span class="option-subtext">4h – 140 € ✅</span>
+    </div>
+
+    <!-- 💻 HORS SAP - SERVICES NUMÉRIQUES PRO -->
+    <div class="custom-group">💻 HORS SAP - SERVICES NUMÉRIQUES PRO</div>
+    <div class="custom-option" data-value="SITE_VITRINE|750">
+      <strong>SITE VITRINE</strong><br>
+      <span class="option-subtext">750 € ❌</span>
+    </div>
+    <div class="custom-note">→ 1 page, délai 3 jours</div>
+
+    <div class="custom-option" data-value="SITE_E-COMMERCE_SIMPLE|1500">
+      <strong>SITE E-COMMERCE SIMPLE</strong><br>
+      <span class="option-subtext">1500 € ❌</span>
+    </div>
+    <div class="custom-note">→ 1 page+boutique simple, délai 10 jours</div>
+
+    <div class="custom-option" data-value="SITE_E-COMMERCE_COMPLET|2500">
+      <strong>SITE E-COMMERCE COMPLET</strong><br>
+      <span class="option-subtext">2500 € ❌</span>
+    </div>
+    <div class="custom-note">→ plusieurs pages, boutique complexe, délai 3 semaines</div>
+
+    <div class="custom-option" data-value="MISE_A_JOUR|50">
+      <strong>MISE À JOUR</strong><br>
+      <span class="option-subtext">50 € ❌</span>
+    </div>
+    <div class="custom-note">→ rajout d'une option/fonctionnalité</div>
+
+    <!-- 🧼 MÉNAGE-DESINFECTION DOMICILE / VÉHICULE -->
+    <div class="custom-group">🧼 MÉNAGE-DESINFECTION DOMICILE / VÉHICULE</div>
+    <div class="custom-option" data-value="menage_express|53">
+      <strong>Ménage EXPRESS (Studio/T1)</strong><br>
+      <span class="option-subtext">1h30 – 53 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="menage_essentiel|88">
+      <strong>Ménage ESSENTIEL (T2/T3)</strong><br>
+      <span class="option-subtext">2h30 – 88 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="menage_grand|140">
+      <strong>Ménage GRAND LOGEMENT (T4+/Maison)</strong><br>
+      <span class="option-subtext">4h – 140 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Desinfection_pro1|35">
+      <strong>Désinfection pro - poussières/acariens (1 pièce)</strong><br>
+      <span class="option-subtext">35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Desinfection_pro2|70">
+      <strong>Désinfection pro - poussières/acariens (2 pièces)</strong><br>
+      <span class="option-subtext">70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Desinfection_pro3|105">
+      <strong>Désinfection pro - poussières/acariens (3 pièces)</strong><br>
+      <span class="option-subtext">105 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Desinfection_pro4|140">
+      <strong>Désinfection pro - poussières/acariens (4 pièces)</strong><br>
+      <span class="option-subtext">140 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Nettoyage_vitres1|30">
+      <strong>Nettoyage de vitres (1h)</strong><br>
+      <span class="option-subtext">30 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Nettoyage_vitres2|60">
+      <strong>Nettoyage de vitres (2h)</strong><br>
+      <span class="option-subtext">60 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Nettoyage_vitres3|90">
+      <strong>Nettoyage de vitres (3h)</strong><br>
+      <span class="option-subtext">90 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Nettoyage_vitres4|120">
+      <strong>Nettoyage de vitres (4h)</strong><br>
+      <span class="option-subtext">120 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Nettoyage_terrasse1|35">
+      <strong>Nettoyage de terrasse (1h)</strong><br>
+      <span class="option-subtext">35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Nettoyage_terrasse2|70">
+      <strong>Nettoyage de terrasse (2h)</strong><br>
+      <span class="option-subtext">70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Nettoyage_terrasse3|105">
+      <strong>Nettoyage de terrasse (3h)</strong><br>
+      <span class="option-subtext">105 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Nettoyage_terrasse4|140">
+      <strong>Nettoyage de terrasse (4h)</strong><br>
+      <span class="option-subtext">140 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="vehicule_simple|35">
+      <strong>Nettoyage véhicule SIMPLE</strong><br>
+      <span class="option-subtext">1h – 35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="vehicule_premium|70">
+      <strong>Nettoyage véhicule PREMIUM</strong><br>
+      <span class="option-subtext">2h – 70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="vehicule_premium_plus|105">
+      <strong>Nettoyage véhicule PREMIUM+MOTEUR+COFFRE</strong><br>
+      <span class="option-subtext">3h – 105 € ✅</span>
+    </div>
+
+    <!-- 🌿 TRAVAUX DE JARDINAGE -->
+    <div class="custom-group">🌿 TRAVAUX DE JARDINAGE</div>
+    <div class="custom-option" data-value="Tonte_PETIT|35">
+      <strong>Tonte de pelouse PETIT JARDIN</strong><br>
+      <span class="option-subtext">Jusqu'à 100m² – 1h – 35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Tonte_MOYEN|70">
+      <strong>Tonte de pelouse MOYEN JARDIN</strong><br>
+      <span class="option-subtext">Jusqu'à 100-300m² – 2h – 70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Tonte_GRAND|105">
+      <strong>Tonte de pelouse GRAND JARDIN</strong><br>
+      <span class="option-subtext">Jusqu'à 300-500m² – 3h – 105 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Tonte_TRÈS_GRAND|140">
+      <strong>Tonte de pelouse TRÈS GRAND JARDIN</strong><br>
+      <span class="option-subtext">&gt;500m² – 4h – 140 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Ramassage_EXPRESS|35">
+      <strong>Ramassage feuilles et déchets verts EXPRESS</strong><br>
+      <span class="option-subtext">1h – 35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Ramassage_STANDARD|70">
+      <strong>Ramassage feuilles et déchets verts STANDARD</strong><br>
+      <span class="option-subtext">2h – 70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Ramassage_GRAND_VOLUME|105">
+      <strong>Ramassage feuilles et déchets verts GRAND VOLUME</strong><br>
+      <span class="option-subtext">3h – 105 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="arrosage_EXPRESS|35">
+      <strong>Arrosage/pose arrosage automatique EXPRESS</strong><br>
+      <span class="option-subtext">1h – 35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="arrosage_STANDARD|70">
+      <strong>Arrosage/pose arrosage automatique STANDARD</strong><br>
+      <span class="option-subtext">2h – 70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="arrosage_COMPLEX|140">
+      <strong>Arrosage/pose arrosage automatique COMPLEX</strong><br>
+      <span class="option-subtext">4h – 140 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Desherbage_PETIT|35">
+      <strong>Désherbage manuel</strong><br>
+      <span class="option-subtext">Jusqu'à 20m² – 1h – 35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Desherbage_MOYEN|70">
+      <strong>Désherbage manuel</strong><br>
+      <span class="option-subtext">20-50m² – 2h – 70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Desherbage_GRAND|105">
+      <strong>Désherbage manuel</strong><br>
+      <span class="option-subtext">Plus de 50m² – 3h – 105 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Taille1|35">
+      <strong>Taille de haies/arbustes</strong><br>
+      <span class="option-subtext">1h – 35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Taille2|70">
+      <strong>Taille de haies/arbustes</strong><br>
+      <span class="option-subtext">2h – 70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="Taille3|105">
+      <strong>Taille de haies/arbustes</strong><br>
+      <span class="option-subtext">3h – 105 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="DENEIGEMENT_EXPRESS|35">
+      <strong>Deneigement EXPRESS</strong><br>
+      <span class="option-subtext">Allée+entrée – 1h – 35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="DENEIGEMENT_STANDARD|70">
+      <strong>Deneigement STANDARD</strong><br>
+      <span class="option-subtext">Allée+entrée+trottoir – 2h – 70 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="DENEIGEMENT_COMPLET|105">
+      <strong>Deneigement COMPLET</strong><br>
+      <span class="option-subtext">Tour complet maison – 3h – 105 € ✅</span>
+    </div>
+
+    <!-- 🚓 SÉCURITÉ DOMICILE -->
+    <div class="custom-group">🚓 SÉCURITÉ DOMICILE</div>
+    <div class="custom-option" data-value="surveillance_weekend|80">
+      <strong>Surveillance WEEK-END</strong><br>
+      <span class="option-subtext">1h total – 80 € ✅</span>
+    </div>
+    <div class="custom-note">→ 2 passages de 30mn</div>
+
+    <div class="custom-option" data-value="surveillance_semaine|200">
+      <strong>Surveillance SEMAINE</strong><br>
+      <span class="option-subtext">2h30 total – 200 € ✅</span>
+    </div>
+    <div class="custom-note">→ 5 passages de 30mn</div>
+
+    <div class="custom-option" data-value="camera_securite|50">
+      <strong>Caméra de sécurité connectée</strong><br>
+      <span class="option-subtext">50 € ❌</span>
+    </div>
+
+    <div class="custom-option" data-value="application_camera|15">
+      <strong>Connection appli Caméra au smartphone</strong><br>
+      <span class="option-subtext">15 € ❌</span>
+    </div>
+
+    <div class="custom-option" data-value="camera_dashcam|50">
+      <strong>Caméra de sécurité dashcam</strong><br>
+      <span class="option-subtext">50 € ❌</span>
+    </div>
+
+    <div class="custom-option" data-value="application_dashcam|15">
+      <strong>Connection appli dashcam au smartphone</strong><br>
+      <span class="option-subtext">15 € ❌</span>
+    </div>
+
+    <!-- 🧑‍🤝‍🧑 ACCOMPAGNEMENT / SOUTIEN -->
+    <div class="custom-group">🧑‍🤝‍🧑 ACCOMPAGNEMENT / SOUTIEN</div>
+    <div class="custom-option" data-value="babysitting_ponctuel|60">
+      <strong>Baby-sitting PONCTUEL</strong><br>
+      <span class="option-subtext">2h – 60 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="babysitting_soiree|120">
+      <strong>Baby-sitting SOIRÉE</strong><br>
+      <span class="option-subtext">4h – 120 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="babysitting_journee|240">
+      <strong>Baby-sitting JOURNÉE</strong><br>
+      <span class="option-subtext">8h – 240 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="accompagnement_trajet_simple|35">
+      <strong>Accompagnement TRAJET SIMPLE</strong><br>
+      <span class="option-subtext">35 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="accompagnement_trajet_ar|50">
+      <strong>Accompagnement TRAJET A/R</strong><br>
+      <span class="option-subtext">50 € ✅</span>
+    </div>
+
+    <div class="custom-option" data-value="accompagnement_activite|80">
+      <strong>Accompagnement course/activité</strong><br>
+      <span class="option-subtext">80 € ✅</span>
+    </div>
+
+    <!-- 👨‍🔧 MÉCANIQUE 🇸 🇦 🇲 -->
+    <div class="custom-group">👨‍🔧 MÉCANIQUE ----🇸 🇦 🇲----  
+🇸cooter, 🇦uto, 🇲otoculture</div>
+    <div class="custom-option" data-value="revision_sam|150">
+      <strong>⚡Révision 100 % –🇸cooter, 🇦uto, 🇲otoculture</strong><br>
+      <span class="option-subtext">150 € ✅</span>
+    </div>
+    <div class="custom-note">→ 🔧Offrez à votre machine une révision 
+complète de A à Z. 💻 diagnostic OBD-II ⚙️ Vérification de tous les 
+organes mécaniques et électriques 🔋 Test batterie, charge et circuit de
+ démarrage 🛢️ Contrôle et remplacement des filtres, bougies et liquides
+ (habitacle, huile, carburant, air) 🧰Tension des courroies, graissage 
+complet 🔩 Serrage général et inspection de sécurité ✅ Rapport de 
+contrôle détaillé et conseils d'entretien personnalisés. Votre engin 
+repart comme neuf, prêt pour la saison et les performances à 100 % !</div>
+
+    <div class="custom-option" data-value="remise_forme_sam|80">
+      <strong>✨ Entretien-Remise en forme – 🇸cooter, 🇦uto, 🇲otoculture</strong><br>
+      <span class="option-subtext">80 € ✅</span>
+    </div>
+    <div class="custom-note">→ 🔧Nettoyage moteur &amp; châssis ⚙️ 
+Graissage, affûtage des lames, contrôles visuels 🔋 Charge Batterie, 
+niveaux &amp; pression pneus, contrôle bougies, Lubrification des câbles
+ et leviers, nettoyage du filtre à air, traitement du carburant. ✅ Une 
+machine propre, performante et prête à repartir !</div>
+
+  </div>
+  <div class="custom-tooltip" id="customTooltip"></div>
+</div>
+
+            <div id="optionTooltip" style="
+                display: none;
+                position: fixed;
+                background: rgba(51, 51, 51, 0.95);
+                color: white;
+                padding: 12px 16px;
+                border-radius: 8px;
+                font-size: 0.9em;
+                max-width: 300px;
+                z-index: 999999;
+                border: 2px solid #E3B100;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                pointer-events: none;
+            "></div>
+        </div>
+    </div>
+</div>
+
+<!-- Styles CSS pour la modale et la barre de recherche -->
+<style>
+/* Style responsive pour mobile */
+@media (max-width: 768px) {
+    .modal-content-wrapper {
+        flex-direction: column !important;
+    }
+    
+    .left-column, .right-column {
+        width: 100% !important;
+    }
+    
+    #prestationSelect {
+        min-height: 300px !important;
+    }
+}
+
+/* --- Correction menu déroulant responsive mobile --- */
+@media (max-width: 768px) {
+  #prestationSelect {
+    max-width: 100vw !important;          /* ne pas dépasser la largeur de l'écran */
+    overflow-x: hidden !important;         /* empêche le débordement horizontal */
+    overflow-y: auto !important;           /* permet le défilement vertical */
+    min-height: 50px !important;           /* conserve la taille initiale du champ fermé */
+    max-height: 60vh !important;           /* limite la hauteur de la liste ouverte à 60% de l’écran */
+    white-space: normal !important;        /* permet le retour à la ligne dans les textes longs */
+  }
+
+  #prestationSelect option {
+    white-space: normal !important;        /* les textes des options reviennent à la ligne */
+  }
+}
+
+
+/* Styles du menu personnalisé - CORRECTION Z-INDEX */
+.custom-select-container {
+  position: relative;
+  width: 100%;
+  font-family: "Belleza", sans-serif;
+  margin: 15px 0;
+  z-index: 99999; /* TRÈS IMPORTANT */
+}
+
+.custom-select-display {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid #E3B100;
+  border-radius: 8px;
+  padding: 15px;
+  font-size: 1.1em;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 99999; /* TRÈS IMPORTANT */
+}
+
+.custom-select-display::after {
+  content: "▼";
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8em;
+  color: #E3B100;
+  transition: transform 0.3s ease;
+}
+
+.custom-select-display.open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-select-display:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border-color: #B0780B;
+}
+
+.custom-select-list {
+  display: none;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #E3B100;
+  border-radius: 8px;
+  max-height: max-content;
+  overflow-y: auto;
+  z-index: 999999; /* MAXIMUM Z-INDEX */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.custom-select-list.show {
+  display: block;
+}
+
+.custom-group {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+  color: white;
+  padding: 10px 15px;
+  font-weight: 700;
+  font-size: 1em;
+  border-bottom: 2px solid #B0780B;
+  z-index: 10;
+}
+
+.custom-option {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1.5em;
+  border-bottom: 1px solid #f0f0f0;
+  background: white;
+}
+
+.custom-option:hover {
+  background: linear-gradient(135deg, #fff9e6 0%, #ffe4b3 100%);
+  padding-left: 20px;
+}
+
+.custom-option strong {
+  color: #333;
+  font-size: 1em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.custom-option:hover strong {
+  color: #B0780B;
+}
+
+.option-subtext {
+  font-size: 0.85em;
+  color: #666;
+}
+
+.custom-option:hover .option-subtext {
+  color: #E3B100;
+  font-weight: 600;
+}
+
+.custom-note {
+  padding: 8px 15px;
+  color: #666;
+  font-style: italic;
+  font-size: 0.9em;
+  background: #f8f9fa;
+  cursor: default;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.custom-note:hover {
+  background: #f8f9fa;
+}
+
+.custom-tooltip {
+  display: none;
+  margin-top: 15px;
+  background: rgba(51, 51, 51, 0.95);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.9em;
+  border: 2px solid #E3B100;
+  text-align: center;
+  line-height: 1.5;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+/* Scrollbar personnalisée pour le menu */
+.custom-select-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-select-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.custom-select-list::-webkit-scrollbar-thumb {
+  background: #E3B100;
+  border-radius: 4px;
+}
+
+.custom-select-list::-webkit-scrollbar-thumb:hover {
+  background: #B0780B;
+}
+
+/* Styles fixes pour la barre de recherche */
+#prestationSearch {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 15px !important;
+    font-size: 1.1em !important;
+    border: 2px solid #E3B100 !important;
+    border-radius: 8px !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    font-family: "Belleza", sans-serif !important;
+    transition: none !important;
+    height: 50px !important;
+}
+
+#prestationSearch:focus {
+    width: 100% !important;
+    border: 2px solid #E3B100 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(227, 177, 0, 0.1) !important;
+    height: 50px !important;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  .custom-select-list {
+    max-height: 300px;
+  }
+  
+  .custom-select-display {
+    font-size: 1em;
+    padding: 12px;
+  }
+  
+  .custom-option {
+    padding: 10px 12px;
+    font-size: 0.95em;
+  }
+  
+  .custom-option strong {
+    font-size: 0.95em;
+  }
+  
+  .option-subtext {
+    font-size: 0.8em;
+  }
+}
+</style>
+
+<button id="toggleCartBtn" style="display: flex;">
+    <span style="font-size: 1.3em;">🛒</span>
+    <span style="font-size: 0.9em;">⇄</span>
+    <span id="cartCountBadge" style="display: none;">0</span>
+</button>
+
+<div id="cartContainer" style="right: 0px;">
+    <h2>🧾 Votre sélection</h2>
+    <div id="cartItems" style="max-height: calc(100vh - 250px); overflow-y: auto;"></div>
+    <hr>
+    <div id="cartTotal" style="margin: 10px 0; color: #E3B100; font-weight: bold; text-align: right;"><strong>Total :</strong> 0 €</div>
+    <button id="clearCartBtn" style="
+        margin-top: 10px;
+        background: linear-gradient(135deg, #B30000 0%, #7A0000 100%);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+    ">🗑️ Vider le panier</button>
+</div>
+
+<script>
+// Détection et gestion orientation mobile
+function checkOrientation() {
+  const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Windows Phone|Tablet/i.test(navigator.userAgent);
+  const isMobile = isMobileUA;
+  const isPortrait = window.innerHeight > window.innerWidth;
+  
+  const overlay = document.getElementById('orientationOverlay');
+  
+  if (isMobile && isPortrait) {
+    overlay.style.display = 'flex';
+  } else {
+    overlay.style.display = 'none';
+  }
+}
+
+// Vérifier au chargement
+window.addEventListener('load', checkOrientation);
+
+// Vérifier à chaque changement d'orientation
+window.addEventListener('orientationchange', checkOrientation);
+window.addEventListener('resize', checkOrientation);
+
+const MAKE_WEBHOOK_URL = 'https://hook.eu2.make.com/rhof6giah8otbdzibelvwis5nm9hgek7';
+
+let userData = {
+    nom: '',
+    email: '',
+    telephone: '',
+    timestamp: ''
+};
+
+const disclaimerCheck = document.getElementById('disclaimer');
+const materialsUnderstood = document.getElementById('materials_understood');
+const userNom = document.getElementById('userNom');
+const userEmail = document.getElementById('userEmail');
+const userTelephone = document.getElementById('userTelephone');
+const countryCode = document.getElementById('countryCode');
+const okNomBtn = document.getElementById('okNomBtn');
+const okEmailBtn = document.getElementById('okEmailBtn');
+const okTelephoneBtn = document.getElementById('okTelephoneBtn');
+const disclaimerNote = document.querySelector('.disclaimer-note');
+const checkbox1Container = document.getElementById('checkbox1Container');
+const checkbox2Container = document.getElementById('checkbox2Container');
+const successPopup = document.getElementById('successPopup');
+const confirmationPopup = document.getElementById('confirmationPopup');
+const validationPrestationsPopup = document.getElementById('validationPrestationsPopup');
+const validationOptionsPopup = document.getElementById('validationOptionsPopup');
+const btnConfirmData = document.getElementById('btnConfirmData');
+const btnCorrectData = document.getElementById('btnCorrectData');
+const btnConfirmPrestations = document.getElementById('btnConfirmPrestations');
+const btnCorrectPrestations = document.getElementById('btnCorrectPrestations');
+const btnConfirmOptions = document.getElementById('btnConfirmOptions');
+const btnCorrectOptions = document.getElementById('btnCorrectOptions');
+const prestationsValidationList = document.getElementById('prestationsValidationList');
+const optionsValidationList = document.getElementById('optionsValidationList');
+const displayNom = document.getElementById('displayNom');
+const displayEmail = document.getElementById('displayEmail');
+const displayTelephone = document.getElementById('displayTelephone');
+const popupOverlay = document.getElementById('popupOverlay');
+const closePopup = document.getElementById('closePopup');
+const prestationsSection = document.getElementById('prestationsSection');
+const toggleCartBtn = document.getElementById('toggleCartBtn');
+
+let nomValid = false;
+let emailValid = false;
+let telValid = false;
+
+disclaimerCheck.addEventListener('change', function() {
+    if (this.checked) {
+        checkbox1Container.classList.add('validated');
+        checkbox2Container.style.opacity = '1';
+        checkbox2Container.style.pointerEvents = 'auto';
+        materialsUnderstood.disabled = false;
+    } else {
+        checkbox1Container.classList.remove('validated');
+        checkbox2Container.style.opacity = '0.5';
+        checkbox2Container.style.pointerEvents = 'none';
+        materialsUnderstood.disabled = true;
+        materialsUnderstood.checked = false;
+        checkbox2Container.classList.remove('validated');
+        lockFormulaire();
+    }
+});
+
+materialsUnderstood.addEventListener('change', function() {
+    if (this.checked) {
+        checkbox2Container.classList.add('validated');
+        unlockFormulaire();
+    } else {
+        checkbox2Container.classList.remove('validated');
+        lockFormulaire();
+    }
+});
+
+function unlockFormulaire() {
+    userNom.disabled = false;
+    userNom.style.opacity = '1';
+    userNom.style.cursor = 'text';
+}
+
+function lockFormulaire() {
+    userNom.disabled = true;
+    userNom.style.opacity = '0.5';
+    userNom.style.cursor = 'not-allowed';
+    userNom.value = '';
+    userNom.classList.remove('validated');
+    
+    userEmail.disabled = true;
+    userEmail.style.opacity = '0.5';
+    userEmail.style.cursor = 'not-allowed';
+    userEmail.value = '';
+    userEmail.classList.remove('validated');
+    
+    userTelephone.disabled = true;
+    userTelephone.style.opacity = '0.5';
+    userTelephone.style.cursor = 'not-allowed';
+    userTelephone.value = '';
+    userTelephone.classList.remove('validated');
+    
+    countryCode.disabled = true;
+    countryCode.style.opacity = '0.5';
+    countryCode.style.cursor = 'not-allowed';
+    
+    okNomBtn.disabled = true;
+    okNomBtn.style.opacity = '0.5';
+    okNomBtn.style.cursor = 'not-allowed';
+    
+    okEmailBtn.disabled = true;
+    okEmailBtn.style.opacity = '0.5';
+    okEmailBtn.style.cursor = 'not-allowed';
+    
+    okTelephoneBtn.disabled = true;
+    okTelephoneBtn.style.opacity = '0.5';
+    okTelephoneBtn.style.cursor = 'not-allowed';
+    
+    nomValid = false;
+    emailValid = false;
+    telValid = false;
+}
+
+userNom.addEventListener('input', function() {
+    const nom = this.value.trim();
+    if (nom.length > 0) {
+        this.classList.add('validated');
+        nomValid = true;
+        okNomBtn.disabled = false;
+        okNomBtn.style.opacity = '1';
+        okNomBtn.style.cursor = 'pointer';
+    } else {
+        this.classList.remove('validated');
+        nomValid = false;
+        okNomBtn.disabled = true;
+        okNomBtn.style.opacity = '0.5';
+        okNomBtn.style.cursor = 'not-allowed';
+    }
+});
+
+userEmail.addEventListener('input', function() {
+    const email = this.value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (emailRegex.test(email)) {
+        this.classList.add('validated');
+        emailValid = true;
+        okEmailBtn.disabled = false;
+        okEmailBtn.style.opacity = '1';
+        okEmailBtn.style.cursor = 'pointer';
+    } else {
+        this.classList.remove('validated');
+        emailValid = false;
+        okEmailBtn.disabled = true;
+        okEmailBtn.style.opacity = '0.5';
+        okEmailBtn.style.cursor = 'not-allowed';
+    }
+});
+
+userTelephone.addEventListener('input', function() {
+    // Garder uniquement les chiffres
+    let telephone = this.value.replace(/[^\d]/g, '');
+    
+    // Limiter la longueur selon si commence par 0 ou non
+    if (telephone.startsWith('0')) {
+        if (telephone.length > 10) {
+            telephone = telephone.substring(0, 10);
+        }
+        this.value = telephone;
+        
+        // Valide si exactement 10 chiffres
+        if (telephone.length === 10) {
+            this.classList.add('validated');
+            telValid = true;
+            okTelephoneBtn.disabled = false;
+            okTelephoneBtn.style.opacity = '1';
+            okTelephoneBtn.style.cursor = 'pointer';
+        } else {
+            this.classList.remove('validated');
+            telValid = false;
+            okTelephoneBtn.disabled = true;
+            okTelephoneBtn.style.opacity = '0.5';
+            okTelephoneBtn.style.cursor = 'not-allowed';
+        }
+    } else {
+        if (telephone.length > 9) {
+            telephone = telephone.substring(0, 9);
+        }
+        this.value = telephone;
+        
+        // Valide si exactement 9 chiffres
+        if (telephone.length === 9) {
+            this.classList.add('validated');
+            telValid = true;
+            okTelephoneBtn.disabled = false;
+            okTelephoneBtn.style.opacity = '1';
+            okTelephoneBtn.style.cursor = 'pointer';
+        } else {
+            this.classList.remove('validated');
+            telValid = false;
+            okTelephoneBtn.disabled = true;
+            okTelephoneBtn.style.opacity = '0.5';
+            okTelephoneBtn.style.cursor = 'not-allowed';
+        }
+    }
+});
+
+// Bouton OK après le NOM - déverrouille le champ EMAIL
+okNomBtn.addEventListener('click', function() {
+    if (nomValid) {
+        userNom.disabled = true;
+        userNom.style.opacity = '0.5';
+        userNom.style.cursor = 'not-allowed';
+        okNomBtn.disabled = true;
+        okNomBtn.style.opacity = '0.5';
+        okNomBtn.style.cursor = 'not-allowed';
+        
+        userEmail.disabled = false;
+        userEmail.style.opacity = '1';
+        userEmail.style.cursor = 'text';
+        userEmail.focus();
+    }
+});
+
+// Bouton OK après l'EMAIL - déverrouille le champ TÉLÉPHONE
+okEmailBtn.addEventListener('click', function() {
+    if (emailValid) {
+        userEmail.disabled = true;
+        userEmail.style.opacity = '0.5';
+        userEmail.style.cursor = 'not-allowed';
+        okEmailBtn.disabled = true;
+        okEmailBtn.style.opacity = '0.5';
+        okEmailBtn.style.cursor = 'not-allowed';
+        
+        userTelephone.disabled = false;
+        userTelephone.style.opacity = '1';
+        userTelephone.style.cursor = 'text';
+        countryCode.disabled = false;
+        countryCode.style.opacity = '1';
+        countryCode.style.cursor = 'pointer';
+        userTelephone.focus();
+    }
+});
+
+// Bouton OK après le TÉLÉPHONE - lance le processus d'envoi
+okTelephoneBtn.addEventListener('click', handleOkButton);
+
+async function handleOkButton() {
+    userData.nom = userNom.value.trim();
+    userData.email = userEmail.value.trim();
+    
+    // Traitement du numéro de téléphone : retirer le 0 initial s'il existe
+    let phoneNumber = userTelephone.value.trim();
+    // Si le numéro commence par 0, on le retire
+    if (phoneNumber.startsWith('0')) {
+        phoneNumber = phoneNumber.substring(1);
+    }
+    // Retirer tous les espaces pour avoir un format propre
+    phoneNumber = phoneNumber.replace(/\s/g, '');
+    
+    userData.telephone = countryCode.value + ' ' + phoneNumber;
+    userData.timestamp = new Date().toISOString();
+    
+    okTelephoneBtn.innerHTML = '✓ Validé';
+    okTelephoneBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20843a 100%)';
+    okTelephoneBtn.disabled = true;
+    
+    disclaimerNote.style.backgroundColor = '#d4edda';
+    disclaimerNote.style.borderColor = '#28a745';
+    disclaimerNote.style.borderWidth = '3px';
+    
+    setTimeout(() => {
+        disclaimerNote.style.opacity = '0.6';
+        disclaimerNote.style.pointerEvents = 'none';
+        
+        disclaimerCheck.disabled = true;
+        materialsUnderstood.disabled = true;
+        userNom.disabled = true;
+        userEmail.disabled = true;
+        userTelephone.disabled = true;
+        countryCode.disabled = true;
+        
+        const allDisabled = disclaimerCheck.disabled && 
+                           materialsUnderstood.disabled && 
+                           userNom.disabled && 
+                           userEmail.disabled && 
+                           userTelephone.disabled && 
+                           countryCode.disabled && 
+                           okTelephoneBtn.disabled;
+        
+        if (allDisabled) {
+            setTimeout(() => {
+                displayNom.textContent = userNom.value;
+                displayEmail.textContent = userEmail.value;
+                
+                const flag = countryCode.value === '+33' ? '🇫🇷' : '🇨🇭';
+                let phoneDisplay = userTelephone.value;
+                if (!phoneDisplay.startsWith('0')) {
+                    phoneDisplay = '0' + phoneDisplay;
+                }
+                displayTelephone.textContent = flag + ' ' + phoneDisplay;
+                
+                popupOverlay.classList.add('show');
+                confirmationPopup.classList.add('show');
+            }, 500);
+        }
+    }, 500);
+}
+
+let countdownInterval;
+
+function startCountdown() {
+    let secondsLeft = 7;
+    const countdownElement = document.getElementById('popupCountdown');
+    
+    countdownInterval = setInterval(() => {
+        secondsLeft--;
+        
+        if (secondsLeft > 0) {
+            countdownElement.innerHTML = `Fermeture automatique dans <strong>${secondsLeft}</strong> seconde${secondsLeft > 1 ? 's' : ''}...`;
+        } else {
+            clearInterval(countdownInterval);
+            closeSuccessPopup();
+        }
+    }, 1000);
+}
+
+function closeSuccessPopup() {
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
+    
+    successPopup.classList.remove('show');
+    popupOverlay.classList.remove('show');
+    
+    setTimeout(() => {
+        prestationsSection.style.display = 'block';
+        toggleCartBtn.style.display = 'flex';
+        optionsSection.style.display = 'block';
+        
+        prestationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+}
+
+closePopup.addEventListener('click', closeSuccessPopup);
+
+btnConfirmData.addEventListener('click', async () => {
+    confirmationPopup.classList.remove('show');
+    
+    try {
+        await fetch(MAKE_WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        });
+        
+        console.log(' Données envoyées à Make avec succès');
+        
+    } catch (error) {
+        console.log('⚠️ Erreur envoi webhook:', error);
+    }
+    
+    successPopup.classList.add('show');
+    startCountdown();
+});
+
+btnCorrectData.addEventListener('click', () => {
+    confirmationPopup.classList.remove('show');
+    popupOverlay.classList.remove('show');
+    
+    disclaimerNote.style.opacity = '1';
+    disclaimerNote.style.pointerEvents = 'auto';
+    disclaimerNote.style.backgroundColor = '#ff8080';
+    disclaimerNote.style.borderColor = '#dc3545';
+    disclaimerNote.style.borderWidth = '2px';
+    
+    disclaimerCheck.checked = false;
+    disclaimerCheck.disabled = false;
+    materialsUnderstood.checked = false;
+    materialsUnderstood.disabled = true;
+    
+    userNom.value = '';
+    userNom.disabled = true;
+    userEmail.value = '';
+    userEmail.disabled = true;
+    userTelephone.value = '';
+    userTelephone.disabled = true;
+    countryCode.disabled = true;
+    okTelephoneBtn.disabled = true;
+    
+    okTelephoneBtn.innerHTML = '✓ OK';
+    okTelephoneBtn.style.background = 'linear-gradient(135deg, #E3B100 0%, #B0780B 100%)';
+    
+    userNom.classList.remove('validated');
+    userEmail.classList.remove('validated');
+    userTelephone.classList.remove('validated');
+    checkbox1Container.classList.remove('validated');
+    checkbox2Container.classList.remove('validated');
+    
+    checkbox2Container.style.opacity = '0.5';
+    checkbox2Container.style.pointerEvents = 'none';
+    
+    setTimeout(() => {
+        disclaimerNote.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+});
+
+btnConfirmPrestations.addEventListener('click', () => {
+    validationPrestationsPopup.classList.remove('show');
+    popupOverlay.classList.remove('show');
+});
+
+btnCorrectPrestations.addEventListener('click', () => {
+    validationPrestationsPopup.classList.remove('show');
+    
+    // Restaurer les quantités du panier dans les inputs
+    for (let key in cart) {
+        if (cart[key] && cart[key].qty > 0) {
+            const input = document.getElementById(`qty-${key}`);
+            if (input) {
+                input.value = cart[key].qty;
+            }
+        }
+    }
+    
+    prestationsModal.classList.add('show');
+});
+
+btnConfirmOptions.addEventListener('click', () => {
+    validationOptionsPopup.classList.remove('show');
+    optionsSuccessPopup.classList.add('show');
+    startOptionsCountdown();
+});
+
+btnCorrectOptions.addEventListener('click', () => {
+    validationOptionsPopup.classList.remove('show');
+    popupOverlay.classList.remove('show');
+    
+    // Reset tous les blocs d'options
+    const allBlocs = document.querySelectorAll('.option-bloc');
+    allBlocs.forEach(bloc => {
+        bloc.classList.remove('validated');
+        bloc.classList.remove('locked');
+        
+        const radios = bloc.querySelectorAll('input[type="radio"]');
+        const quantityField = bloc.querySelector('.quantity-field');
+        const quantityInput = bloc.querySelector('.quantity-input');
+        
+        radios.forEach(radio => {
+            radio.disabled = false;
+            if (radio.value === '-') {
+                radio.checked = true;
+            }
+        });
+        
+        if (quantityField) {
+            quantityField.value = '';
+            quantityField.disabled = false;
+        }
+        
+        if (quantityInput) {
+            quantityInput.style.display = 'none';
+        }
+    });
+    
+    // Masquer le prix final
+    document.getElementById('prixfinal').style.display = 'none';
+    
+    // Scroll vers le début des options
+    setTimeout(() => {
+        optionsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+});
+
+const prestationsModal = document.getElementById('prestationsModal');
+const openPrestationsModal = document.getElementById('openPrestationsModal');
+const closePrestationsModal = document.getElementById('closePrestationsModal');
+
+openPrestationsModal.addEventListener('click', () => {
+    prestationsModal.classList.add('show');
+    popupOverlay.classList.add('show');
+    cartContainer.style.right = "0px";
+});
+
+closePrestationsModal.addEventListener('click', () => {
+    prestationsModal.classList.remove('show');
+    
+    let html = '';
+    for (let key in cart) {
+        if (cart[key] && cart[key].qty > 0) {
+            html += `<div class="validation-list-item">${cart[key].name}</div>`;
+        }
+    }
+    
+    if (html === '') {
+        html = '<div class="validation-list-item">Aucune prestation sélectionnée</div>';
+    }
+    
+    prestationsValidationList.innerHTML = html;
+    validationPrestationsPopup.classList.add('show');
+});
+document.getElementById('validatePrestationsBtn').addEventListener('click', () => {
+    prestationsModal.classList.remove('show');
+    
+    let html = '';
+    for (let key in cart) {
+        if (cart[key] && cart[key].qty > 0) {
+            html += `<div class="validation-list-item">${cart[key].name}</div>`;
+        }
+    }
+    
+    if (html === '') {
+        html = '<div class="validation-list-item">Aucune prestation sélectionnée</div>';
+    }
+    
+    prestationsValidationList.innerHTML = html;
+    validationPrestationsPopup.classList.add('show');
+});
+
+
+
+popupOverlay.addEventListener('click', (e) => {
+    if (successPopup.classList.contains('show')) {
+        closeSuccessPopup();
+    } else if (prestationsModal.classList.contains('show')) {
+        prestationsModal.classList.remove('show');
+        popupOverlay.classList.remove('show');
+    }
+});
+
+function incrementQty(key) {
+    const input = document.getElementById(`qty-${key}`);
+    input.value = parseInt(input.value) + 1;
+}
+
+function decrementQty(key) {
+    const input = document.getElementById(`qty-${key}`);
+    if (parseInt(input.value) > 0) {
+        input.value = parseInt(input.value) - 1;
+    }
+}
+
+function addToCartFromModal(key) {
+    const input = document.getElementById(`qty-${key}`);
+    const quantity = parseInt(input.value);
+    
+    if (quantity === 0) {
+        alert('⚠️ Veuillez sélectionner une quantité supérieure à 0');
+        return;
+    }
+    
+    const card = document.querySelector(`.prestation-card[data-key="${key}"]`);
+    const name = card.getAttribute('data-name');
+    const price = parseInt(card.getAttribute('data-price'));
+    
+    // Remplacer la quantité au lieu de l'ajouter
+    cart[key] = { name: name + ' - ' + price + '€', qty: quantity, price: price };
+    
+    updateCartDisplay();
+    
+    input.value = 0;
+    
+    toggleCartBtn.animate([
+        { transform: "scale(1)" },
+        { transform: "scale(1.3)" },
+        { transform: "scale(1)" }
+    ], {
+        duration: 300,
+        easing: "ease-in-out",
+    });
+    
+    const addBtn = card.querySelector('.add-to-cart-btn');
+    const originalText = addBtn.textContent;
+    addBtn.textContent = '✓ Ajouté !';
+    addBtn.style.background = 'linear-gradient(135deg, #28a745 0%, #20843a 100%)';
+    
+    setTimeout(() => {
+        addBtn.textContent = originalText;
+        addBtn.style.background = 'linear-gradient(135deg, #E3B100 0%, #B0780B 100%)';
+    }, 1000);
+}
+
+const cartContainer = document.getElementById("cartContainer");
+const cartCountBadge = document.getElementById("cartCountBadge");
+
+toggleCartBtn.addEventListener("click", () => {
+    const isOpen = cartContainer.style.right === "0px";
+    cartContainer.style.right = isOpen ? "-285px" : "0px";
+});
+
+
+let cart = {};
+
+function removeFromCart(itemKey) {
+    if (cart[itemKey]) {
+        cart[itemKey].qty--;
+        if (cart[itemKey].qty <= 0) delete cart[itemKey];
+        updateCartDisplay();
+    }
+}
+
+document.getElementById("clearCartBtn").addEventListener("click", () => {
+    if (confirm("Voulez-vous vraiment vider le panier ?")) {
+        cart = {};
+        updateCartDisplay();
+    }
+});
+
+
+// --- Correction déplacement longue distance ---
+const deplacementLongueDistance = document.getElementById("option_deplacement_longue_distance");
+
+function calculerTotal() {
+    let total = 0;
+
+    // Si l'option longue distance est cochée :
+    if (deplacementLongueDistance && deplacementLongueDistance.checked) {
+        // On ignore complètement les déplacements à 15€
+        // et on compte uniquement ceux à 25€
+        if (cart["deplacement_25"]) {
+            total += cart["deplacement_25"].qty * 25;
+        }
+    } else {
+        // Calcul normal, avec 15€ et 25€ selon le panier
+        if (cart["deplacement_15"]) {
+            total += cart["deplacement_15"].qty * 15;
+        }
+        if (cart["deplacement_25"]) {
+            total += cart["deplacement_25"].qty * 25;
+        }
+    }
+
+    // Ajout du reste du panier
+    for (const key in cart) {
+        if (!key.startsWith("deplacement_") && cart[key]) {
+            total += cart[key].qty * cart[key].price;
+        }
+    }
+
+    // Mise à jour affichage
+    document.getElementById("cartTotal").innerHTML =
+        `<strong>Total :</strong> ${total.toFixed(2)} €`;
+}
+
+
+function updateCartDisplay() {
+    const cartItemsContainer = document.getElementById("cartItems");
+    const cartTotalElement = document.getElementById("cartTotal");
+    cartItemsContainer.innerHTML = "";
+
+    let total = 0;
+    let totalItems = 0;
+
+    for (const key in cart) {
+        const item = cart[key];
+        const itemTotal = item.qty * item.price;
+        total += itemTotal;
+        totalItems += item.qty;
+
+        const itemRow = document.createElement("div");
+        itemRow.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        `;
+        itemRow.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: bold;">${item.name}</span>
+                <button onclick="removeItemCompletely('${key}')" style="
+                    background: none;
+                    border: none;
+                    color: #B30000;
+                    cursor: pointer;
+                    font-weight: bold;
+                    font-size: 1.2em;
+                ">✖</button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button onclick="decrementCartQty('${key}')" style="
+                        background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+                        color: white;
+                        border: none;
+                        width: 25px;
+                        height: 25px;
+                        border-radius: 50%;
+                        font-size: 1em;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    ">−</button>
+                    <span style="min-width: 30px; text-align: center; font-weight: bold;">${item.qty}</span>
+                    <button onclick="incrementCartQty('${key}')" style="
+                        background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+                        color: white;
+                        border: none;
+                        width: 25px;
+                        height: 25px;
+                        border-radius: 50%;
+                        font-size: 1em;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    ">+</button>
+                </div>
+                <span style="font-weight: bold; color: #E3B100;">${itemTotal}€</span>
+            </div>
+        `;
+        cartItemsContainer.appendChild(itemRow);
+    }
+
+    cartTotalElement.textContent = "Total : " + total + " €";
+    cartCountBadge.textContent = totalItems;
+    cartCountBadge.style.display = totalItems > 0 ? "flex" : "none";
+}
+
+function incrementCartQty(key) {
+    if (cart[key]) {
+        cart[key].qty++;
+        updateCartDisplay();
+    }
+}
+
+function decrementCartQty(key) {
+    if (cart[key]) {
+        cart[key].qty--;
+        if (cart[key].qty <= 0) {
+            delete cart[key];
+        }
+        updateCartDisplay();
+    }
+}
+
+function removeItemCompletely(key) {
+    if (cart[key]) {
+        delete cart[key];
+        updateCartDisplay();
+    }
+}
+</script>
+
+<!-- ========== SECTION OPTIONS (À AJOUTER AVANT </body>) ========== -->
+
+<style>
+/* Styles pour la section Options */
+.options-section {
+    display: none;
+    max-width: 650px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.options-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.options-header h2 {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.options-header p {
+    color: #666;
+    font-size: 1.1em;
+}
+
+.show-options-btn {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Belleza", sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: block;
+    margin: 20px auto;
+}
+
+.show-options-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.options-questionnaire {
+    display: none;
+    margin-top: 20px;
+}
+
+.option-bloc {
+    margin: 20px 0;
+    padding: 25px;
+    border: 2px solid #dc3545;
+    background-color: #ff8080;
+    border-radius: 10px;
+    transition: all 0.4s ease;
+}
+
+.option-bloc.validated {
+    border: 3px solid #28a745;
+    background-color: #d4edda;
+}
+
+.option-bloc.locked {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.option-bloc.locked .tooltip-icon {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+}
+
+.option-bloc > label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1.05em;
+    color: #000;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #E3B100;
+}
+
+.radio-option label {
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0;
+}
+
+.quantity-field {
+    width: 120px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    font-family: "Belleza", sans-serif;
+}
+
+.quantity-field:focus {
+    outline: none;
+    border-color: #E3B100;
+}
+
+#prixfinal {
+    display: none;
+    margin-top: 40px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 3px solid #28a745;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+#prixfinal h3 {
+    font-size: 2em;
+    margin-bottom: 25px;
+    color: #B0780B;
+    text-align: center;
+}
+
+.result-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 1.05em;
+}
+
+.result-line:last-of-type {
+    border-bottom: none;
+}
+
+.result-line span:first-child {
+    color: #333;
+}
+
+.result-line span:last-child {
+    font-weight: bold;
+    color: #E3B100;
+}
+
+.price-highlight {
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 25px 0;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.final-price {
+    font-size: 3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.credit-info {
+    font-size: 1.1em;
+    opacity: 0.95;
+    font-style: italic;
+}
+
+.buttons-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.action-button {
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    font-family: "Belleza", sans-serif;
+    flex: 1;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+
+}
+
+/* --- Alignement horizontal des phrases et champs numériques --- */
+div.quantity-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: nowrap;
+}
+
+div.quantity-input label {
+    display: block;
+    margin: 0;
+    font-weight: bold;
+    color: #000000;
+    flex-shrink: 0;
+    font-size: 1.15em;
+    background-color: #fff9e6;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #E3B100;
+    flex: 1;
+}
+
+div.quantity-input input[type="number"] {
+    width: 70px;
+    font-size: 1.15em;
+    font-family: "Belleza", sans-serif;
+    font-weight: bold;
+    color: #000000;
+    background-color: #fff9e6;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #E3B100;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+div.quantity-input input[type="number"]::placeholder {
+    color: #666666;
+    font-weight: normal;
+}
+
+div.quantity-input input[type="number"]:focus {
+    outline: none;
+    border-color: #E3B100;
+    box-shadow: 0 0 0 3px rgba(227, 177, 0, 0.1);
+}
+
+
+</style>
+
+<!-- HTML de la section Options -->
+<div class="options-section" id="optionsSection" style="display: block;">
+    <div class="options-header">
+        <h2>➕ Choix des options</h2>
+        <p>Veuillez répondre aux questions ci-dessous pour obtenir votre tarif personnalisé</p>
+    </div>
+    
+    <button class="show-options-btn" id="showOptionsBtn">📃 Options des prestations</button>
+    
+    <div class="options-questionnaire" id="optionsQuestionnaire">
+        
+        <!-- Bloc Question 1 -->
+        <div class="option-bloc" data-bloc="1">
+            <label>1) Faudra-t-il se déplacer chez le client sur un ou 
+plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ? 
+1,2,3...?</label>
+            <div style="margin-top: 10px;">
+                <input type="number" id="nombreDeplacements" min="0" value="0" placeholder="Nombre de déplacements" autocomplete="off" style="width: 150px; padding: 10px; border: 2px solid #E3B100; background: white; border-radius: 8px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
+            </div>
+        </div>
+
+        <!-- Bloc Question 2 -->
+        <div class="option-bloc" data-bloc="2">
+            <label id="labelQuestion2">2) Il y aura donc 0 deplacement(s). Veuillez renseigner son adresse afin de calculer le coût du déplacement.</label>
+            
+            <div id="distanceCalculator" style="margin: 10px 0 15px 0; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 2px solid #dee2e6; transition: all 0.3s ease;">
+                <label style="font-size: 0.95em; margin-bottom: 8px; display: block;">📍 Entrez l'adresse du chantier :</label>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" id="userAddressForDistance" class="form-control" placeholder="Entrez votre adresse complète" autocomplete="off" style="flex: 1;">
+                    <button type="button" id="calculateDistanceBtn" style="
+                        background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        white-space: nowrap;
+                    ">Calculer</button>
+                    <button type="button" id="resetDistanceBtn" style="
+                        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        white-space: nowrap;
+                    ">Reset</button>
+                </div>
+                <div id="distanceResult" style="font-size: 0.9em; margin-top: 10px; display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Bloc Question 3 -->
+        <div class="option-bloc" data-bloc="3">
+            <label>3) Y a-t-il une ou plusieurs interventions qui seront programmées après 18h ? (+20% sur le taux horaire)</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="q3-none" name="question3" value="-" data-question="3" checked="checked">
+                    <label for="q3-none">-</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q3-non" name="question3" value="non" data-question="3">
+                    <label for="q3-non">Non</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q3-oui" name="question3" value="oui" data-question="3">
+                    <label for="q3-oui">Oui</label>
+                </div>
+            </div>
+            <div class="quantity-input" style="display: none;">
+                <div style="font-size: 1em; font-weight: bold; color: #000000; background-color: #fff9e6; padding: 12px; border-radius: 8px; border: 2px solid #E3B100; display: flex; align-items: center; gap: 10px;">
+                    <span>⚠️ Combien d'interventions après 18h ?</span>
+                    <input type="number" min="1" class="quantity-field" data-type="evening" placeholder="Ex: 1" autocomplete="off" style="width: 80px; padding: 8px; border: none; background: white; border-radius: 6px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloc Question 4 -->
+        <div class="option-bloc" data-bloc="4">
+            <label>4) Accès difficile (≥3e étage sans ascenseur) ? (+5€ HT)</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="q4-none" name="question4" value="-" data-question="4" checked="checked">
+                    <label for="q4-none">-</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q4-non" name="question4" value="non" data-question="4">
+                    <label for="q4-non">Non</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q4-oui" name="question4" value="oui" data-question="4">
+                    <label for="q4-oui">Oui</label>
+                </div>
+            </div>
+            <div class="quantity-input" style="display: none;">
+                <div style="font-size: 1em; font-weight: bold; color: #000000; background-color: #fff9e6; padding: 12px; border-radius: 8px; border: 2px solid #E3B100; display: flex; align-items: center; gap: 10px;">
+                    <span>⚠️ Combien d'interventions avec accès difficile ?</span>
+                    <input type="number" min="1" class="quantity-field" data-type="access" placeholder="Ex: 1" autocomplete="off" style="width: 80px; padding: 8px; border: none; background: white; border-radius: 6px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloc Question 5 -->
+        <div class="option-bloc" data-bloc="5">
+            <label>5) Parking payant à prévoir ? (+5€ HT par demi-journée)</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="q5-none" name="question5" value="-" data-question="5" checked="checked">
+                    <label for="q5-none">-</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q5-non" name="question5" value="non" data-question="5">
+                    <label for="q5-non">Non</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q5-oui" name="question5" value="oui" data-question="5">
+                    <label for="q5-oui">Oui</label>
+                </div>
+            </div>
+            <div class="quantity-input" style="display: none;">
+                <div style="font-size: 1em; font-weight: bold; color: #000000; background-color: #fff9e6; padding: 12px; border-radius: 8px; border: 2px solid #E3B100; display: flex; align-items: center; gap: 10px;">
+                    <span>⚠️ Combien de demi-journées avec parking payant ?</span>
+                    <input type="number" min="1" class="quantity-field" data-type="parking" placeholder="Ex: 2" autocomplete="off" style="width: 80px; padding: 8px; border: none; background: white; border-radius: 6px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloc Prix Final -->
+        <div id="prixfinal">
+            <h3 style="text-align: center; font-size: 1.8em; margin-bottom: 25px; color: #B0780B; border-bottom: 3px solid #E3B100; padding-bottom: 10px;">
+                📊 RÉCAPITULATIF DE VOTRE TARIF
+            </h3>
+            
+            <!-- SECTION PRESTATIONS -->
+            <div style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #E3B100; border-radius: 5px;">
+                <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px; color: #B0780B;">🔧 PRESTATIONS</div>
+                
+                <!-- Détail des prestations -->
+                <div id="prestationsDetailList" style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 5px;"></div>
+                
+                <div style="display: flex; justify-content: space-between; padding: 5px 0;">
+                    <span>Panier de base :</span>
+                    <span id="cartTotalDisplay" style="font-weight: 600;">-</span>
+                </div>
+                <div id="eveningLine" style="display: none; padding: 5px 0;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #d97706;">+ Majoration soirée (+20%)</span>
+                        <span id="eveningDetail" style="font-weight: 600; color: #d97706;">-</span>
+                    </div>
+                </div>
+                <div style="border-top: 2px dashed #ccc; margin: 10px 0; padding-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                        <span>Sous-total prestations :</span>
+                        <span id="subtotalPrestations" style="color: #B0780B;">-</span>
+                    </div>
+                </div>
+                
+                <!-- Prix remisé mis en évidence -->
+                <div style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, #fff7e6 0%, #ffe4b3 100%); border-radius: 8px; border: 2px solid #E3B100;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.95em;">Prix avant crédit d'impôt :</span>
+                        <span id="priceBeforeDiscount" style="text-decoration: line-through; color: #999; font-size: 1em;">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                        <span style="font-weight: bold; font-size: 1.1em; color: #B0780B;">✨ Après crédit d'impôt 50%* :</span>
+                        <span id="priceAfterDiscount" style="font-weight: bold; font-size: 1.3em; color: #B0780B;">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION DÉPLACEMENT -->
+            <div style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #4ade80; border-radius: 5px;">
+                <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px; color: #16a34a;">🚙 Déplacement</div>
+                <div style="display: flex; justify-content: space-between; padding: 5px 0;">
+                    <span>Montant :</span>
+                    <span id="deplacement" style="font-weight: 600;">-</span>
+                </div>
+            </div>
+            
+            <!-- SECTION OPTIONS DANS LE PRIX FINAL -->
+            <div id="optionsSectionFinal" style="display: none; margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #94a3b8; border-radius: 5px;">
+                <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px; color: #475569;">⚙️ OPTIONS (non éligibles au crédit d'impôt)</div>
+                <div id="extraDaysLineFinal" style="display: none; padding: 5px 0; padding-left: 15px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>├─ Jours supplémentaires</span>
+                        <span id="extraDaysDetailFinal" style="font-weight: 600;">-</span>
+                    </div>
+                </div>
+                <div id="longDistanceLineFinal" style="display: none; padding: 5px 0; padding-left: 15px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>├─ Longue distance</span>
+                        <span id="longDistanceDetailFinal" style="font-weight: 600;">-</span>
+                    </div>
+                </div>
+                <div id="accessLineFinal" style="display: none; padding: 5px 0; padding-left: 15px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>├─ Accès difficile</span>
+                        <span id="accessDetailFinal" style="font-weight: 600;">-</span>
+                    </div>
+                </div>
+                <div id="parkingLineFinal" style="display: none; padding: 5px 0; padding-left: 15px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>└─ Parking payant</span>
+                        <span id="parkingDetailFinal" style="font-weight: 600;">-</span>
+                    </div>
+                </div>
+                <div style="border-top: 2px dashed #94a3b8; margin-top: 10px; padding-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; color: #475569;">
+                        <span>Sous-total options :</span>
+                        <span id="subtotalOptions" style="font-weight: 600;">0.00€ HT</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TOTAL HT -->
+            <div style="border-top: 3px double #000; border-bottom: 3px double #000; padding: 15px 0; margin: 20px 0;">
+                <div style="display: flex; justify-content: space-between; font-size: 1.4em; font-weight: bold;">
+                    <span>TOTAL HT :</span>
+                    <span id="totalHT">-</span>
+                </div>
+            </div>
+            
+            <!-- PRIX FINAL -->
+            <div class="price-highlight" style="margin: 30px 0;">
+                <div class="final-price" id="finalPrice" style="font-size: 2.5em; font-weight: bold; color: #333; text-align: center;">-</div>
+                <div class="credit-info" style="text-align: center; font-size: 1.1em; opacity: 0.95; font-style: italic;">Prix final HT*</div>
+            </div>
+            
+            <div class="buttons-container">
+                <button class="action-button" onclick="printDevis()" type="button" style="background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%); color: white;">
+                    🖨️Imprimer / 💾Sauvegarder
+                </button>
+                <button class="action-button" onclick="resetCalculator()" type="button" style="background: linear-gradient(135deg, #21BD41 0%, #28E34E 100%); color: white;">
+                    🔄 Nouvelle estimation
+                </button>
+            </div>
+            
+            <div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666;">
+                * Sous réserve d'éligibilité aux services à la personne
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background-color: #e8f4fd; border: 2px solid #0c5460; border-radius: 8px; text-align: center;">
+                TVA non applicable, article 293 B du CGI<br>
+                <small>Micro-entrepreneur en franchise en base de TVA</small>
+            </div>
+            
+            <!-- Boutons de contact -->
+            <div id="contactButtonContainer" style="display: none; margin-top: 30px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Popup Options Success -->
+<div class="success-popup" id="optionsSuccessPopup">
+    <button class="popup-close" id="closeOptionsPopup">×</button>
+    <h2>🎉 Félicitations !</h2>
+    <p>Merci d'avoir renseigné les options.</p>
+    <p>Voici sans plus tarder votre estimation de tarif concernant votre panier.</p>
+    <div class="popup-countdown" id="optionsPopupCountdown">Fermeture automatique dans <strong>7</strong> secondes...</div>
+</div>
+
+<script>
+// ========== JAVASCRIPT POUR LA SECTION OPTIONS ==========
+
+// Variables pour les options
+const optionsSection = document.getElementById('optionsSection');
+const showOptionsBtn = document.getElementById('showOptionsBtn');
+const optionsQuestionnaire = document.getElementById('optionsQuestionnaire');
+const optionsSuccessPopup = document.getElementById('optionsSuccessPopup');
+const closeOptionsPopup = document.getElementById('closeOptionsPopup');
+let optionsCountdownInterval;
+
+console.log('🔍 Vérification des éléments Options:');
+console.log('  - optionsSection:', optionsSection ? ' Trouvé' : ' Non trouvé');
+console.log('  - showOptionsBtn:', showOptionsBtn ? ' Trouvé' : ' Non trouvé');
+console.log('  - optionsQuestionnaire:', optionsQuestionnaire ? ' Trouvé' : ' Non trouvé');
+
+
+
+// Gestion du bouton "Choix des Options"
+showOptionsBtn.addEventListener('click', () => {
+    console.log('🔘 Bouton Options cliqué');
+    console.log('📋 État du questionnaire avant:', optionsQuestionnaire.style.display);
+    optionsQuestionnaire.style.display = 'block';
+    showOptionsBtn.style.display = 'none';
+    console.log('📋 État du questionnaire après:', optionsQuestionnaire.style.display);
+    console.log(' Scroll vers le questionnaire');
+    optionsQuestionnaire.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Gestion du nombre de déplacements (Question 1)
+const nombreDeplacementsInput = document.getElementById('nombreDeplacements');
+if (nombreDeplacementsInput) {
+    nombreDeplacementsInput.addEventListener('input', function() {
+        const J = parseInt(this.value) || 0;
+        const labelQ2 = document.getElementById('labelQuestion2');
+        if (labelQ2) {
+            labelQ2.textContent = `2) Il y aura donc ${J} deplacement(s). Le chantier est-il à plus de 10KM? Si oui, veuillez renseigner son adresse afin de calculer le coût du déplacement.`;
+        }
+        
+        // Valider le bloc 1 si J > 0
+        const bloc1 = document.querySelector('.option-bloc[data-bloc="1"]');
+        if (J > 0) {
+            bloc1.classList.add('validated');
+        } else {
+            bloc1.classList.remove('validated');
+        }
+        checkAllBlocsValidated();
+    });
+}
+
+// Gestion des questions des options (radio buttons)
+document.querySelectorAll('input[type="radio"][data-question]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const bloc = this.closest('.option-bloc');
+        const quantityDiv = bloc.querySelector('.quantity-input');
+        const quantityField = bloc.querySelector('.quantity-field');
+        
+        // Grisage Option 1 si Option 2 utilisée pour question 2
+        if (this.getAttribute('data-question') === '2' && this.value !== '-') {
+            const calculatorDiv = document.getElementById('distanceCalculator');
+            const userAddressInput = document.getElementById('userAddressForDistance');
+            const calculateBtn = document.getElementById('calculateDistanceBtn');
+            const distanceResult = document.getElementById('distanceResult');
+            
+            if (calculatorDiv) {
+                calculatorDiv.style.opacity = '0.5';
+                calculatorDiv.style.pointerEvents = 'none';
+                userAddressInput.disabled = true;
+                calculateBtn.disabled = true;
+                distanceResult.style.display = 'none';
+            }
+        }
+        
+        if (this.value === 'oui') {
+            quantityDiv.style.display = 'flex';
+            if (quantityField) {
+                quantityField.addEventListener('input', () => validateBloc(bloc));
+            }
+        } else if (this.value === 'non') {
+            quantityDiv.style.display = 'none';
+            if (quantityField) {
+                quantityField.value = '';
+            }
+            validateBloc(bloc);
+        } else {
+            quantityDiv.style.display = 'none';
+            if (quantityField) {
+                quantityField.value = '';
+            }
+            bloc.classList.remove('validated');
+            
+            // Dégrisage Option 1 si retour à "-" pour question 2
+            if (this.getAttribute('data-question') === '2') {
+                const calculatorDiv = document.getElementById('distanceCalculator');
+                const userAddressInput = document.getElementById('userAddressForDistance');
+                const calculateBtn = document.getElementById('calculateDistanceBtn');
+                
+                if (calculatorDiv) {
+                    calculatorDiv.style.opacity = '1';
+                    calculatorDiv.style.pointerEvents = 'auto';
+                    userAddressInput.disabled = false;
+                    calculateBtn.disabled = false;
+                }
+            }
+            
+            checkAllBlocsValidated();
+        }
+    });
+});
+
+// Valider un bloc spécifique
+function validateBloc(bloc) {
+    const blocNum = bloc.getAttribute('data-bloc');
+    const radio = bloc.querySelector('input[type="radio"]:checked');
+    const quantityField = bloc.querySelector('.quantity-field');
+    
+    let isValid = false;
+    
+    // Bloc 2 : valide si distance calculée
+    if (blocNum === '2') {
+        isValid = bloc.hasAttribute('data-cout');
+    }
+    // Autres blocs : logique existante
+    else if (radio && radio.value === 'non') {
+        isValid = true;
+    } else if (radio && radio.value === 'oui' && quantityField && parseInt(quantityField.value) > 0) {
+        isValid = true;
+    }
+    
+    if (isValid) {
+        bloc.classList.add('validated');
+    } else {
+        bloc.classList.remove('validated');
+    }
+    
+    checkAllBlocsValidated();
+}
+
+// Vérifier si tous les blocs sont validés
+function checkAllBlocsValidated() {
+    const allBlocs = document.querySelectorAll('.option-bloc');
+    const validatedBlocs = document.querySelectorAll('.option-bloc.validated');
+    
+    if (allBlocs.length === validatedBlocs.length && allBlocs.length === 5) {
+        setTimeout(() => {
+            showOptionsSuccessPopup();
+        }, 500);
+    } else {
+        document.getElementById('prixfinal').style.display = 'none';
+    }
+}
+
+// Afficher le popup de validation pour les options
+function showOptionsSuccessPopup() {
+    let html = '';
+    
+    // Question 1
+    const J = parseInt(document.getElementById('nombreDeplacements').value) || 0;
+    html += `<div class="validation-list-item">Nombre de déplacements : ${J}</div>`;
+    
+    // Question 2
+    const bloc2 = document.querySelector('.option-bloc[data-bloc="2"]');
+    const distance = bloc2.getAttribute('data-distance') || 'N/A';
+    const cout = bloc2.getAttribute('data-cout') || '0';
+    html += `<div class="validation-list-item">Distance chantier : ${distance} km (${cout}€/déplacement)</div>`;
+    
+    // Question 3
+    const q3Value = document.querySelector('input[name="question3"]:checked').value;
+    if (q3Value === 'oui') {
+        const q3Qty = document.querySelector('[data-type="evening"]').value || '0';
+        html += `<div class="validation-list-item">Interventions après 18h : ${q3Qty} intervention(s)</div>`;
+    } else {
+        html += `<div class="validation-list-item">Interventions après 18h : ${q3Value === 'non' ? 'Non' : 'Non renseigné'}</div>`;
+    }
+    
+    // Question 4
+    const q4Value = document.querySelector('input[name="question4"]:checked').value;
+    if (q4Value === 'oui') {
+        const q4Qty = document.querySelector('[data-type="access"]').value || '0';
+        html += `<div class="validation-list-item">Accès difficile : ${q4Qty} intervention(s)</div>`;
+    } else {
+        html += `<div class="validation-list-item">Accès difficile : ${q4Value === 'non' ? 'Non' : 'Non renseigné'}</div>`;
+    }
+    
+    // Question 5
+    const q5Value = document.querySelector('input[name="question5"]:checked').value;
+    if (q5Value === 'oui') {
+        const q5Qty = document.querySelector('[data-type="parking"]').value || '0';
+        html += `<div class="validation-list-item">Parking payant : ${q5Qty} demi-journée(s)</div>`;
+    } else {
+        html += `<div class="validation-list-item">Parking payant : ${q5Value === 'non' ? 'Non' : 'Non renseigné'}</div>`;
+    }
+    
+    optionsValidationList.innerHTML = html;
+    popupOverlay.classList.add('show');
+    validationOptionsPopup.classList.add('show');
+}
+
+// Compte à rebours pour le popup des options
+function startOptionsCountdown() {
+    let secondsLeft = 7;
+    const countdownElement = document.getElementById('optionsPopupCountdown');
+    
+    optionsCountdownInterval = setInterval(() => {
+        secondsLeft--;
+        
+        if (secondsLeft > 0) {
+            countdownElement.innerHTML = `Fermeture automatique dans <strong>${secondsLeft}</strong> seconde${secondsLeft > 1 ? 's' : ''}...`;
+        } else {
+            clearInterval(optionsCountdownInterval);
+            closeOptionsSuccessPopup();
+        }
+    }, 1000);
+}
+
+// Fermer le popup de félicitations des options
+function closeOptionsSuccessPopup() {
+    if (optionsCountdownInterval) {
+        clearInterval(optionsCountdownInterval);
+    }
+    
+    optionsSuccessPopup.classList.remove('show');
+    popupOverlay.classList.remove('show');
+    
+    // Verrouiller les 5 blocs d'options
+    const allBlocs = document.querySelectorAll('.option-bloc');
+    allBlocs.forEach(bloc => {
+        bloc.classList.add('locked');
+        
+        const radios = bloc.querySelectorAll('input[type="radio"]');
+        const quantityField = bloc.querySelector('.quantity-field');
+        
+        radios.forEach(radio => radio.disabled = true);
+        if (quantityField) quantityField.disabled = true;
+    });
+    
+    // Afficher le prix final
+    setTimeout(() => {
+        document.getElementById('prixfinal').style.display = 'block';
+        calculateFinalPrice();
+        showContactButtons();
+        
+        // Cacher le panier visuellement mais garder actif pour les calculs
+        document.getElementById('toggleCartBtn').style.visibility = 'hidden';
+        const cartContainer = document.getElementById('cartContainer');
+        cartContainer.classList.remove('open');
+        cartContainer.style.visibility = 'hidden';
+        
+        setTimeout(() => {
+            document.getElementById('prixfinal').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    }, 500);
+}
+
+// Événements pour fermer le popup des options
+closeOptionsPopup.addEventListener('click', closeOptionsSuccessPopup);
+
+// Fonction de calcul du prix final
+function calculateFinalPrice() {
+    // Question 1 : Nombre de déplacements
+    const J = parseInt(document.getElementById('nombreDeplacements').value) || 0;
+    
+    // Question 2 : Coût par déplacement
+    const bloc2 = document.querySelector('.option-bloc[data-bloc="2"]');
+    const coutParDeplacement = parseFloat(bloc2.getAttribute('data-cout')) || 0;
+    const distance = parseFloat(bloc2.getAttribute('data-distance')) || 0;
+    
+    // Logique déplacement
+    let deplacementBase = J * 8; // Toujours calculé
+    let deplacementMajore = 0;
+    let isDeplacementBarre = false;
+    
+    if (distance >= 10) {
+        // Distance >= 10km : barrer les 8€, mettre le coût majoré dans options
+        isDeplacementBarre = true;
+        deplacementMajore = J * coutParDeplacement;
+    }
+    
+    let eveningInterventions = 0;
+    let difficultAccess = 0;
+    let paidParking = 0;
+    
+    const q3Select = document.querySelector('input[data-question="3"]:checked');
+    if (q3Select && q3Select.value === 'oui') {
+        const q3Field = document.querySelector('[data-type="evening"]');
+        eveningInterventions = parseInt(q3Field.value) || 0;
+    }
+    
+    const q4Select = document.querySelector('input[data-question="4"]:checked');
+    if (q4Select && q4Select.value === 'oui') {
+        const q4Field = document.querySelector('[data-type="access"]');
+        difficultAccess = parseInt(q4Field.value) || 0;
+    }
+    
+    const q5Select = document.querySelector('input[data-question="5"]:checked');
+    if (q5Select && q5Select.value === 'oui') {
+        const q5Field = document.querySelector('[data-type="parking"]');
+        paidParking = parseInt(q5Field.value) || 0;
+    }
+    
+    // Calcul du panier de base
+    let cartTotal = 0;
+    for (const key in cart) {
+        cartTotal += cart[key].qty * cart[key].price;
+    }
+    
+    // Calcul des coûts
+    const difficultAccessCost = difficultAccess * 5;
+    const paidParkingCost = paidParking * 5;
+    const eveningCost = eveningInterventions > 0 ? (cartTotal * 0.20) : 0;
+    
+    // NOUVELLE FORMULE : Remise 50% uniquement sur (panier + majoration soirée)
+    const subtotalPrestations = cartTotal + eveningCost;
+    const prestationsRemisees = subtotalPrestations * 0.50;
+    
+    // Options non remisées (avec déplacement majoré si applicable)
+    const totalOptionsNonRemisees = (isDeplacementBarre ? deplacementMajore : 0) + difficultAccessCost + paidParkingCost;
+    
+    // Total HT et Prix final
+    const deplacementFinal = isDeplacementBarre ? 0 : deplacementBase;
+    const totalHT = cartTotal + eveningCost + deplacementFinal + totalOptionsNonRemisees;
+    const finalPrice = prestationsRemisees + deplacementFinal + totalOptionsNonRemisees;
+    
+    // Affichage
+    // Détail des prestations
+    let prestationsDetailHTML = '';
+    for (const key in cart) {
+        if (cart[key] && cart[key].qty > 0) {
+            prestationsDetailHTML += `
+                <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; page-break-inside: avoid;">
+                    <span>${cart[key].name}</span>
+                    <span style="font-weight: 600;">${cart[key].qty} × ${cart[key].price}€ = ${(cart[key].qty * cart[key].price).toFixed(2)}€ HT</span>
+                </div>
+            `;
+        }
+    }
+    document.getElementById('prestationsDetailList').innerHTML = prestationsDetailHTML || '<div style="text-align: center; color: #999;">Aucune prestation</div>';
+    
+    document.getElementById('cartTotalDisplay').textContent = `${cartTotal.toFixed(2)}€ HT`;
+    
+    // Affichage du déplacement (barré ou non)
+    const deplacementElement = document.getElementById('deplacement');
+    if (isDeplacementBarre) {
+        deplacementElement.innerHTML = `<span style="text-decoration: line-through; color: #999;">${deplacementBase.toFixed(2)}€ HT</span>`;
+    } else {
+        deplacementElement.textContent = `${deplacementBase.toFixed(2)}€ HT`;
+    }
+    
+    // Sous-total prestations
+    document.getElementById('subtotalPrestations').textContent = `${subtotalPrestations.toFixed(2)}€ HT`;
+    
+    // Prix avant/après remise
+    document.getElementById('priceBeforeDiscount').textContent = `${subtotalPrestations.toFixed(2)}€ HT`;
+    document.getElementById('priceAfterDiscount').textContent = `${prestationsRemisees.toFixed(2)}€ HT`;
+    
+    // Afficher/masquer la ligne majoration soirée
+    if (eveningCost > 0) {
+        document.getElementById('eveningLine').style.display = 'block';
+        document.getElementById('eveningDetail').textContent = `(${eveningInterventions} intervention${eveningInterventions > 1 ? 's' : ''}) = +${eveningCost.toFixed(2)}€ HT`;
+    } else {
+        document.getElementById('eveningLine').style.display = 'none';
+    }
+    
+    // Afficher/masquer les options
+    const hasOptions = deplacementMajore > 0 || difficultAccessCost > 0 || paidParkingCost > 0;
+    if (hasOptions) {
+        document.getElementById('optionsSectionFinal').style.display = 'block';
+    } else {
+        document.getElementById('optionsSectionFinal').style.display = 'none';
+    }
+    
+    // Afficher déplacement majoré dans options si applicable
+    if (deplacementMajore > 0) {
+        document.getElementById('extraDaysLineFinal').style.display = 'block';
+        document.getElementById('extraDaysDetailFinal').textContent = `(${J} × ${coutParDeplacement}€) = ${deplacementMajore.toFixed(2)}€ HT`;
+        document.querySelector('#extraDaysLineFinal span:first-child').textContent = '├─ Déplacement majoré :';
+    } else {
+        document.getElementById('extraDaysLineFinal').style.display = 'none';
+    }
+    
+    // Masquer ligne Q2 (ancienne)
+    document.getElementById('longDistanceLineFinal').style.display = 'none';
+    
+    if (difficultAccessCost > 0) {
+        document.getElementById('accessLineFinal').style.display = 'block';
+        document.getElementById('accessDetailFinal').textContent = `(${difficultAccess}× 5€) = ${difficultAccessCost.toFixed(2)}€ HT`;
+    } else {
+        document.getElementById('accessLineFinal').style.display = 'none';
+    }
+    
+    if (paidParkingCost > 0) {
+        document.getElementById('parkingLineFinal').style.display = 'block';
+        document.getElementById('parkingDetailFinal').textContent = `(${paidParking}× 5€) = ${paidParkingCost.toFixed(2)}€ HT`;
+    } else {
+        document.getElementById('parkingLineFinal').style.display = 'none';
+    }
+    
+    // Afficher le sous-total des options
+    document.getElementById('subtotalOptions').textContent = `${totalOptionsNonRemisees.toFixed(2)}€ HT`;
+    
+    document.getElementById('totalHT').textContent = `${totalHT.toFixed(2)}€`;
+    document.getElementById('finalPrice').textContent = `${finalPrice.toFixed(2)}€`;
+}
+
+// Fonction pour afficher les boutons de contact
+function showContactButtons() {
+  const buttonsDiv = document.getElementById('contactButtonContainer');
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  const emailSubject = encodeURIComponent('Demande de renseignements - Calculateur Nico-LA "A la Carte"');
+  const emailBody = encodeURIComponent(`Bonjour Nico, j'ai réalisé une estimation sur votre calculateur de tarif "À la Carte" et je souhaiterais discuter avec vous de mon projet. Pourriez-vous me recontacter? Merci d'avance pour votre retour. Cordialement.`);
+  
+  const smsText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de tarif "À la Carte". Pouvons-nous échanger sur mon projet ?`);
+  
+  const whatsappText = encodeURIComponent(`Bonjour Nico, j'ai utilisé votre calculateur de tarif "À la Carte". Pouvons-nous échanger sur mon projet ?`);
+  
+  const buttonStyle = `
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.95em;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Belleza', sans-serif;
+    width: 100%;
+    max-width: 280px;
+  `;
+  
+  if (isMobile) {
+    // Mobile : 5 boutons
+    buttonsDiv.innerHTML = `
+<a href="https://nico-la-tarifs.carrd.co/" target="_blank" style="${buttonStyle}"
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+    ← Retour page tarif
+  </a>
+  <a href="tel:+33614417061" style="${buttonStyle}" 
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+    📱 Appeler Nico
+  </a>
+  <a href="mailto:nicolas.szczot@gmail.com?subject=${emailSubject}&body=${emailBody}" style="${buttonStyle}"
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+    ✉️ Envoyer un Email
+  </a>
+  <a href="https://wa.me/33614417061?text=${whatsappText}" target="_blank" style="${buttonStyle}"
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
+<path fill="#fff" d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"></path><path fill="#fff" d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"></path><path fill="#cfd8dc" d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"></path><path fill="#40c351" d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"></path><path fill="#fff" fill-rule="evenodd" d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z" clip-rule="evenodd"></path>
+</svg> WhatsApp
+  </a>
+  <a href="sms:+33614417061&body=${smsText}" style="${buttonStyle}"
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+    💬 SMS
+  </a>
+    `;
+  } else {
+    // Desktop : 3 boutons
+    buttonsDiv.innerHTML = `
+<a href="https://nico-la-tarifs.carrd.co/" target="_blank" style="${buttonStyle}"
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+    ← Retour page tarif
+  </a>
+  <a href="mailto:nicolas.szczot@gmail.com?subject=${emailSubject}&body=${emailBody}" style="${buttonStyle}"
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+    ✉️ Envoyer un Email
+  </a>
+  <a href="https://nico-la-contact.carrd.co/" target="_blank" style="${buttonStyle}"
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)'" 
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)'">
+    📢 Page de Contact
+  </a>
+    `;
+  }
+  
+  buttonsDiv.style.display = 'flex';
+}
+
+// Fonction pour réinitialiser le calculateur
+function resetCalculator() {
+    if (confirm('Voulez-vous vraiment faire un nouveau tarif "À la Carte" ?')) {
+        location.reload(true);
+    }
+}
+
+// Calculateur de distance
+const ORIGIN_ADDRESS = '19a impasse du chenet 74100 Vetraz Monthoux';
+const DISTANCE_THRESHOLD = 20; // km
+
+// Fonction pour calculer la distance entre deux points (formule de Haversine)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Rayon de la Terre en km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+
+// Fonction pour géocoder une adresse avec Nominatim (OpenStreetMap)
+async function geocodeAddress(address) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`;
+    const response = await fetch(url, {
+        headers: {
+            'User-Agent': 'Calculateur-Distance-App'
+        }
+    });
+    const data = await response.json();
+    if (data.length > 0) {
+        return {
+            lat: parseFloat(data[0].lat),
+            lon: parseFloat(data[0].lon)
+        };
+    }
+    return null;
+}
+
+document.getElementById('calculateDistanceBtn').addEventListener('click', async function() {
+    const userAddress = document.getElementById('userAddressForDistance').value.trim();
+    const resultDiv = document.getElementById('distanceResult');
+    const btn = this;
+    
+    if (!userAddress) {
+        resultDiv.style.display = 'block';
+        resultDiv.style.color = '#dc3545';
+        resultDiv.innerHTML = '⚠️ Veuillez entrer une adresse';
+        return;
+    }
+    
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Calcul...';
+    resultDiv.style.display = 'block';
+    resultDiv.style.color = '#666';
+    resultDiv.innerHTML = '🔄 Calcul de la distance en cours...';
+    
+    try {
+        const originCoords = await geocodeAddress(ORIGIN_ADDRESS);
+        
+        if (!originCoords) {
+            throw new Error('Impossible de localiser l\'adresse de départ');
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const userCoords = await geocodeAddress(userAddress);
+        
+        if (!userCoords) {
+            btn.disabled = false;
+            btn.innerHTML = 'Calculer';
+            resultDiv.style.color = '#dc3545';
+            resultDiv.innerHTML = ' Adresse introuvable. Vérifiez votre saisie (ville, code postal, pays).';
+            return;
+        }
+        
+        let distanceInKm = calculateDistance(
+            originCoords.lat, originCoords.lon,
+            userCoords.lat, userCoords.lon
+        ).toFixed(1);
+        
+        btn.disabled = false;
+        btn.innerHTML = 'Calculer';
+        
+        let dist = parseFloat(distanceInKm);
+        const J = parseInt(document.getElementById('nombreDeplacements').value) || 0;
+        let coutParDeplacement = 0;
+        let messageTexte = '';
+        
+        // Limite à 100km max
+        if (dist > 100) {
+            dist = 100;
+            distanceInKm = '100.0';
+        }
+        
+        if (dist < 10) {
+            coutParDeplacement = 8;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 8€ = ${(J * 8).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        } else if (dist < 20) {
+            coutParDeplacement = 15;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 15€ = ${(J * 15).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        } else if (dist < 30) {
+            coutParDeplacement = 25;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 25€ = ${(J * 25).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        } else if (dist < 40) {
+            coutParDeplacement = 35;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 35€ = ${(J * 35).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        } else if (dist < 50) {
+            coutParDeplacement = 45;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 45€ = ${(J * 45).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        } else if (dist < 60) {
+            coutParDeplacement = 55;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 55€ = ${(J * 55).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        } else if (dist < 70) {
+            coutParDeplacement = 65;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 65€ = ${(J * 65).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        } else if (dist < 80) {
+            coutParDeplacement = 75;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 75€ = ${(J * 75).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        } else if (dist < 90) {
+            coutParDeplacement = 85;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 85€ = ${(J * 85).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        } else if (dist <= 100) {
+            coutParDeplacement = 95;
+            messageTexte = `✓ Distance : ${distanceInKm} km - Coût : ${J} × 95€ = ${(J * 95).toFixed(2)}€`;
+            resultDiv.style.backgroundColor = '#d4edda';
+            resultDiv.style.border = '2px solid #28a745';
+            resultDiv.style.color = '#28a745';
+        }
+        
+        resultDiv.innerHTML = `<strong>${messageTexte}</strong>`;
+        resultDiv.style.padding = '10px';
+        resultDiv.style.borderRadius = '6px';
+        resultDiv.style.fontWeight = 'bold';
+        resultDiv.style.display = 'block';
+        
+        // Stocker les données dans le bloc
+        const bloc2 = document.querySelector('.option-bloc[data-bloc="2"]');
+        bloc2.setAttribute('data-distance', distanceInKm);
+        bloc2.setAttribute('data-cout', coutParDeplacement);
+        bloc2.setAttribute('data-adresse', userAddress);
+        
+        // Valider le bloc (devient vert)
+        bloc2.classList.add('validated');
+        checkAllBlocsValidated();
+        
+    } catch (error) {
+        btn.disabled = false;
+        btn.innerHTML = 'Calculer';
+        resultDiv.style.display = 'block';
+        resultDiv.style.color = '#dc3545';
+        resultDiv.innerHTML = ' Erreur lors du calcul. Veuillez réessayer.';
+        console.error('Erreur calcul distance:', error);
+    }
+});
+
+// Bouton Reset pour la question 2
+document.getElementById('resetDistanceBtn').addEventListener('click', function() {
+    const bloc2 = document.querySelector('.option-bloc[data-bloc="2"]');
+    const userAddressInput = document.getElementById('userAddressForDistance');
+    const distanceResult = document.getElementById('distanceResult');
+    const calculatorDiv = document.getElementById('distanceCalculator');
+    
+    userAddressInput.value = '';
+    distanceResult.style.display = 'none';
+    distanceResult.innerHTML = '';
+    calculatorDiv.style.borderColor = '#dee2e6';
+    calculatorDiv.style.borderWidth = '2px';
+    
+    bloc2.removeAttribute('data-distance');
+    bloc2.removeAttribute('data-cout');
+    bloc2.removeAttribute('data-adresse');
+    bloc2.classList.remove('validated');
+    checkAllBlocsValidated();
+});
+
+// Fonction d'impression du devis avec gestion des sauts de page
+function printDevis() {
+  // Créer un iframe caché pour l'impression
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'absolute';
+  iframe.style.width = '0';
+  iframe.style.height = '0';
+  iframe.style.border = 'none';
+  iframe.style.visibility = 'hidden';
+  document.body.appendChild(iframe);
+  
+  // Récupérer les informations du client
+  const userName = document.getElementById('userNom').value || 'N/A';
+  const userEmail = document.getElementById('userEmail').value || 'N/A';
+  const countryCode = document.getElementById('countryCode').value || '+33';
+  const phoneNumber = document.getElementById('userTelephone').value || '';
+  const userPhone = phoneNumber ? countryCode + ' ' + phoneNumber : 'N/A';
+  const currentDate = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  
+  // Récupérer le panier
+  let panierHTML = '';
+  let panierTotal = 0;
+  
+  for (const key in cart) {
+    if (cart[key].qty > 0) {
+      const itemTotal = cart[key].qty * cart[key].price;
+      panierTotal += itemTotal;
+      panierHTML += `
+        <div class="info-row">
+          <span class="info-label">${cart[key].name} ${cart[key].qty > 1 ? '(x' + cart[key].qty + ')' : ''}</span>
+          <span class="info-value">${itemTotal.toFixed(2)} € HT</span>
+        </div>
+      `;
+    }
+  }
+  
+  // Récupérer les options sélectionnées
+  let optionsHTML = '';
+  let optionsTotal = 0;
+  
+  // Question 1 et 2 : Déplacements
+  const J = parseInt(document.getElementById('nombreDeplacements').value) || 0;
+  const bloc2 = document.querySelector('.option-bloc[data-bloc="2"]');
+  const coutParDeplacement = parseFloat(bloc2.getAttribute('data-cout')) || 0;
+  const distance = parseFloat(bloc2.getAttribute('data-distance')) || 0;
+  
+  let deplacementBase = J * 8;
+  let deplacementMajore = 0;
+  let isDeplacementBarre = false;
+  
+  if (distance >= 10) {
+    isDeplacementBarre = true;
+    deplacementMajore = J * coutParDeplacement;
+    optionsTotal += deplacementMajore;
+    optionsHTML += `
+      <div class="info-row">
+        <span class="info-label">Déplacement majoré (${J} × ${coutParDeplacement}€)</span>
+        <span class="info-value">${deplacementMajore.toFixed(2)} € HT</span>
+      </div>
+    `;
+  }
+  
+  const deplacementFinal = isDeplacementBarre ? 0 : deplacementBase;
+  
+  // Option 3: Interventions en soirée
+  const q3Select = document.querySelector('input[data-question="3"]:checked');
+  let eveningCost = 0;
+  if (q3Select && q3Select.value === 'oui') {
+    const q3Field = document.querySelector('[data-type="evening"]');
+    const eveningInterventions = parseInt(q3Field.value) || 0;
+    if (eveningInterventions > 0) {
+      eveningCost = panierTotal * 0.20;
+      optionsHTML += `
+        <div class="info-row">
+          <span class="info-label">Majoration soirée (${eveningInterventions} intervention${eveningInterventions > 1 ? 's' : ''}, +20%)</span>
+          <span class="info-value">${eveningCost.toFixed(2)} € HT</span>
+        </div>
+      `;
+    }
+  }
+  
+  // Option 4: Accès difficile
+  const q4Select = document.querySelector('input[data-question="4"]:checked');
+  if (q4Select && q4Select.value === 'oui') {
+    const q4Field = document.querySelector('[data-type="access"]');
+    const difficultAccess = parseInt(q4Field.value) || 0;
+    if (difficultAccess > 0) {
+      const cost = difficultAccess * 5;
+      optionsTotal += cost;
+      optionsHTML += `
+        <div class="info-row">
+          <span class="info-label">Accès difficile (${difficultAccess} × 5€)</span>
+          <span class="info-value">${cost.toFixed(2)} € HT</span>
+        </div>
+      `;
+    }
+  }
+  
+  // Option 5: Parking payant
+  const q5Select = document.querySelector('input[data-question="5"]:checked');
+  if (q5Select && q5Select.value === 'oui') {
+    const q5Field = document.querySelector('[data-type="parking"]');
+    const paidParking = parseInt(q5Field.value) || 0;
+    if (paidParking > 0) {
+      const cost = paidParking * 5;
+      optionsTotal += cost;
+      optionsHTML += `
+        <div class="info-row">
+          <span class="info-label">Parking payant (${paidParking} × 5€)</span>
+          <span class="info-value">${cost.toFixed(2)} € HT</span>
+        </div>
+      `;
+    }
+  }
+  
+  // Calcul des totaux
+  const subtotalPrestations = panierTotal + eveningCost;
+  const prestationsRemisees = subtotalPrestations * 0.50;
+  const finalPrice = prestationsRemisees + deplacementFinal + optionsTotal;
+  const tva = finalPrice * 0.20;
+  const totalTTC = finalPrice + tva;
+  
+  // Logo en base64 (votre logo sera inséré ici)
+  
+const logoBase64 = 'https://nicolasszczot-dev.github.io/public/009.png';
+  
+  // Créer le contenu HTML du devis
+  const printContent = `
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Estimation Nico-LA - ${userName}</title>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Belleza&display=swap');
+        
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        
+        @page {
+          margin: 20mm;
+          size: A4 portrait;
+        }
+        
+        body {
+          font-family: 'Belleza', sans-serif;
+          background: white;
+          color: #000;
+          line-height: 1.6;
+          font-size: 14px;
+        }
+        
+        .devis-container {
+          max-width: 800px;
+          margin: 0 auto;
+          background: white;
+        }
+        
+        .header {
+          text-align: center;
+          border-bottom: 4px solid #E3B100;
+          padding-bottom: 20px;
+          margin-bottom: 30px;
+          page-break-inside: avoid;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 30px;
+        }
+        
+        .header .logo-left {
+          max-width: 92px;
+          height: auto;
+        }
+        
+        .header .header-text {
+          flex: 1;
+        }
+        
+        .header h1 {
+          color: #E3B100;
+          font-size: 26px;
+          margin: 0 0 10px 0;
+          font-weight: 400;
+          letter-spacing: 2px;
+        }
+        
+        .header .subtitle {
+          color: #666;
+          margin: 8px 0;
+          font-size: 16px;
+        }
+        
+        .header .date {
+          color: #999;
+          margin: 8px 0 0 0;
+          font-size: 13px;
+        }
+        
+        /* Sections avec protection contre les coupures */
+        .info-section {
+          margin: 25px 0;
+          page-break-inside: avoid;
+          orphans: 3;
+          widows: 3;
+        }
+        
+        .info-section h2 {
+          color: #E3B100;
+          border-bottom: 2px solid #E3B100;
+          padding-bottom: 8px;
+          margin-bottom: 15px;
+          font-size: 20px;
+          font-weight: 400;
+        }
+        
+        .info-row {
+          display: flex;
+          justify-content: space-between;
+          padding: 8px 0;
+          border-bottom: 1px solid #eee;
+        }
+        
+        .info-label {
+          font-weight: bold;
+          color: #333;
+          font-size: 14px;
+        }
+        
+        .info-value {
+          color: #666;
+          text-align: right;
+          font-size: 14px;
+        }
+        
+        /* Section remise - intronquable */
+        .remise-section {
+          background-color: #fff9e6;
+          border: 2px solid #E3B100;
+          border-radius: 8px;
+          padding: 18px;
+          margin: 25px 0;
+          page-break-inside: avoid;
+        }
+        
+        .remise-section h3 {
+          color: #E3B100;
+          margin-bottom: 12px;
+          font-size: 18px;
+        }
+        
+        .remise-row {
+          display: flex;
+          justify-content: space-between;
+          padding: 6px 0;
+          font-size: 15px;
+        }
+        
+        .remise-row.before {
+          color: #999;
+          text-decoration: line-through;
+        }
+        
+        .remise-row.after {
+          color: #28a745;
+          font-weight: bold;
+          font-size: 16px;
+        }
+        
+        /* Page finale avec logo et totaux */
+        .final-page {
+          page-break-before: always;
+          min-height: 800px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        
+        .logo-container {
+          text-align: center;
+          padding: 30px 0;
+        }
+        
+        .logo-container img {
+          max-width: 120px;
+          height: auto;
+        }
+        
+        /* Section totaux - peut être coupée si nécessaire */
+        .total-section {
+          border-top: 3px solid #E3B100;
+          padding-top: 25px;
+          margin-top: 30px;
+        }
+        
+        .total-section-part1 {
+          page-break-inside: avoid;
+        }
+        
+        .total-section-part2 {
+          page-break-inside: avoid;
+          border-top: 2px solid #E3B100;
+          padding-top: 20px;
+          margin-top: 20px;
+        }
+        
+        .total-row {
+          display: flex;
+          justify-content: space-between;
+          padding: 10px 0;
+          font-size: 16px;
+        }
+        
+        .total-row.highlight {
+          background-color: #f8f9fa;
+          padding: 10px 12px;
+          margin: 5px 0;
+          border-radius: 6px;
+        }
+        
+        .total-row.final {
+          font-weight: bold;
+          font-size: 28px;
+          color: #E3B100;
+          border-top: 3px solid #E3B100;
+          margin-top: 15px;
+          padding-top: 18px;
+        }
+        
+        .footer {
+          margin-top: 40px;
+          padding-top: 25px;
+          border-top: 1px solid #ddd;
+          text-align: center;
+          color: #999;
+          font-size: 12px;
+          line-height: 1.8;
+          page-break-inside: avoid;
+        }
+        
+        .footer p {
+          margin: 4px 0;
+        }
+        
+        .footer strong {
+          color: #333;
+        }
+        
+        @media print {
+          body {
+            margin: 0;
+            padding: 0;
+          }
+          
+          .page-break {
+            page-break-before: always;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="devis-container">
+        <!-- En-tête -->
+        <div class="header">
+          <img src="${logoBase64}" alt="Logo Nico-LA" class="logo-left">
+          <div class="header-text">
+            <h1>ESTIMATION FINALE</h1>
+            <p class="subtitle">soumise à validation par Nico-LA</p>
+            <p class="date">Date : ${currentDate}</p>
+          </div>
+        </div>
+        
+        <!-- Informations Client - Bloc intronquable -->
+        <div class="info-section">
+          <h2>Informations Client</h2>
+          <div class="info-row">
+            <span class="info-label">Nom :</span>
+            <span class="info-value">${userName}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email :</span>
+            <span class="info-value">${userEmail}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Téléphone :</span>
+            <span class="info-value" style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+              <span style="font-size: 20px;">${userPhone.startsWith('0033') || userPhone.startsWith('+33') ? '🇫🇷' : '📞'}</span>
+              <span>${(() => {
+                let phone = userPhone.replace(/\D/g, '');
+                phone = phone.slice(-9);
+                phone = '0' + phone;
+                return phone.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+              })()}</span>
+            </span>
+          </div>
+          ${(() => {
+            const bloc2 = document.querySelector('.option-bloc[data-bloc="2"]');
+            const adresseChantier = bloc2 ? bloc2.getAttribute('data-adresse') : null;
+            if (adresseChantier) {
+              return `
+                <div class="info-row">
+                  <span class="info-label">Adresse chantier :</span>
+                  <span class="info-value">${adresseChantier}</span>
+                </div>
+              `;
+            }
+            return '';
+          })()}
+        </div>
+        
+        <!-- Prestations - Bloc intronquable -->
+        <div class="info-section">
+          <h2>Prestations Sélectionnées</h2>
+          ${panierHTML}
+        </div>
+        
+        <!-- Options - Bloc intronquable si présent -->
+        ${optionsHTML ? `
+        <div class="info-section">
+          <h2>Options Supplémentaires</h2>
+          ${optionsHTML}
+        </div>
+        ` : ''}
+        
+        <!-- Remise - Bloc intronquable -->
+        <div class="remise-section">
+          <h3>🎉 Remise Services à la Personne (-50%)</h3>
+          <div class="remise-row" style="margin-bottom: 3px;">
+            <span>Prestations (tarif standard) :</span>
+          </div>
+          <div style="text-align: right; margin-bottom: 10px;">
+            <span>${subtotalPrestations.toFixed(2)} € HT</span>
+          </div>
+          <div class="remise-row after" style="margin-bottom: 3px;">
+            <span style="color: #E3B100;">Prestations (avec remise 50%) * :</span>
+          </div>
+          <div style="text-align: right; margin-bottom: 5px;">
+            <span style="color: #E3B100; font-weight: bold; font-size: 16px;">${prestationsRemisees.toFixed(2)} € HT</span>
+          </div>
+          <p style="font-size: 12px; color: #666; margin-top: 8px; font-style: italic;">* Sous réserve d'éligibilité aux services à la personne</p>
+        </div>
+        
+        <!-- Page finale avec Totaux -->
+        <div class="final-page">
+          <!-- Section totaux -->
+          <div class="total-section" style="margin-top: 15px; padding-top: 15px;">
+            <div class="total-section-part1">
+              <div class="total-row" style="padding: 6px 0; margin-bottom: 2px;">
+                <span>Prestations (tarif standard) :</span>
+              </div>
+              <div style="text-align: right; margin-bottom: 12px;">
+                <span>${subtotalPrestations.toFixed(2)} € HT</span>
+              </div>
+              <div class="total-row" style="padding: 6px 0; margin-bottom: 2px;">
+                <span style="color: #E3B100;">Prestations (avec remise 50%) * :</span>
+              </div>
+              <div style="text-align: right; margin-bottom: 12px;">
+                <span style="color: #E3B100; font-weight: bold;">${prestationsRemisees.toFixed(2)} € HT</span>
+              </div>
+              <div class="total-row" style="padding: 8px 0;">
+                <span>Déplacement (${J} × 8€) :</span>
+                <span>${isDeplacementBarre ? `<span style="text-decoration: line-through; color: #999;">${deplacementBase.toFixed(2)} € HT</span>` : `${deplacementBase.toFixed(2)} € HT`}</span>
+              </div>
+              ${optionsTotal > 0 ? `
+              <div class="total-row" style="padding: 8px 0;">
+                <span>Options supplémentaires :</span>
+                <span>${optionsTotal.toFixed(2)} € HT</span>
+              </div>
+              ` : ''}
+              <div class="total-row final" style="margin-top: 10px; padding-top: 12px;">
+                <span style="color: #000000;">TOTAL standard HT :</span>
+              </div>
+              <div style="text-align: right; margin-bottom: 15px;">
+                <span style="color: #000000; font-weight: bold; font-size: 28px;">${(subtotalPrestations + (isDeplacementBarre ? 0 : deplacementBase) + optionsTotal).toFixed(2)} € HT</span>
+              </div>
+              <div class="total-row final" style="margin-top: 10px; padding-top: 12px; border-top: none;">
+                <span>TOTAL remisé HT * :</span>
+              </div>
+              <div style="text-align: right; margin-bottom: 8px;">
+                <span style="color: #E3B100; font-weight: bold; font-size: 28px;">${finalPrice.toFixed(2)} € HT</span>
+              </div>
+              <p style="font-size: 11px; color: #666; font-style: italic; text-align: right;">* Sous réserve d'éligibilité aux services à la personne</p>
+            </div>
+          </div>
+          
+          <!-- Logo avant footer -->
+          <div style="text-align: center; margin: 25px 0 15px 0;">
+            <img src="${logoBase64}" alt="Logo Nico-LA" style="max-width: 100px; height: auto;">
+          </div>
+          
+          <!-- Footer -->
+          <div class="footer" style="margin-top: 25px; padding-top: 20px;">
+            <p><strong>Estimation valable 30 jours</strong></p>
+            <p>TVA non applicable, article 293 B du CGI</p>
+            <p><strong>Nico-LA</strong> - nicolas.szczot@gmail.com - +33 6 14 41 70 61</p>
+            <p>19a impasse du chenet, 74100 Vetraz Monthoux</p>
+            <p style="margin-top: 12px; font-size: 11px;">Micro-entrepreneur en franchise en base de TVA</p>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+  
+  // Écrire le contenu dans l'iframe
+  const iframeDoc = iframe.contentWindow.document;
+  iframeDoc.open();
+  iframeDoc.write(printContent);
+  iframeDoc.close();
+  
+  // Attendre que le contenu soit chargé puis lancer l'impression
+  iframe.contentWindow.onload = function() {
+    setTimeout(function() {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+      
+      // Supprimer l'iframe après l'impression
+      setTimeout(function() {
+        document.body.removeChild(iframe);
+      }, 1000);
+    }, 250);
+  };
+}
+
+
+</script>
+
+
+
+
+
+
+<script>
+// Variables globales du menu personnalisé
+const selectDisplay = document.getElementById('selectedPrestation');
+const selectList = document.getElementById('customSelectList');
+const customTooltip = document.getElementById('customTooltip');
+
+// Fonction pour retirer les accents
+function removeAccents(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+// Gestion du menu déroulant personnalisé
+if (selectDisplay) {
+    selectDisplay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = selectList.classList.contains('show');
+        
+        if (!isOpen) {
+            selectList.classList.add('show');
+            selectDisplay.classList.add('open');
+        } else {
+            selectList.classList.remove('show');
+            selectDisplay.classList.remove('open');
+        }
+    });
+}
+
+// Fermeture du menu au clic extérieur
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.custom-select-container')) {
+        selectList.classList.remove('show');
+        selectDisplay.classList.remove('open');
+    }
+});
+
+// Sélection d'une option
+if (selectList) {
+    selectList.addEventListener('click', (e) => {
+        const option = e.target.closest('.custom-option');
+        if (!option) return;
+        
+        const value = option.getAttribute('data-value');
+        const text = option.querySelector('strong').textContent;
+        
+        selectDisplay.innerHTML = text;
+        selectDisplay.setAttribute('data-value', value);
+        
+        selectList.classList.remove('show');
+        selectDisplay.classList.remove('open');
+    });
+}
+
+// Fonction de filtrage avec ouverture automatique du menu
+function filterPrestations() {
+    const searchInput = document.getElementById('prestationSearch');
+    const selectList = document.getElementById('customSelectList');
+    const selectDisplay = document.getElementById('selectedPrestation');
+    const searchTerm = removeAccents(searchInput.value.toLowerCase().trim());
+
+    if (!selectList) return;
+
+    const allElements = selectList.querySelectorAll('.custom-option, .custom-note, .custom-group');
+
+    // Si la barre est vide, fermer le menu et afficher tout
+    if (searchTerm === '') {
+        allElements.forEach(el => {
+            el.style.display = '';
+        });
+        selectList.classList.remove('show');
+        selectDisplay.classList.remove('open');
+        return;
+    }
+
+    // OUVRIR LE MENU automatiquement quand on tape
+    selectList.classList.add('show');
+    selectDisplay.classList.add('open');
+
+    // Masquer tous les éléments par défaut
+    allElements.forEach(el => {
+        el.style.display = 'none';
+    });
+
+    // Parcourir chaque option et afficher les correspondances
+    const options = selectList.querySelectorAll('.custom-option');
+    options.forEach(option => {
+        // Chercher dans le texte de l'option + la note suivante
+        let fullText = option.textContent;
+
+        // Ajouter aussi le texte de la note suivante
+        let nextNote = option.nextElementSibling;
+        if (nextNote && nextNote.classList.contains('custom-note')) {
+            fullText += ' ' + nextNote.textContent;
+        }
+
+        const normalizedText = removeAccents(fullText.toLowerCase());
+
+        if (normalizedText.includes(searchTerm)) {
+            option.style.display = '';
+
+            // Afficher la note associée
+            if (nextNote && nextNote.classList.contains('custom-note')) {
+                nextNote.style.display = '';
+            }
+
+            // Afficher aussi le groupe auquel appartient l'option
+            let prev = option.previousElementSibling;
+            while (prev) {
+                if (prev.classList.contains('custom-group')) {
+                    prev.style.display = '';
+                    break;
+                }
+                prev = prev.previousElementSibling;
+            }
+        }
+    });
+}
+
+// Fonction pour ajouter au panier
+function addSelectedToCart() {
+    const value = selectDisplay.getAttribute('data-value');
+    if (!value) {
+        alert('Veuillez sélectionner une prestation');
+        return;
+    }
+    
+    const [key, price] = value.split('|');
+    const name = selectDisplay.textContent.trim();
+    
+    cart[key] = { name: name, qty: 1, price: parseFloat(price) };
+    updateCartDisplay();
+    
+    selectDisplay.innerHTML = 'Choisissez une prestation...';
+    selectDisplay.removeAttribute('data-value');
+    
+    // Animation
+    const toggleCartBtn = document.getElementById('toggleCartBtn');
+    if (toggleCartBtn) {
+        toggleCartBtn.animate([
+            { transform: "scale(1)" },
+            { transform: "scale(1.3)" },
+            { transform: "scale(1)" }
+        ], { duration: 300 });
+    }
+}
+</script>
+</body></html>
