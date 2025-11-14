@@ -21,6 +21,12 @@ body {
     padding: 20px;
 }
 
+/* Cacher le panier et son bouton au chargement */
+#toggleCartBtn,
+#cartContainer {
+    display: none;
+}
+
 .calculator-container {
     max-width: 650px;
     margin: 0 auto;
@@ -1818,14 +1824,14 @@ machine propre, performante et prête à repartir !</div>
 }
 </style>
 
-<button id="toggleCartBtn" style="display: none;">
+<button id="toggleCartBtn">
 
     <span style="font-size: 1.3em;">🛒</span>
     <span style="font-size: 0.9em;">⇄</span>
     <span id="cartCountBadge" style="display: none;">0</span>
 </button>
 
-<div id="cartContainer" style="right: 0px;">
+<div id="cartContainer">
     <h2>🧾 Votre sélection</h2>
     <div id="cartItems" style="max-height: calc(100vh - 250px); overflow-y: auto;"></div>
     <hr>
@@ -2171,20 +2177,18 @@ async function handleOkButton() {
 
 function showAfterConfirmation() {
     const prestations = document.getElementById('prestationsSection');
-    const toggleCartBtn = document.getElementById('toggleCartBtn');
+    const options = document.getElementById('optionsSection');
 
-    if (prestations && toggleCartBtn) {
+    if (prestations) {
         prestations.style.display = 'block';
-        toggleCartBtn.style.display = 'flex';
- if (options) {
-            options.style.display = 'block';
-        }
     }
+    if (options) {
+        options.style.display = 'block';
+    }
+    // Le panier n'apparaît PAS ici
 }
 
-btnConfirmData.addEventListener('click', function () {
-    showAfterConfirmation();
-});
+
 
 
 let countdownInterval;
@@ -2214,11 +2218,48 @@ function closeSuccessPopup() {
     popupOverlay.classList.remove('show');
     
     setTimeout(() => {
-        prestationsSection.style.display = 'block';
-        toggleCartBtn.style.display = 'flex';
-        optionsSection.style.display = 'block';
+        // Afficher les sections prestations et options
+        const prestations = document.getElementById('prestationsSection');
+        const options = document.getElementById('optionsSection');
+        const toggleCart = document.getElementById('toggleCartBtn');
+        const cartContainer = document.getElementById('cartContainer');
         
-        prestationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        console.log('🔍 Affichage du panier:', {
+            prestations: !!prestations,
+            options: !!options,
+            toggleCart: !!toggleCart,
+            cartContainer: !!cartContainer
+        });
+        
+        if (prestations) {
+            prestations.style.display = 'block';
+        }
+        if (options) {
+            options.style.display = 'block';
+        }
+        
+        // Afficher le bouton du panier ET le panier lui-même
+        if (toggleCart) {
+            toggleCart.style.display = 'flex';
+            toggleCart.style.visibility = 'visible';
+            toggleCart.style.opacity = '1';
+            console.log('✅ Bouton panier affiché');
+        } else {
+            console.log('❌ Bouton panier non trouvé');
+        }
+        
+        if (cartContainer) {
+            cartContainer.style.display = 'flex';
+            cartContainer.style.visibility = 'visible';
+            cartContainer.style.right = '-320px'; // Position fermée par défaut
+            console.log('✅ Container panier affiché');
+        } else {
+            console.log('❌ Container panier non trouvé');
+        }
+        
+        if (prestations) {
+            prestations.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }, 300);
 }
 
@@ -2236,12 +2277,13 @@ btnConfirmData.addEventListener('click', async () => {
             body: JSON.stringify(userData)
         });
         
-        console.log(' Données envoyées à Make avec succès');
+        console.log('✅ Données envoyées à Make avec succès');
         
     } catch (error) {
         console.log('⚠️ Erreur envoi webhook:', error);
     }
     
+    // Afficher le popup de succès avec compte à rebours
     successPopup.classList.add('show');
     startCountdown();
 });
