@@ -996,6 +996,40 @@ input.quantity-input[type=number] {
   .confirmation-popup {
     width: 70%;
     max-width: 500px;
+    padding: 15px 25px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .confirmation-popup h2 {
+    font-size: 1.1em;
+    margin-bottom: 8px;
+  }
+  
+  .confirmation-popup p {
+    font-size: 0.85em;
+    margin-bottom: 8px;
+  }
+  
+  .user-data-display {
+    padding: 8px;
+    margin: 10px 0;
+  }
+  
+  .user-data-display p {
+    font-size: 0.85em;
+    margin: 5px 0;
+  }
+  
+  .confirmation-buttons {
+    margin-top: 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .confirmation-btn {
+    padding: 6px 15px;
+    font-size: 0.85em;
   }
   
   /* Champ téléphone en colonne sur mobile */
@@ -1039,7 +1073,7 @@ input.quantity-input[type=number] {
     <h2>🎉 Félicitations !</h2>
     <p>Vos informations ont été enregistrées avec succès.</p>
     <p>Vous pouvez maintenant accéder au calculateur de prestations.</p>
-    <p class="popup-countdown" id="popupCountdown">Fermeture automatique dans <strong>1</strong> seconde...</p>
+    <p class="popup-countdown" id="popupCountdown">Fermeture automatique dans <strong>5</strong> secondes...</p>
 </div>
 
 <div class="confirmation-popup" id="confirmationPopup">
@@ -1047,7 +1081,7 @@ input.quantity-input[type=number] {
     <p>Merci de vérifier que vos informations sont correctes :</p>
     <div class="user-data-display">
         <p><strong>Nom :</strong> <span id="displayNom">ss</span></p>
-        <p><strong>Email :</strong> <span id="displayEmail">ss@ss.fr</span></p>
+        <p><strong>Email :</strong> <span id="displayEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d1e1e2d1e1e430b1f">[email&#160;protected]</a></span></p>
         <p><strong>Téléphone :</strong> <span id="displayTelephone">🇫🇷 0666666666</span></p>
     </div>
     <p>Avez-vous correctement renseigné vos coordonnées ?</p>
@@ -1848,7 +1882,7 @@ machine propre, performante et prête à repartir !</div>
     ">🗑️ Vider le panier</button>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // Détection et gestion orientation mobile
 function checkOrientation() {
   const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Windows Phone|Tablet/i.test(navigator.userAgent);
@@ -3197,7 +3231,7 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
     <h2>🎉 Félicitations !</h2>
     <p>Merci d'avoir renseigné les options.</p>
     <p>Voici sans plus tarder votre estimation de tarif concernant votre panier.</p>
-    <div class="popup-countdown" id="optionsPopupCountdown">Fermeture automatique dans <strong>7</strong> secondes...</div>
+    <div class="popup-countdown" id="optionsPopupCountdown">Fermeture automatique dans <strong>5</strong> secondes...</div>
 </div>
 
 <script>
@@ -3400,7 +3434,7 @@ function showOptionsSuccessPopup() {
 
 // Compte à rebours pour le popup des options
 function startOptionsCountdown() {
-    let secondsLeft = 7;
+    let secondsLeft = 5;
     const countdownElement = document.getElementById('optionsPopupCountdown');
     
     optionsCountdownInterval = setInterval(() => {
@@ -4574,12 +4608,13 @@ function addSelectedToCart() {
             { transform: "scale(1)" },
             { transform: "scale(1.3)" },
             { transform: "scale(1)" }
-        ], { duration: 300 });
+        ], {
+            duration: 300,
+            easing: "ease-in-out",
+        });
     }
 }
-
-
-
 </script>
 
-</body></html>
+</body>
+</html>
