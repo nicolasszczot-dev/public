@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
+<html lang="fr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculateur de Tarifs - Nico-LA</title>
@@ -708,6 +708,14 @@ input.quantity-input[type=number] {
     flex-direction: column;
 }
 
+@media (max-width: 768px) and (orientation: landscape) {
+    #cartContainer {
+        width: 55%;
+        right: -55%;
+        padding: 10px;
+    }
+}
+
 #toggleCartBtn {
     position: fixed;
     top: 15px;
@@ -772,8 +780,9 @@ input.quantity-input[type=number] {
         font-size: 1em;
     }
     #cartContainer {
-        width: 100%;
-        right: -100%;
+        width: 70%;
+        right: -70%;
+        padding: 10px;
     }
     .prestations-grid {
         grid-template-columns: 1fr;
@@ -978,6 +987,37 @@ input.quantity-input[type=number] {
     grid-template-columns: repeat(2, 1fr) !important;
   }
   
+  .prestations-modal {
+    padding: 20px;
+    max-height: 88vh;
+  }
+  
+  .modal-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+  }
+  
+  .modal-header h2 {
+    font-size: 1.4em;
+  }
+  
+  .prestations-grid {
+    gap: 12px;
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .prestation-card {
+    padding: 12px;
+  }
+  
+  .prestation-name {
+    font-size: 0.95em;
+  }
+  
+  .prestation-price {
+    font-size: 1.2em;
+  }
+  
   .options-grid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
@@ -990,6 +1030,34 @@ input.quantity-input[type=number] {
   .confirmation-popup {
     width: 70%;
     max-width: 500px;
+    padding: 20px 30px;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  
+  .confirmation-popup h2 {
+    font-size: 1.3em;
+    margin-bottom: 12px;
+  }
+  
+  .confirmation-popup p {
+    font-size: 0.95em;
+    margin-bottom: 10px;
+  }
+  
+  .user-data-display {
+    padding: 10px;
+    margin: 12px 0;
+  }
+  
+  .confirmation-buttons {
+    margin-top: 15px;
+    gap: 10px;
+  }
+  
+  .confirmation-btn {
+    padding: 8px 20px;
+    font-size: 0.95em;
   }
   
   /* Champ téléphone en colonne sur mobile */
@@ -1012,7 +1080,7 @@ input.quantity-input[type=number] {
 </head>
 <body>
 
-<div class="orientation-overlay" id="orientationOverlay">
+<div class="orientation-overlay" id="orientationOverlay" style="display: none;">
   <div class="orientation-popup">
     <h2>Pour un meilleur confort</h2>
     <div class="orientation-icon">📱 → 🔄</div>
@@ -1027,7 +1095,7 @@ input.quantity-input[type=number] {
     <h2>🎉 Félicitations !</h2>
     <p>Vos informations ont été enregistrées avec succès.</p>
     <p>Vous pouvez maintenant accéder au calculateur de prestations.</p>
-    <p class="popup-countdown" id="popupCountdown">Fermeture automatique dans <strong>7</strong> secondes...</p>
+    <p class="popup-countdown" id="popupCountdown">Fermeture automatique dans <strong>5</strong> secondes...</p>
 </div>
 
 <div class="confirmation-popup" id="confirmationPopup">
@@ -1084,7 +1152,10 @@ input.quantity-input[type=number] {
                 <label for="disclaimer">
                     <span>Je comprends que ce prix sera uniquement <strong><em>estimatif.</em></strong></span>
                     <span class="tooltip-icon">ℹ
-                        <span class="tooltip-text">Même si cette estimation devrait être proche du prix final, elle devra néanmoins être contrôlée et ajustée si nécessaire par l'auteur des travaux. Merci de votre compréhension.</span>
+                        <span class="tooltip-text">Même si cette 
+estimation devrait être proche du prix final, elle devra néanmoins être 
+contrôlée et ajustée si nécessaire par l'auteur des travaux. Merci de 
+votre compréhension.</span>
                     </span>
                     <input type="checkbox" id="disclaimer" autocomplete="off">
                 </label>
@@ -1094,37 +1165,43 @@ input.quantity-input[type=number] {
                 <label for="materials_understood">
                     <span>Si matériel acheté → Matériel facturé prix coûtant.<br>J'ai compris.</span>
                     <span class="tooltip-icon">ℹ
-                        <span class="tooltip-text">🧾 Conformément à l'article D7233-1 du Code du travail, les activités de services à la personne (SAP) doivent distinguer le prix des prestations du coût des fournitures, du matériel ou des produits nécessaires à l'intervention. Ces éléments sont donc facturés à leur prix coûtant, sans aucune marge, conformément à la réglementation en vigueur.</span>
+                        <span class="tooltip-text">🧾 Conformément à 
+l'article D7233-1 du Code du travail, les activités de services à la 
+personne (SAP) doivent distinguer le prix des prestations du coût des 
+fournitures, du matériel ou des produits nécessaires à l'intervention. 
+Ces éléments sont donc facturés à leur prix coûtant, sans aucune marge, 
+conformément à la réglementation en vigueur.</span>
                     </span>
-                    <input type="checkbox" id="materials_understood" autocomplete="off" disabled>
+                    <input type="checkbox" id="materials_understood" autocomplete="off" disabled="disabled">
                 </label>
             </div>
             
             <div style="margin: 20px 0; text-align: center;">
-                <input class="form-control" id="userNom" name="user_name_field_unique" placeholder="Nom *" required type="text" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" disabled style="opacity: 0.5; cursor: not-allowed;">
-                <button class="print-button" id="okNomBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;">
+                <input class="form-control" id="userNom" name="user_name_field_unique" placeholder="Nom *" required="" type="text" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" disabled="disabled" style="opacity: 0.5; cursor: not-allowed;">
+                <button class="print-button" id="okNomBtn" type="button" disabled="disabled" style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;">
                     OK, continuer
                 </button>
                 
-                <input class="form-control" id="userEmail" name="user_email_field_unique" placeholder="Email *" required type="email" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" disabled style="opacity: 0.5; cursor: not-allowed;">
-                <button class="print-button" id="okEmailBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;">
+                <input class="form-control" id="userEmail" name="user_email_field_unique" placeholder="Email *" required="" type="email" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" disabled="disabled" style="opacity: 0.5; cursor: not-allowed;">
+                <button class="print-button" id="okEmailBtn" type="button" disabled="disabled" style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;">
                     OK, continuer
                 </button>
                 
                 <div id="phoneContainer" style="display: flex; gap: 5px; justify-content: center; align-items: center; max-width: 400px; margin: 5px auto;">
-                    <select class="form-control" id="countryCode" autocomplete="off" style="width: 100px; opacity: 0.5; cursor: not-allowed;" disabled>
-                        <option value="+33" selected>🇫🇷 +33</option>
-                        <option value="+41" >🇨🇭 +41</option>
+                    <select class="form-control" id="countryCode" autocomplete="off" style="width: 100px; opacity: 0.5; cursor: not-allowed;" disabled="disabled">
+                        <option value="+33" selected="selected">🇫🇷 +33</option>
+                        <option value="+41">🇨🇭 +41</option>
                     </select>
-                    <input class="form-control" id="userTelephone" name="user_phone_field_unique" placeholder="Numéro(fixe/mobile) avec ou sans le 0 *" required type="tel" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" style="flex: 1; opacity: 0.5; cursor: not-allowed;" disabled>
+                    <input class="form-control" id="userTelephone" name="user_phone_field_unique" placeholder="Numéro(fixe/mobile) avec ou sans le 0 *" required="" type="tel" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" style="flex: 1; opacity: 0.5; cursor: not-allowed;" disabled="disabled">
                 </div>
-                <button class="print-button" id="okTelephoneBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;">
+                <button class="print-button" id="okTelephoneBtn" type="button" disabled="disabled" style="opacity: 0.5; cursor: not-allowed; margin: 10px auto; display: block;">
                     OK, continuer
                 </button>
             </div>
             
             <p class="reassurance-text">
-                En cliquant sur "OK pour continuer", vos données ne seront utilisées que pour créer un dossier à votre nom. *: obligatoire.
+                En cliquant sur "OK pour continuer", vos données ne 
+seront utilisées que pour créer un dossier à votre nom. *: obligatoire.
             </p>
             
         </div>
@@ -1166,112 +1243,112 @@ input.quantity-input[type=number] {
 
 
 <select id="prestationSelect" class="form-control" style="width: 100%; max-width: 100%; margin: 0; padding: 15px; font-size: 0.75em; height: 50px;">
-                <option value="" disabled selected>Choisissez une prestation...</option>
+                <option value="" disabled="disabled" selected="selected">Choisissez une prestation...</option>
 
                                 <optgroup label="🧱 FIXATIONS MURALES">
-                    <option value="etagere_fixation|15" >Étagère murale - 15€✅</option>
-                    <option value="cube|10" >Cube - 10€✅</option>
-                    <option value="meuble_suspendu|40" >Meuble suspendu - 40€✅</option>
-                    <option value="tableau|15" >Tableau - 15€✅</option>
-                    <option value="miroir|15" >Miroir - 15€✅</option>
-                    <option value="cadre_deco|10" >Cadre décoratif - 10€✅</option>
-                    <option value="tringle_rideaux|25" >Tringle à rideaux - 25€✅</option>
-                    <option value="store|25" >Store - 25€✅</option>
-                    <option value="volet_roulant|70" >Volet roulant (160cm maxi) - 70€❌</option>
-                    <option value="porte_manteau|15" >Porte-manteau - 15€✅</option>
-                    <option value="patere|10" >Patère - 10€✅</option>
-                    <option value="crochet|10" >Crochet - 10€✅</option>
-                    <option value="detecteur_fumee|10" >Détecteur de fumée - 10€✅</option>
-                    <option value="detecteur_co|10" >Détecteur de CO - 10€✅</option>
-                    <option value="moustiquaires|45" >Moustiquaires - 45€✅</option>
+                    <option value="etagere_fixation|15">Étagère murale - 15€✅</option>
+                    <option value="cube|10">Cube - 10€✅</option>
+                    <option value="meuble_suspendu|40">Meuble suspendu - 40€✅</option>
+                    <option value="tableau|15">Tableau - 15€✅</option>
+                    <option value="miroir|15">Miroir - 15€✅</option>
+                    <option value="cadre_deco|10">Cadre décoratif - 10€✅</option>
+                    <option value="tringle_rideaux|25">Tringle à rideaux - 25€✅</option>
+                    <option value="store|25">Store - 25€✅</option>
+                    <option value="volet_roulant|70">Volet roulant (160cm maxi) - 70€❌</option>
+                    <option value="porte_manteau|15">Porte-manteau - 15€✅</option>
+                    <option value="patere|10">Patère - 10€✅</option>
+                    <option value="crochet|10">Crochet - 10€✅</option>
+                    <option value="detecteur_fumee|10">Détecteur de fumée - 10€✅</option>
+                    <option value="detecteur_co|10">Détecteur de CO - 10€✅</option>
+                    <option value="moustiquaires|45">Moustiquaires - 45€✅</option>
                 </optgroup>
 
                 <optgroup label="🚪 MENUISERIE LÉGÈRE">
-                    <option value="poignees|10" >Poignées - 10€✅</option>
-                    <option value="serrures/verrous|15" >Serrures/verrous - 15€✅</option>
-                    <option value="portes_placards|40" >Portes placards couliss.(x2) - 40€❌</option>
-                    <option value="dressing_devis|0" >Dressing (sur devis)❌</option>
-                    <option value="claustras|40" >Claustras / séparation de pièce - 40€❌</option>
-                    <option value="reglage_portes|10" >Réglage de portes - 10€✅</option>
-                    <option value="reglage_tiroirs|10" >Réglage tiroirs - 10€✅</option>
-                    <option value="reglage_charnieres|10" >Réglage charnières - 10€✅</option>
-                    <option value="barres_appui|30" >Barres d'appui personnes âgées - 30€✅</option>
+                    <option value="poignees|10">Poignées - 10€✅</option>
+                    <option value="serrures/verrous|15">Serrures/verrous - 15€✅</option>
+                    <option value="portes_placards|40">Portes placards couliss.(x2) - 40€❌</option>
+                    <option value="dressing_devis|0">Dressing (sur devis)❌</option>
+                    <option value="claustras|40">Claustras / séparation de pièce - 40€❌</option>
+                    <option value="reglage_portes|10">Réglage de portes - 10€✅</option>
+                    <option value="reglage_tiroirs|10">Réglage tiroirs - 10€✅</option>
+                    <option value="reglage_charnieres|10">Réglage charnières - 10€✅</option>
+                    <option value="barres_appui|30">Barres d'appui personnes âgées - 30€✅</option>
                 </optgroup>
 
                 <optgroup label="Mobilier 🛁/👩‍🍳/🛋️/🛏️">
                     
-		    <option value="meuble_bas_cuisine|25" >Meuble bas cuisine - 25€✅</option>
- 		    <option value="meuble_haut_cuisine|35" >Meuble haut cuisine - 35€✅</option> 
-		    <option value="meuble_angle_cuisine|30" >Meuble d’angle cuisine - 30€✅</option>
-		    <option value="meuble_sous_evier|30" >Meuble sous evier - 30€✅</option>
-		    <option value="evier_cuisine|30" >Evier cuisine - 30€✅</option>
-		    <option value="robinetterie|20" >Robinetterie simple - 20€❌</option>
-                    <option value="hotte_intérieure|40" >Hotte évacuation intérieure - 40€❌</option>
-		    <option value="support_ustensiles|15" >Support à ustensiles - 15€✅</option>
+		    <option value="meuble_bas_cuisine|25">Meuble bas cuisine - 25€✅</option>
+ 		    <option value="meuble_haut_cuisine|35">Meuble haut cuisine - 35€✅</option> 
+		    <option value="meuble_angle_cuisine|30">Meuble d’angle cuisine - 30€✅</option>
+		    <option value="meuble_sous_evier|30">Meuble sous evier - 30€✅</option>
+		    <option value="evier_cuisine|30">Evier cuisine - 30€✅</option>
+		    <option value="robinetterie|20">Robinetterie simple - 20€❌</option>
+                    <option value="hotte_intérieure|40">Hotte évacuation intérieure - 40€❌</option>
+		    <option value="support_ustensiles|15">Support à ustensiles - 15€✅</option>
 		    
                     
-		    <option value="Lavabo|25" >Lavabo - 25€✅</option>
-		    <option value="Lavabo sur colonne|35" >Lavabo sur colonne - 35€✅</option>
-		    <option value="vasque|15" >Vasque - 15€✅</option>
-		    <option value="meuble_simple_vasque|30" >Meuble simple vasque - 30€✅</option>
-		    <option value="meuble_double_vasque|40" >Meuble double vasque - 40€✅</option>
-		    <option value="armoire_miroir|35" >Armoire miroir - 35€✅</option>
-                    <option value="colonne|30" >Colonne - 30€✅</option>
-                    <option value="porte_serviettes|15" >Porte-serviettes - 15€✅</option>
-                    <option value="etageres_sdb|15" >Étagères salle de bain - 15€✅</option>
-                    <option value="porte_savon|15" >Porte-savon - 15€✅</option>
-                    <option value="pare_douche|60" >Pare-douche en dur - 60€❌</option>
-                    <option value="douche_rideau|25" >Rideau de douche - 25€✅</option>
-                    <option value="robinetterie|20" >Robinetterie simple - 20€❌</option>
-                    <option value="pommeau_douche|15" >Pommeau de douche - 15€✅</option>
+		    <option value="Lavabo|25">Lavabo - 25€✅</option>
+		    <option value="Lavabo sur colonne|35">Lavabo sur colonne - 35€✅</option>
+		    <option value="vasque|15">Vasque - 15€✅</option>
+		    <option value="meuble_simple_vasque|30">Meuble simple vasque - 30€✅</option>
+		    <option value="meuble_double_vasque|40">Meuble double vasque - 40€✅</option>
+		    <option value="armoire_miroir|35">Armoire miroir - 35€✅</option>
+                    <option value="colonne|30">Colonne - 30€✅</option>
+                    <option value="porte_serviettes|15">Porte-serviettes - 15€✅</option>
+                    <option value="etageres_sdb|15">Étagères salle de bain - 15€✅</option>
+                    <option value="porte_savon|15">Porte-savon - 15€✅</option>
+                    <option value="pare_douche|60">Pare-douche en dur - 60€❌</option>
+                    <option value="douche_rideau|25">Rideau de douche - 25€✅</option>
+                    <option value="robinetterie|20">Robinetterie simple - 20€❌</option>
+                    <option value="pommeau_douche|15">Pommeau de douche - 15€✅</option>
 
-		    <option value="lit_simple|40" >Lit simple - 40€✅</option>
- 		    <option value="lit_double|80" >Lit double - 80€✅</option> 
-		    <option value="mezzanine|65" >Mezzanine - 65€✅</option>
-		    <option value="lit superposé|150" >Lit superposé - 150€✅</option>
-		    <option value="bureau|50" >Bureau - 50€✅</option>
-		    <option value="armoire|50" >Armoire - 50€✅</option>
-		    <option value="bibliothèque|60" >Bibliothèque - 60€✅</option>
+		    <option value="lit_simple|40">Lit simple - 40€✅</option>
+ 		    <option value="lit_double|80">Lit double - 80€✅</option> 
+		    <option value="mezzanine|65">Mezzanine - 65€✅</option>
+		    <option value="lit superposé|150">Lit superposé - 150€✅</option>
+		    <option value="bureau|50">Bureau - 50€✅</option>
+		    <option value="armoire|50">Armoire - 50€✅</option>
+		    <option value="bibliothèque|60">Bibliothèque - 60€✅</option>
                     
                     
                 </optgroup>
 
                 <optgroup label="🌿 EXTÉRIEUR / JARDIN / GARAGE">
-                    <option value="salon_jardin|70" >Mobilier jardin : Salon - 70€✅</option>
-                    <option value="table_jardin|30" >Mobilier jardin : Table - 30€✅</option>
-                    <option value="banc_jardin|20" >Mobilier jardin : Banc - 20€✅</option>
-                    <option value="transat|15" >Mobilier jardin : Transat - 15€✅</option>
-                    <option value="fauteuil_suspendu|45" >Mobilier jardin : Fauteuil suspendu - 45€❌</option>
-                    <option value="balancelle|45" >Mobilier jardin : Balancelle - 45€❌</option>
-                    <option value="hamac|40" >Mobilier jardin : Hamac - 40€❌</option>
-                    <option value="parasol|30" >Mobilier jardin : Parasol - 30€✅</option>
-                    <option value="abri_velos|70" >Mobilier jardin : Abri à vélos - 70€❌</option>
-                    <option value="coffre_jardin|20" >Mobilier jardin : Coffre - 20€✅</option>
-                    <option value="cabanon|70" >Mobilier jardin : Cabanon rangement - 70€❌</option>
-                    <option value="barbecue|50" >Barbecue - 50€❌</option>
-                    <option value="plancha|30" >Plancha - 30€❌</option>
-                    <option value="tonnelle|55" >Tonnelle - 55€❌</option>
-                    <option value="brumisateurs|50" >Brumisateurs - 50€❌</option>
-                    <option value="portillon|45" >Portillon - 45€❌</option>
-                    <option value="boite_lettres|20" >Boîte aux lettres - 20€✅</option>
-                    <option value="luminaires_ext|25" >Luminaires extérieurs - 25€❌</option>
-                    <option value="support_porte_velos|30" >Support porte vélos - 30€✅</option>
-                    <option value="rangements_garage|25" >Rangements, étagères de garage - 25€✅</option>
-                    <option value="supports_outils|20" >Supports muraux outils - 20€✅</option>
-                    <option value="trampoline|50" >Trampoline - 50€❌</option>
-                    <option value="balancoire|50" >Balançoire - 50€❌</option>
-                    <option value="aire_jeux|150" >Aire de jeux - 150€❌</option>
-                    <option value="spa_gonflable|75" >Spa gonflable + mise en route - 75€❌</option>
+                    <option value="salon_jardin|70">Mobilier jardin : Salon - 70€✅</option>
+                    <option value="table_jardin|30">Mobilier jardin : Table - 30€✅</option>
+                    <option value="banc_jardin|20">Mobilier jardin : Banc - 20€✅</option>
+                    <option value="transat|15">Mobilier jardin : Transat - 15€✅</option>
+                    <option value="fauteuil_suspendu|45">Mobilier jardin : Fauteuil suspendu - 45€❌</option>
+                    <option value="balancelle|45">Mobilier jardin : Balancelle - 45€❌</option>
+                    <option value="hamac|40">Mobilier jardin : Hamac - 40€❌</option>
+                    <option value="parasol|30">Mobilier jardin : Parasol - 30€✅</option>
+                    <option value="abri_velos|70">Mobilier jardin : Abri à vélos - 70€❌</option>
+                    <option value="coffre_jardin|20">Mobilier jardin : Coffre - 20€✅</option>
+                    <option value="cabanon|70">Mobilier jardin : Cabanon rangement - 70€❌</option>
+                    <option value="barbecue|50">Barbecue - 50€❌</option>
+                    <option value="plancha|30">Plancha - 30€❌</option>
+                    <option value="tonnelle|55">Tonnelle - 55€❌</option>
+                    <option value="brumisateurs|50">Brumisateurs - 50€❌</option>
+                    <option value="portillon|45">Portillon - 45€❌</option>
+                    <option value="boite_lettres|20">Boîte aux lettres - 20€✅</option>
+                    <option value="luminaires_ext|25">Luminaires extérieurs - 25€❌</option>
+                    <option value="support_porte_velos|30">Support porte vélos - 30€✅</option>
+                    <option value="rangements_garage|25">Rangements, étagères de garage - 25€✅</option>
+                    <option value="supports_outils|20">Supports muraux outils - 20€✅</option>
+                    <option value="trampoline|50">Trampoline - 50€❌</option>
+                    <option value="balancoire|50">Balançoire - 50€❌</option>
+                    <option value="aire_jeux|150">Aire de jeux - 150€❌</option>
+                    <option value="spa_gonflable|75">Spa gonflable + mise en route - 75€❌</option>
                 </optgroup>
 
                 <optgroup label="🎥 AUDIO-VIDÉO">
-                    <option value="support_tv|40" >Support mural / bras articulé TV/PC - 40€✅</option>
-                    <option value="borne_wifi|40" >Borne répétiteur Wi-Fi - 40€✅</option>
-                    <option value="projecteur|55" >Projecteur - 55€✅</option>
-                    <option value="installation_iptv|15" >↳ Installation IPTV légale - 15€✅</option>
-                    <option value="home_cinema|55" >Home-cinéma - 55€✅</option>
-                    <option value="hauts_parleurs|40" >Hauts-parleurs - 40€✅</option>
-		    <option value="Carplay|120" >Système Carplay - 120€✅</option>
+                    <option value="support_tv|40">Support mural / bras articulé TV/PC - 40€✅</option>
+                    <option value="borne_wifi|40">Borne répétiteur Wi-Fi - 40€✅</option>
+                    <option value="projecteur|55">Projecteur - 55€✅</option>
+                    <option value="installation_iptv|15">↳ Installation IPTV légale - 15€✅</option>
+                    <option value="home_cinema|55">Home-cinéma - 55€✅</option>
+                    <option value="hauts_parleurs|40">Hauts-parleurs - 40€✅</option>
+		    <option value="Carplay|120">Système Carplay - 120€✅</option>
                 </optgroup>
             </select>
         </div>
@@ -1280,8 +1357,8 @@ input.quantity-input[type=number] {
 
 <!-- Styles CSS pour la modale et la barre de recherche -->
 <style>
-/* Style responsive pour mobile */
-@media (max-width: 768px) {
+/* Style responsive pour mobile portrait uniquement */
+@media (max-width: 768px) and (orientation: portrait) {
     .modal-content-wrapper {
         flex-direction: column !important;
     }
@@ -1292,6 +1369,39 @@ input.quantity-input[type=number] {
     
     #prestationSelect {
         min-height: 300px !important;
+    }
+}
+
+/* Style pour mobile paysage - garder 2 colonnes */
+@media (max-width: 900px) and (orientation: landscape) {
+    .modal-content-wrapper {
+        gap: 15px !important;
+        padding: 10px !important;
+        min-height: auto !important;
+    }
+    
+    .left-column {
+        gap: 10px !important;
+    }
+    
+    .left-column button {
+        padding: 8px 15px !important;
+        font-size: 0.9em !important;
+    }
+    
+    .left-column p {
+        font-size: 0.75em !important;
+        line-height: 1.3 !important;
+    }
+    
+    #prestationSearch {
+        padding: 10px !important;
+        font-size: 0.9em !important;
+    }
+    
+    #prestationSelect {
+        font-size: 0.7em !important;
+        padding: 10px !important;
     }
 }
 
@@ -1355,7 +1465,7 @@ input.quantity-input[type=number] {
 <div id="cartContainer">
     <h2>🧾 Votre sélection</h2>
     <div id="cartItems" style="max-height: calc(100vh - 250px); overflow-y: auto;"></div>
-    <hr/>
+    <hr>
     <div id="cartTotal" style="margin: 10px 0; color: #E3B100; font-weight: bold; text-align: right;"><strong>Total :</strong> 0 €</div>
     <button id="clearCartBtn" style="
         margin-top: 10px;
@@ -1699,7 +1809,7 @@ async function handleOkButton() {
 let countdownInterval;
 
 function startCountdown() {
-    let secondsLeft = 7;
+    let secondsLeft = 5;
     const countdownElement = document.getElementById('popupCountdown');
     
     countdownInterval = setInterval(() => {
@@ -1976,7 +2086,10 @@ const cartCountBadge = document.getElementById("cartCountBadge");
 
 toggleCartBtn.addEventListener("click", () => {
     const isOpen = cartContainer.style.right === "0px";
-    cartContainer.style.right = isOpen ? "-285px" : "0px";
+    const windowWidth = window.innerWidth;
+    const cartWidth = cartContainer.offsetWidth;
+    const hiddenAmount = cartWidth * 0.95;
+    cartContainer.style.right = isOpen ? `-${hiddenAmount}px` : "0px";
 });
 
 
@@ -2417,7 +2530,9 @@ div.quantity-input input[type="number"]:focus {
         
         <!-- Bloc Question 1 -->
         <div class="option-bloc" data-bloc="1">
-            <label>1) Faudra-t-il se déplacer chez le client sur un ou plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ? 1,2,3...?</label>
+            <label>1) Faudra-t-il se déplacer chez le client sur un ou 
+plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ? 
+1,2,3...?</label>
             <div style="margin-top: 10px;">
                 <input type="number" id="nombreDeplacements" min="0" value="0" placeholder="Nombre de déplacements" autocomplete="off" style="width: 150px; padding: 10px; border: 2px solid #E3B100; background: white; border-radius: 8px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
             </div>
@@ -2461,7 +2576,7 @@ div.quantity-input input[type="number"]:focus {
             <label>3) Y a-t-il une ou plusieurs interventions qui seront programmées après 18h ? (+20% sur le taux horaire)</label>
             <div class="radio-group">
                 <div class="radio-option">
-                    <input type="radio" id="q3-none" name="question3" value="-" data-question="3" checked>
+                    <input type="radio" id="q3-none" name="question3" value="-" data-question="3" checked="checked">
                     <label for="q3-none">-</label>
                 </div>
                 <div class="radio-option">
@@ -2486,7 +2601,7 @@ div.quantity-input input[type="number"]:focus {
             <label>4) Accès difficile (≥3e étage sans ascenseur) ? (+5€ HT)</label>
             <div class="radio-group">
                 <div class="radio-option">
-                    <input type="radio" id="q4-none" name="question4" value="-" data-question="4" checked>
+                    <input type="radio" id="q4-none" name="question4" value="-" data-question="4" checked="checked">
                     <label for="q4-none">-</label>
                 </div>
                 <div class="radio-option">
@@ -2511,7 +2626,7 @@ div.quantity-input input[type="number"]:focus {
             <label>5) Parking payant à prévoir ? (+5€ HT par demi-journée)</label>
             <div class="radio-group">
                 <div class="radio-option">
-                    <input type="radio" id="q5-none" name="question5" value="-" data-question="5" checked>
+                    <input type="radio" id="q5-none" name="question5" value="-" data-question="5" checked="checked">
                     <label for="q5-none">-</label>
                 </div>
                 <div class="radio-option">
@@ -2645,7 +2760,7 @@ div.quantity-input input[type="number"]:focus {
                 * Sous réserve d'éligibilité aux services à la personne
             </div>
             <div style="margin-top: 20px; padding: 15px; background-color: #e8f4fd; border: 2px solid #0c5460; border-radius: 8px; text-align: center;">
-                TVA non applicable, article 293 B du CGI<br/>
+                TVA non applicable, article 293 B du CGI<br>
                 <small>Micro-entrepreneur en franchise en base de TVA</small>
             </div>
             
@@ -2662,7 +2777,7 @@ div.quantity-input input[type="number"]:focus {
     <h2>🎉 Félicitations !</h2>
     <p>Merci d'avoir renseigné les options.</p>
     <p>Voici sans plus tarder votre estimation de tarif concernant votre panier.</p>
-    <div class="popup-countdown" id="optionsPopupCountdown">Fermeture automatique dans <strong>7</strong> secondes...</div>
+    <div class="popup-countdown" id="optionsPopupCountdown">Fermeture automatique dans <strong>5</strong> secondes...</div>
 </div>
 
 <script>
@@ -2865,7 +2980,7 @@ function showOptionsSuccessPopup() {
 
 // Compte à rebours pour le popup des options
 function startOptionsCountdown() {
-    let secondsLeft = 7;
+    let secondsLeft = 5;
     const countdownElement = document.getElementById('optionsPopupCountdown');
     
     optionsCountdownInterval = setInterval(() => {
@@ -3893,11 +4008,11 @@ const logoBase64 = 'https://nicolasszczot-dev.github.io/public/009.png';
 
 </script>
 
-</body>
-</html>
 
-</body>
-</html>
+
+
+
+
 <script>
 // Fonction pour retirer les accents
 function removeAccents(str) {
@@ -4012,4 +4127,4 @@ function addSelectedToCart() {
     // Réappliquer le filtre
     filterPrestations();
 }
-</script>
+</script></body></html>
