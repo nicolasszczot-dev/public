@@ -1254,7 +1254,7 @@ seront utilisées que pour créer un dossier à votre nom. *: obligatoire.
                     <option value="cadre_deco|10">Cadre décoratif - 10€✅</option>
                     <option value="tringle_rideaux|25">Tringle à rideaux - 25€✅</option>
                     <option value="store|25">Store - 25€✅</option>
-                    <option value="volet_roulant|70">Volet roulant (160cm maxi) - 70€❌</option>
+                    <option value="volet_roulant|70">Volet roulant (160cm maxi) - 70€✅</option>
                     <option value="porte_manteau|15">Porte-manteau - 15€✅</option>
                     <option value="patere|10">Patère - 10€✅</option>
                     <option value="crochet|10">Crochet - 10€✅</option>
@@ -2668,11 +2668,12 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
                 
                 <!-- Détail des prestations -->
                 <div id="prestationsDetailList" style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 5px;"></div>
+<div style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+       <div style="padding: 3px 0;">Prestations éligibles crédit d'impôt : <span id="cartTotalEligible" style="color: #28a745; font-weight: bold;">0.00€ HT ✅</span></div>
+       <div style="padding: 3px 0;">Prestations non éligibles : <span id="cartTotalNonEligible" style="color: #dc3545; font-weight: bold;">0.00€ HT ❌</span></div>
+   </div>
                 
-                <div style="display: flex; justify-content: space-between; padding: 5px 0;">
-                    <span>Panier de base :</span>
-                    <span id="cartTotalDisplay" style="font-weight: 600;">-</span>
-                </div>
+                
                 <div id="eveningLine" style="display: none; padding: 5px 0;">
                     <div style="display: flex; justify-content: space-between;">
                         <span style="color: #d97706;">+ Majoration soirée (+20%)</span>
@@ -2744,18 +2745,26 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
             </div>
             
             <!-- TOTAL HT -->
-            <div style="border-top: 3px double #000; border-bottom: 3px double #000; padding: 15px 0; margin: 20px 0;">
-                <div style="display: flex; justify-content: space-between; font-size: 1.4em; font-weight: bold;">
-                    <span>TOTAL HT à regler :</span>
-                    <span id="totalHT">-</span>
-                </div>
-            </div>
+       <div style="margin: 30px 0;">
+    <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #DADADB); border: 3px solid #475569; border-radius: 10px;">
+        <div style="text-align: center;">
+            <span style="font-size: 32px; color: #475569; font-weight: bold;">TOTAL HT à régler : <span id="totalHT">0.00€</span></span>
+        </div>
+    </div>
+</div>
             
             <!-- PRIX FINAL -->
             <div class="price-highlight" style="margin: 30px 0;">
-                <div class="final-price" id="finalPrice" style="font-size: 2.5em; font-weight: bold; color: #333; text-align: center;">-</div>
-                <div class="credit-info" style="text-align: center; font-size: 1.1em; opacity: 0.95; font-style: italic;">Prix final "réel" HT*</div>
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #fff9e6, #fff); border: 3px solid #E3B100; border-radius: 10px;">
+       <div style="text-align: center;">
+           <span style="font-size: 32px; color: #E3B100; font-weight: bold;">Prix final "réel" HT* : <span id="finalPrice">0.00€</span></span>
+       </div>
+   </div>
+<div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666;">
+                * Sous réserve d'éligibilité aux services à la personne
             </div>
+</div>
+                
             
             <div class="buttons-container">
                 <button class="action-button" onclick="printDevis()" type="button" style="background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%); color: white;">
@@ -2766,9 +2775,7 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
                 </button>
             </div>
             
-            <div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666;">
-                * Sous réserve d'éligibilité aux services à la personne
-            </div>
+            
             <div style="margin-top: 20px; padding: 15px; background-color: #e8f4fd; border: 2px solid #0c5460; border-radius: 8px; text-align: center;">
                 TVA non applicable, article 293 B du CGI<br>
                 <small>Micro-entrepreneur en franchise en base de TVA</small>
@@ -3090,11 +3097,18 @@ function calculateFinalPrice() {
         paidParking = parseInt(q5Field.value) || 0;
     }
     
-    // Calcul du panier de base
-    let cartTotal = 0;
-    for (const key in cart) {
-        cartTotal += cart[key].qty * cart[key].price;
-    }
+    // Calcul du panier de base séparé éligible/non-éligible
+   let cartTotalEligible = 0;
+   let cartTotalNonEligible = 0;
+   for (const key in cart) {
+       const itemTotal = cart[key].qty * cart[key].price;
+       if (cart[key].eligibleCreditImpot) {
+           cartTotalEligible += itemTotal;
+       } else {
+           cartTotalNonEligible += itemTotal;
+       }
+   }
+   let cartTotal = cartTotalEligible + cartTotalNonEligible;
     
     // Calcul des coûts
     const difficultAccessCost = difficultAccess * 5;
@@ -3102,8 +3116,9 @@ function calculateFinalPrice() {
     const eveningCost = eveningInterventions > 0 ? (cartTotal * 0.20) : 0;
     
     // NOUVELLE FORMULE : Remise 50% uniquement sur (panier + majoration soirée)
-    const subtotalPrestations = cartTotal + eveningCost;
-    const prestationsRemisees = subtotalPrestations * 0.50;
+   const subtotalPrestationsEligibles = cartTotalEligible + eveningCost;
+   const prestationsRemisees = subtotalPrestationsEligibles * 0.50;
+   const subtotalPrestations = cartTotal + eveningCost;
     
     // Options non remisées (avec déplacement majoré si applicable)
     const totalOptionsNonRemisees = (isDeplacementBarre ? deplacementMajore : 0) + difficultAccessCost + paidParkingCost;
@@ -3111,7 +3126,7 @@ function calculateFinalPrice() {
     // Total HT et Prix final
     const deplacementFinal = isDeplacementBarre ? 0 : deplacementBase;
     const totalHT = cartTotal + eveningCost + deplacementFinal + totalOptionsNonRemisees;
-    const finalPrice = prestationsRemisees + deplacementFinal + totalOptionsNonRemisees;
+    const finalPrice = prestationsRemisees + cartTotalNonEligible + deplacementFinal + totalOptionsNonRemisees;
     
     // Affichage
     // Détail des prestations
@@ -3128,7 +3143,9 @@ function calculateFinalPrice() {
     }
     document.getElementById('prestationsDetailList').innerHTML = prestationsDetailHTML || '<div style="text-align: center; color: #999;">Aucune prestation</div>';
     
-    document.getElementById('cartTotalDisplay').textContent = `${cartTotal.toFixed(2)}€ HT`;
+    
+document.getElementById('cartTotalEligible').textContent = `${cartTotalEligible.toFixed(2)}€ HT ✅`;
+   document.getElementById('cartTotalNonEligible').textContent = `${cartTotalNonEligible.toFixed(2)}€ HT ❌`;
     
     // Affichage du déplacement (barré ou non)
     const deplacementElement = document.getElementById('deplacement');
@@ -3143,7 +3160,7 @@ function calculateFinalPrice() {
     
     // Prix avant/après remise
     document.getElementById('priceBeforeDiscount').textContent = `${subtotalPrestations.toFixed(2)}€ HT`;
-    document.getElementById('priceAfterDiscount').textContent = `${prestationsRemisees.toFixed(2)}€ HT`;
+    document.getElementById('priceAfterDiscount').textContent = `${(prestationsRemisees + cartTotalNonEligible).toFixed(2)}€ HT`;
     
     // Afficher/masquer la ligne majoration soirée
     if (eveningCost > 0) {
@@ -3960,9 +3977,11 @@ const logoBase64 = 'https://nicolasszczot-dev.github.io/public/009.png';
                 <span>${optionsTotal.toFixed(2)} € HT</span>
               </div>
               ` : ''}
-              <div class="total-row final" style="margin-top: 10px; padding-top: 12px;">
-                <span style="color: #000000;">TOTAL standard HT :</span>
-              </div>
+             <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #fff); border: 3px solid #333; border-radius: 10px;">
+       <div style="text-align: center;">
+           <span style="font-size: 32px; color: #000000; font-weight: bold;">TOTAL HT à régler : <span id="totalHT">0.00€</span></span>
+       </div>
+   </div>
               <div style="text-align: right; margin-bottom: 15px;">
                 <span style="color: #000000; font-weight: bold; font-size: 28px;">${(subtotalPrestations + (isDeplacementBarre ? 0 : deplacementBase) + optionsTotal).toFixed(2)} € HT</span>
               </div>
@@ -4105,7 +4124,13 @@ function addSelectedToCart() {
     const name = optionText.split(' - ')[0];
 
     // Ajouter au panier avec quantité = 1 (remplacer la quantité si déjà présent)
-    cart[key] = { name: name + ' - ' + price + '€', qty: 1, price: parseFloat(price) };
+const eligibleCredit = optionText.includes('✅');
+    cart[key] = { 
+       name: name + ' - ' + price + '€', 
+       qty: 1, 
+       price: parseFloat(price),
+       eligibleCreditImpot: eligibleCredit
+   };
     
     // Mettre à jour l'affichage du panier
     updateCartDisplay();
