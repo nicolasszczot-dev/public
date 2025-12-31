@@ -1226,7 +1226,7 @@ seront utilisées que pour créer un dossier à votre nom. *: obligatoire.
     <div class="modal-content-wrapper" style="display: flex; gap: 30px; padding: 20px; min-height: 500px;">
         <!-- COLONNE GAUCHE : Barre de recherche + Boutons -->
         <div class="left-column" style="flex: 1; display: flex; flex-direction: column; gap: 20px; justify-content: flex-start;">
-            <input type="text" id="prestationSearch" placeholder="🔍 Rechercher une prestation..." oninput="filterPrestations()">
+           <input type="text" id="prestationSearch" placeholder="🔍 Rechercher une prestation..." autocomplete="off">
             
             <button class="add-to-cart-btn" onclick="addSelectedToCart()" style="width: 100%; margin: 0;">🛒 Ajouter au panier</button>
             
@@ -1464,6 +1464,37 @@ seront utilisées que pour créer un dossier à votre nom. *: obligatoire.
     min-height: 250px !important;
     max-height: 400px !important;
     overflow-y: auto !important;
+}
+/* ===== AMÉLIORATIONS MOBILE BARRE DE RECHERCHE ===== */
+@media (max-width: 768px) {
+    #prestationSearch {
+        font-size: 16px !important;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    
+    #prestationSelect[size] {
+        max-height: 250px !important;
+        font-size: 14px !important;
+    }
+    
+    #prestationSelect option {
+        padding: 12px 8px !important;
+        line-height: 1.4 !important;
+    }
+}
+
+/* Mobile paysage */
+@media (max-width: 900px) and (orientation: landscape) {
+    #prestationSearch {
+        font-size: 14px !important;
+        padding: 10px !important;
+        height: 45px !important;
+    }
+    
+    #prestationSelect[size] {
+        max-height: 200px !important;
+    }
 }
 </style>
 
@@ -4103,17 +4134,28 @@ const logoBase64 = 'https://nicolasszczot-dev.github.io/public/009.png';
 
 
 <script>
+// ===== FILTRAGE DES PRESTATIONS =====
 // Fonction pour retirer les accents
 function removeAccents(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-// Fonction de filtrage des prestations avec ouverture automatique
+// Détecter si on est sur mobile
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Fonction de filtrage des prestations
 function filterPrestations() {
     const searchInput = document.getElementById('prestationSearch');
     const select = document.getElementById('prestationSelect');
-    const searchTerm = removeAccents(searchInput.value.toLowerCase());
-
+    
+    if (!searchInput || !select) {
+        console.error('Éléments non trouvés');
+        return;
+    }
+    
+    const searchTerm = removeAccents(searchInput.value.toLowerCase().trim());
     const optgroups = select.querySelectorAll('optgroup');
     let visibleOptionsCount = 0;
 
@@ -4133,42 +4175,59 @@ function filterPrestations() {
             }
         });
 
-        if (hasVisibleOptions) {
-            optgroup.style.display = '';
-        } else {
-            optgroup.style.display = 'none';
-        }
+        optgroup.style.display = hasVisibleOptions ? '' : 'none';
     });
 
+    // Gérer l'option par défaut
     const defaultOption = select.querySelector('option[disabled][selected]');
     if (defaultOption) {
         defaultOption.style.display = searchTerm === '' ? '' : 'none';
     }
 
-    // Ouvrir automatiquement le select et le garder ouvert tant que searchTerm n'est pas vide
+    // Adaptation mobile vs desktop
+    const mobile = isMobile();
+    
     if (searchTerm !== '') {
-        // Forcer minimum 2 pour que le navigateur considère le select comme ouvert
-        const displaySize = Math.max(visibleOptionsCount, 2);
-        select.setAttribute('size', displaySize > 15 ? 15 : displaySize);
+        const maxSize = mobile ? 8 : 15;
+        const minSize = mobile ? 4 : 5;
+        const displaySize = Math.min(Math.max(visibleOptionsCount, minSize), maxSize);
+        
+        select.setAttribute('size', displaySize);
         select.style.height = 'auto';
-        select.style.maxHeight = '500px';
+        select.style.maxHeight = mobile ? '250px' : '400px';
         select.style.overflowY = 'auto';
-        // Garder le select ouvert en permanence tant qu'il y a du texte
-        select.style.display = 'block';
+        
+        // Sur mobile, scroll vers le select
+        if (mobile && visibleOptionsCount > 0) {
+            setTimeout(() => {
+                select.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
     } else {
-        // Ne fermer que si la barre est vide
         select.removeAttribute('size');
         select.style.height = '50px';
         select.style.maxHeight = '';
         select.style.overflowY = '';
-        select.value = '';
     }
 }
 
-// Le select s'ouvre/ferme automatiquement via le système de size dans filterPrestations()
-// Pas besoin de code supplémentaire pour gérer l'ouverture
+// Initialisation au chargement de la page
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('prestationSearch');
+    if (searchInput) {
+        searchInput.removeAttribute('oninput');
+        searchInput.addEventListener('input', filterPrestations);
+        
+        // Sur mobile : améliorer l'UX
+        if (isMobile()) {
+            searchInput.style.fontSize = '16px';
+        }
+        
+        console.log('✅ Recherche initialisée');
+    }
+});
 
-// Fonction pour ajouter au panier (quantité = 1)
+// Fonction pour ajouter au panier
 function addSelectedToCart() {
     const select = document.getElementById('prestationSelect');
     const searchInput = document.getElementById('prestationSearch');
@@ -4183,19 +4242,16 @@ function addSelectedToCart() {
     const optionText = select.options[select.selectedIndex].text;
     const name = optionText.split(' - ')[0];
 
-    // Ajouter au panier avec quantité = 1 (remplacer la quantité si déjà présent)
-const eligibleCredit = optionText.includes('✅');
+    const eligibleCredit = optionText.includes('✅');
     cart[key] = { 
-       name: name + ' - ' + price + '€', 
-       qty: 1, 
-       price: parseFloat(price),
-       eligibleCreditImpot: eligibleCredit
-   };
+        name: name + ' - ' + price + '€', 
+        qty: 1, 
+        price: parseFloat(price),
+        eligibleCreditImpot: eligibleCredit
+    };
     
-    // Mettre à jour l'affichage du panier
     updateCartDisplay();
     
-    // Animation du bouton panier
     if (toggleCartBtn) {
         toggleCartBtn.animate([
             { transform: "scale(1)" },
@@ -4207,19 +4263,19 @@ const eligibleCredit = optionText.includes('✅');
         });
     }
 
-    // Vider la barre de recherche (ce qui fermera le menu via filterPrestations)
+    // Vider la recherche
     searchInput.value = '';
-
-    // Réinitialiser le select
     select.selectedIndex = 0;
-
-    // Fermer explicitement le menu
     select.removeAttribute('size');
     select.style.height = '50px';
     select.style.maxHeight = '';
     select.style.overflowY = '';
-
-    // Réappliquer le filtre
+    
+    // Sur mobile, fermer le clavier
+    if (isMobile()) {
+        searchInput.blur();
+    }
+    
     filterPrestations();
 }
 </script></body></html>
