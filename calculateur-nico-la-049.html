@@ -2611,75 +2611,82 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
                 <div id="distanceResult" style="display: none;"></div>
             </div>
         </div>
-
-        <div class="option-bloc" data-bloc="3">
+<!-- Bloc Question 3 -->
+<div class="option-bloc" data-bloc="3">
     <h3>3️) Y a-t-il une ou plusieurs interventions qui seront programmées après 18h ? (+20% sur le taux horaire)</h3>
     <div class="radio-group">
-        <label class="radio-option">
-            <input type="radio" name="question3" value="non" data-question="3" checked="checked">
-            <span class="radio-text">❌ Non</span>
-        </label>
-        <label class="radio-option">
-            <input type="radio" name="question3" value="oui" data-question="3">
-            <span class="radio-text">✅ Oui</span>
-        </label>
+        <div class="radio-option">
+            <input type="radio" id="q3-none" name="question3" value="-" data-question="3" checked="checked">
+            <label for="q3-none">-</label>
+        </div>
+        <div class="radio-option">
+            <input type="radio" id="q3-non" name="question3" value="non" data-question="3">
+            <label for="q3-non">Non</label>
+        </div>
+        <div class="radio-option">
+            <input type="radio" id="q3-oui" name="question3" value="oui" data-question="3">
+            <label for="q3-oui">Oui</label>
+        </div>
     </div>
-    
+
     <div id="eveningPrestationsList" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid #E3B100;">
-        <p style="font-weight: bold; margin-bottom: 15px; color: #E3B100;">Pour chaque prestation, indiquez si elle sera effectuée après 18h :</p>
+        <p style="font-weight: bold; margin-bottom: 15px; color: #E3B100;">
+            Pour chaque prestation, indiquez si elle sera effectuée après 18h :
+        </p>
         <div id="eveningPrestationsContent"></div>
     </div>
 </div>
 
-        <!-- Bloc Question 4 -->
-        <div class="option-bloc" data-bloc="4">
-            <label>4) Accès difficile (≥3e étage sans ascenseur) ? (+5€ HT)</label>
-            <div class="radio-group">
-                <div class="radio-option">
-                    <input type="radio" id="q4-none" name="question4" value="-" data-question="4" checked="checked">
-                    <label for="q4-none">-</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="q4-non" name="question4" value="non" data-question="4">
-                    <label for="q4-non">Non</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="q4-oui" name="question4" value="oui" data-question="4">
-                    <label for="q4-oui">Oui</label>
-                </div>
-            </div>
-            <div class="quantity-input" style="display: none;">
-                <div style="font-size: 1em; font-weight: bold; color: #000000; background-color: #fff9e6; padding: 12px; border-radius: 8px; border: 2px solid #E3B100; display: flex; align-items: center; gap: 10px;">
-                    <span>⚠️ Combien d'interventions avec accès difficile ?</span>
-                    <input type="number" min="1" class="quantity-field" data-type="access" placeholder="Ex: 1" autocomplete="off" style="width: 80px; padding: 8px; border: none; background: white; border-radius: 6px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
-                </div>
-            </div>
+<!-- Bloc Question 4 -->
+<div class="option-bloc" data-bloc="4">
+    <label>4) Accès difficile (≥3e étage sans ascenseur) ? (+5€ HT)</label>
+    <div class="radio-group">
+        <div class="radio-option">
+            <input type="radio" id="q4-none" name="question4" value="-" data-question="4" checked="checked">
+            <label for="q4-none">-</label>
         </div>
+        <div class="radio-option">
+            <input type="radio" id="q4-non" name="question4" value="non" data-question="4">
+            <label for="q4-non">Non</label>
+        </div>
+        <div class="radio-option">
+            <input type="radio" id="q4-oui" name="question4" value="oui" data-question="4">
+            <label for="q4-oui">Oui</label>
+        </div>
+    </div>
+    <div class="quantity-input" style="display: none;">
+        <div style="font-size: 1em; font-weight: bold; color: #000000; background-color: #fff9e6; padding: 12px; border-radius: 8px; border: 2px solid #E3B100; display: flex; align-items: center; gap: 10px;">
+            <span>⚠️ Combien de déplacements avec accès difficile ?</span>
+            <input type="number" min="1" class="quantity-field" data-type="access" placeholder="Ex: 1" autocomplete="off" style="width: 80px; padding: 8px; border: none; background: white; border-radius: 6px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
+        </div>
+    </div>
+</div>
 
-        <!-- Bloc Question 5 -->
-        <div class="option-bloc" data-bloc="5">
-            <label>5) Parking payant à prévoir ? (+5€ HT par demi-journée)</label>
-            <div class="radio-group">
-                <div class="radio-option">
-                    <input type="radio" id="q5-none" name="question5" value="-" data-question="5" checked="checked">
-                    <label for="q5-none">-</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="q5-non" name="question5" value="non" data-question="5">
-                    <label for="q5-non">Non</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="q5-oui" name="question5" value="oui" data-question="5">
-                    <label for="q5-oui">Oui</label>
-                </div>
-            </div>
-            <div class="quantity-input" style="display: none;">
-                <div style="font-size: 1em; font-weight: bold; color: #000000; background-color: #fff9e6; padding: 12px; border-radius: 8px; border: 2px solid #E3B100; display: flex; align-items: center; gap: 10px;">
-                    <span>⚠️ Combien de demi-journées avec parking payant ?</span>
-                    <input type="number" min="1" class="quantity-field" data-type="parking" placeholder="Ex: 2" autocomplete="off" style="width: 80px; padding: 8px; border: none; background: white; border-radius: 6px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
-                </div>
-            </div>
+<!-- Bloc Question 5 -->
+<div class="option-bloc" data-bloc="5">
+    <label>5) Parking payant à prévoir ? (+5€ HT par demi-journée)</label>
+    <div class="radio-group">
+        <div class="radio-option">
+            <input type="radio" id="q5-none" name="question5" value="-" data-question="5" checked="checked">
+            <label for="q5-none">-</label>
         </div>
+        <div class="radio-option">
+            <input type="radio" id="q5-non" name="question5" value="non" data-question="5">
+            <label for="q5-non">Non</label>
+        </div>
+        <div class="radio-option">
+            <input type="radio" id="q5-oui" name="question5" value="oui" data-question="5">
+            <label for="q5-oui">Oui</label>
+        </div>
+    </div>
+    <div class="quantity-input" style="display: none;">
+        <div style="font-size: 1em; font-weight: bold; color: #000000; background-color: #fff9e6; padding: 12px; border-radius: 8px; border: 2px solid #E3B100; display: flex; align-items: center; gap: 10px;">
+            <span>⚠️ Combien de demi-journées avec parking payant ?</span>
+            <input type="number" min="1" class="quantity-field" data-type="parking" placeholder="Ex: 2" autocomplete="off" style="width: 80px; padding: 8px; border: none; background: white; border-radius: 6px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
+        </div>
+    </div>
+</div>
+
 
         <!-- Bloc Prix Final -->
         <div id="prixfinal" style="display: none;">
@@ -2942,11 +2949,32 @@ function validateBloc(bloc) {
     let isValid = false;
     
     // Bloc 2 : valide si distance calculée
-    if (blocNum === '2') {
-        isValid = bloc.hasAttribute('data-cout');
+   if (blocNum === '2') {
+       isValid = bloc.hasAttribute('data-cout');
+   }
+// Bloc 3 : valide si Q3="non" OU (Q3="oui" ET tous radios evening != "-")
+else if (blocNum === '3') {
+    const q3Radio = document.querySelector('input[name="question3"]:checked');
+    if (q3Radio) {
+        if (q3Radio.value === 'non') {
+            isValid = true;
+        } else if (q3Radio.value === 'oui') {
+            const eveningRadios = document.querySelectorAll('input[data-evening-key]');
+            if (eveningRadios.length === 0) {
+                isValid = false;
+            } else {
+                const allGroups = new Set();
+                eveningRadios.forEach(er => allGroups.add(er.name));
+                isValid = Array.from(allGroups).every(groupName => {
+                    const checkedInGroup = document.querySelector(`input[name="${groupName}"]:checked`);
+                    return checkedInGroup && checkedInGroup.value !== '-';
+                });
+            }
+        }
     }
-    // Autres blocs : logique existante
-    else if (radio && radio.value === 'non') {
+}
+   // Autres blocs : logique existante
+   else if (radio && radio.value === 'non') {
         isValid = true;
     } else if (radio && radio.value === 'oui' && quantityField && parseInt(quantityField.value) > 0) {
         isValid = true;
@@ -3335,19 +3363,21 @@ function showContactButtons() {
 function updateEveningPrestationsList() {
     const eveningList = document.getElementById('eveningPrestationsContent');
     const q3Oui = document.querySelector('input[data-question="3"][value="oui"]');
-    
+
+    // Si Q3 n'est pas "Oui" → on masque la liste
     if (!q3Oui || !q3Oui.checked) {
         document.getElementById('eveningPrestationsList').style.display = 'none';
         return;
     }
-    
+
+    // Aucun article dans le panier
     if (Object.keys(cart).length === 0) {
         eveningList.innerHTML = '<p style="color: #999; text-align: center;">Aucune prestation dans le panier</p>';
         return;
     }
-    
+
     document.getElementById('eveningPrestationsList').style.display = 'block';
-    
+
     let html = '';
     for (const key in cart) {
         if (cart[key].qty > 0) {
@@ -3356,35 +3386,70 @@ function updateEveningPrestationsList() {
                     <div style="font-weight: bold; margin-bottom: 8px; color: #333;">${cart[key].name}</div>
                     <div style="display: flex; gap: 20px;">
                         <div class="radio-option">
-                            <input type="radio" id="evening_non_${key}" name="evening_${key}" value="non" data-evening-key="${key}" checked>
-                            <label for="evening_non_${key}">❌ Non (avant 18h)</label>
+                            <input type="radio"
+                                   id="evening-${key}-none"
+                                   name="evening-${key}"
+                                   value="-"
+                                   data-evening-key="${key}"
+                                   checked="checked"
+                                   onchange="validateBloc(document.querySelector(\'.option-bloc[data-bloc=\\\'3\\\']\'))">
+                            <label for="evening-${key}-none">-</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" id="evening_oui_${key}" name="evening_${key}" value="oui" data-evening-key="${key}" onchange="calculateFinalPrice()">
-                            <label for="evening_oui_${key}">✅ Oui (après 18h)</label>
+                            <input type="radio"
+                                   id="evening-${key}-non"
+                                   name="evening-${key}"
+                                   value="non"
+                                   data-evening-key="${key}"
+                                   onchange="validateBloc(document.querySelector(\'.option-bloc[data-bloc=\\\'3\\\']\'))">
+                            <label for="evening-${key}-non">Non avant 18h</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio"
+                                   id="evening-${key}-oui"
+                                   name="evening-${key}"
+                                   value="oui"
+                                   data-evening-key="${key}"
+                                   onchange="calculateFinalPrice(); validateBloc(document.querySelector(\'.option-bloc[data-bloc=\\\'3\\\']\'))">
+                            <label for="evening-${key}-oui">Oui après 18h</label>
                         </div>
                     </div>
                 </div>
             `;
         }
     }
-    
     eveningList.innerHTML = html;
 }
 
-// Attacher les événements
-document.querySelectorAll('input[data-question="3"]').forEach(radio => {
-    radio.addEventListener('change', function() {
+
+// Attacher les événements sur Q3
+document.querySelectorAll('input[name="question3"]').forEach(radio => {
+    radio.addEventListener('change', function () {
         updateEveningPrestationsList();
+
         const bloc3 = document.querySelector('.option-bloc[data-bloc="3"]');
-        if (this.value === 'oui' || this.value === 'non') {
+        const checkedMain = document.querySelector('input[name="question3"]:checked');
+
+        // Tous les boutons evening doivent être déplacés de "-" si Q3 = "oui"
+        const eveningRadios = document.querySelectorAll('input[data-evening-key]');
+        const allEveningFilled = eveningRadios.length === 0 || Array.from(eveningRadios).every(er => {
+            const groupName = er.name;
+            const checkedInGroup = document.querySelector(`input[name="${groupName}"]:checked`);
+            return checkedInGroup && checkedInGroup.value !== '-';
+        });
+
+        if (checkedMain && checkedMain.id !== 'q3-none' && allEveningFilled) {
             bloc3.classList.add('validated');
         } else {
             bloc3.classList.remove('validated');
         }
+
         checkAllBlocsValidated();
     });
 });
+
+
+
 
 // Fonction pour réinitialiser le calculateur
 function resetCalculator() {
