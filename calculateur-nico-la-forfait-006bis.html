@@ -1212,6 +1212,7 @@ seront utilisées que pour créer un dossier à votre nom. *: obligatoire.
              Info Client:<br>
              ✅signifie que la prestation ouvre droit au crédit d'impôt pour services à la personne (50 %).<br>
              ❌signifie qu'elle n'y ouvre pas droit.
+	     
             </p>
         </div>
         
@@ -2280,8 +2281,12 @@ function addToCartFromModal(key) {
     const name = card.getAttribute('data-name');
     const price = parseInt(card.getAttribute('data-price'));
     
+    // Détecter automatiquement l'éligibilité via le ✅
+    const cardText = card.textContent || card.innerText;
+    const eligible = cardText.includes('✅');
+    
     // Remplacer la quantité au lieu de l'ajouter
-    cart[key] = { name: name + ' - ' + price + '€', qty: quantity, price: price };
+    cart[key] = { name: name + ' - ' + price + '€', qty: quantity, price: price, eligibleCreditImpot: eligible };
     
     updateCartDisplay();
     
@@ -2399,7 +2404,7 @@ function updateCartDisplay() {
                 <button onclick="removeItemCompletely('${key}')" style="
                     background: none;
                     border: none;
-                    color: #B30000;
+                    color: #9E39F8;
                     cursor: pointer;
                     font-weight: bold;
                     font-size: 1.2em;
@@ -2795,29 +2800,31 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
         </div>
 
         <!-- Bloc Question 3 -->
-        <div class="option-bloc" data-bloc="3">
-            <label>3) Y a-t-il une ou plusieurs interventions qui seront programmées après 18h ? (+20% sur le taux horaire)</label>
-            <div class="radio-group">
-                <div class="radio-option">
-                    <input type="radio" id="q3-none" name="question3" value="-" data-question="3" checked="checked">
-                    <label for="q3-none">-</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="q3-non" name="question3" value="non" data-question="3">
-                    <label for="q3-non">Non</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="q3-oui" name="question3" value="oui" data-question="3">
-                    <label for="q3-oui">Oui</label>
-                </div>
-            </div>
-            <div class="quantity-input" style="display: none;">
-                <div style="font-size: 1em; font-weight: bold; color: #000000; background-color: #fff9e6; padding: 12px; border-radius: 8px; border: 2px solid #E3B100; display: flex; align-items: center; gap: 10px;">
-                    <span>⚠️ Combien d'interventions après 18h ?</span>
-                    <input type="number" min="1" class="quantity-field" data-type="evening" placeholder="Ex: 1" autocomplete="off" style="width: 80px; padding: 8px; border: none; background: white; border-radius: 6px; font-size: 1em; font-weight: bold; text-align: center; font-family: 'Belleza', sans-serif;">
-                </div>
-            </div>
+<div class="option-bloc" data-bloc="3">
+    <h3>3️) Y a-t-il une ou plusieurs interventions qui seront programmées après 18h ? (+20% sur le taux horaire)</h3>
+    <div class="radio-group">
+        <div class="radio-option">
+            <input type="radio" id="q3-none" name="question3" value="-" data-question="3" checked="checked">
+            <label for="q3-none">-</label>
         </div>
+        <div class="radio-option">
+            <input type="radio" id="q3-non" name="question3" value="non" data-question="3">
+            <label for="q3-non">Non</label>
+        </div>
+        <div class="radio-option">
+            <input type="radio" id="q3-oui" name="question3" value="oui" data-question="3">
+            <label for="q3-oui">Oui</label>
+        </div>
+    </div>
+
+    <div id="eveningPrestationsList" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid #E3B100;">
+        <p style="font-weight: bold; margin-bottom: 15px; color: #E3B100;">
+            Pour chaque prestation, indiquez si elle sera effectuée après 18h :
+        </p>
+        <div id="eveningPrestationsContent"></div>
+    </div>
+</div>
+
 
         <!-- Bloc Question 4 -->
         <div class="option-bloc" data-bloc="4">
@@ -2870,7 +2877,7 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
         </div>
 
         <!-- Bloc Prix Final -->
-        <div id="prixfinal">
+        <div id="prixfinal" style="display: none;">
             <h3 style="text-align: center; font-size: 1.8em; margin-bottom: 25px; color: #B0780B; border-bottom: 3px solid #E3B100; padding-bottom: 10px;">
                 📊 RÉCAPITULATIF DE VOTRE TARIF
             </h3>
@@ -2881,11 +2888,12 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
                 
                 <!-- Détail des prestations -->
                 <div id="prestationsDetailList" style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 5px;"></div>
+<div style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+       <div style="padding: 3px 0;">Prestations éligibles crédit d'impôt : <span id="cartTotalEligible" style="color: #28a745; font-weight: bold;">0.00€ HT ✅</span></div>
+       <div style="padding: 3px 0;">Prestations non éligibles : <span id="cartTotalNonEligible" style="color: #dc3545; font-weight: bold;">0.00€ HT ❌</span></div>
+   </div>
                 
-                <div style="display: flex; justify-content: space-between; padding: 5px 0;">
-                    <span>Panier de base :</span>
-                    <span id="cartTotalDisplay" style="font-weight: 600;">-</span>
-                </div>
+                
                 <div id="eveningLine" style="display: none; padding: 5px 0;">
                     <div style="display: flex; justify-content: space-between;">
                         <span style="color: #d97706;">+ Majoration soirée (+20%)</span>
@@ -2899,8 +2907,9 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
                     </div>
                 </div>
                 
-                <!-- Prix remisé mis en évidence -->
-                <div style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, #fff7e6 0%, #ffe4b3 100%); border-radius: 8px; border: 2px solid #E3B100;">
+                                <!-- Prix remisé mis en évidence - VISIBLE UNIQUEMENT SI PRESTATIONS ELIGIBLES -->
+                <div id="creditImpotBox" style="display: none; margin-top: 15px; padding: 12px; background: linear-gradient(135deg, #fff7e6 0%, #ffe4b3 100%); border-radius: 8px; border: 2px solid #E3B100;">
+                    <div id="creditDetail" style="margin-bottom: 10px; font-size: 0.9em; color: #666;"></div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 0.95em;">Prix avant crédit d'impôt :</span>
                         <span id="priceBeforeDiscount" style="text-decoration: line-through; color: #999; font-size: 1em;">-</span>
@@ -2910,6 +2919,7 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
                         <span id="priceAfterDiscount" style="font-weight: bold; font-size: 1.3em; color: #B0780B;">-</span>
                     </div>
                 </div>
+
             </div>
             
             <!-- SECTION DÉPLACEMENT -->
@@ -2957,18 +2967,27 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
             </div>
             
             <!-- TOTAL HT -->
-            <div style="border-top: 3px double #000; border-bottom: 3px double #000; padding: 15px 0; margin: 20px 0;">
-                <div style="display: flex; justify-content: space-between; font-size: 1.4em; font-weight: bold;">
-                    <span>TOTAL HT à régler :</span>
-                    <span id="totalHT">-</span>
-                </div>
-            </div>
+       <div style="margin: 30px 0;">
+    <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #DADADB); border: 3px solid #475569; border-radius: 10px;">
+        <div style="text-align: center;">
+            <span style="font-size: 32px; color: #475569; font-weight: bold;">TOTAL HT à régler : <span id="totalHT">0.00€</span></span>
+        </div>
+    </div>
+</div>
             
-            <!-- PRIX FINAL -->
-            <div class="price-highlight" style="margin: 30px 0;">
-                <div class="final-price" id="finalPrice" style="font-size: 2.5em; font-weight: bold; color: #333; text-align: center;">-</div>
-                <div class="credit-info" style="text-align: center; font-size: 1.1em; opacity: 0.95; font-style: italic;">Prix final "réel" HT*</div>
+                 <!-- PRIX FINAL - VISIBLE UNIQUEMENT SI PRESTATIONS ELIGIBLES -->
+            <div id="totalApresCreditBox" class="price-highlight" style="display: none; margin: 30px 0;">
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #fff9e6, #fff); border: 3px solid #E3B100; border-radius: 10px;">
+       <div style="text-align: center;">
+           <span style="font-size: 32px; color: #E3B100; font-weight: bold;">Total "réel" après crédit d'impot*  : <span id="finalPrice">0.00€</span></span>
+       </div>
+   </div>
+<div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666;">
+                * Sous réserve d'éligibilité aux services à la personne
             </div>
+</div>
+
+                
             
             <div class="buttons-container">
                 <button class="action-button" onclick="printDevis()" type="button" style="background: linear-gradient(135deg, #E3B100 0%, #B0780B 100%); color: white;">
@@ -2979,9 +2998,7 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
                 </button>
             </div>
             
-            <div style="text-align: right; margin-top: 15px; font-size: 0.9em; color: #666;">
-                * Sous réserve d'éligibilité aux services à la personne
-            </div>
+            
             <div style="margin-top: 20px; padding: 15px; background-color: #e8f4fd; border: 2px solid #0c5460; border-radius: 8px; text-align: center;">
                 TVA non applicable, article 293 B du CGI<br>
                 <small>Micro-entrepreneur en franchise en base de TVA</small>
@@ -2994,7 +3011,7 @@ plusieurs jours ? ⚠️ Combien de deplacements en tout dois je compter ?
     </div>
 </div>
 
-<!-- Popup Options Success -->
+        <!-- Popup Options Success -->
 <div class="success-popup" id="optionsSuccessPopup">
     <button class="popup-close" id="closeOptionsPopup">×</button>
     <h2>🎉 Félicitations !</h2>
@@ -3039,7 +3056,7 @@ if (nombreDeplacementsInput) {
         const J = parseInt(this.value) || 0;
         const labelQ2 = document.getElementById('labelQuestion2');
         if (labelQ2) {
-            labelQ2.textContent = `2) Il y aura donc ${J} deplacement(s). Le chantier est-il à plus de 10KM? Si oui, veuillez renseigner son adresse afin de calculer le coût du déplacement.`;
+            labelQ2.textContent = `2) Il y aura donc ${J} deplacement(s). Veuillez renseigner son adresse afin de calculer le coût du déplacement.`;
         }
         
         // Valider le bloc 1 si J > 0
@@ -3057,6 +3074,66 @@ if (nombreDeplacementsInput) {
 document.querySelectorAll('input[type="radio"][data-question]').forEach(radio => {
     radio.addEventListener('change', function() {
         const bloc = this.closest('.option-bloc');
+        const questionNum = this.getAttribute('data-question');
+        
+    // GESTION SPÉCIFIQUE QUESTION 3
+if (questionNum === '3') {
+    const eveningList = document.getElementById('eveningPrestationsList');
+    const eveningContent = document.getElementById('eveningPrestationsContent');
+    
+    if (this.value === 'oui') {
+        let html = '';
+        for (const key in cart) {
+            if (cart[key].qty > 0) {
+                html += `
+    <div style="margin-bottom: 15px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #dee2e6;">
+        <p style="font-weight: 600; margin-bottom: 8px; color: #333;">${cart[key].name} (${cart[key].qty}x)</p>
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" id="ev-${key}-none" name="evening-${key}" value="-" data-evening-radio checked>
+                <label for="ev-${key}-none">-</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="ev-${key}-non" name="evening-${key}" value="non" data-evening-radio>
+                <label for="ev-${key}-non">Non</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="ev-${key}-oui" name="evening-${key}" value="oui" data-evening-radio>
+                <label for="ev-${key}-oui">Oui</label>
+            </div>
+        </div>
+    </div>`;
+            }
+        }
+        eveningContent.innerHTML = html || '<p>Aucune prestation dans le panier</p>';
+        eveningList.style.display = 'block';
+        
+        setTimeout(() => {
+            document.querySelectorAll('[data-evening-radio]').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    validateQuestion3();
+                });
+            });
+        }, 100);
+        
+        bloc.classList.remove('validated');
+        checkAllBlocsValidated();
+        return;
+    } else if (this.value === 'non') {
+        eveningList.style.display = 'none';
+        bloc.classList.add('validated');
+        checkAllBlocsValidated();
+        return;
+    } else {
+        eveningList.style.display = 'none';
+        bloc.classList.remove('validated');
+        checkAllBlocsValidated();
+        return;
+    }
+}
+
+
+
         const quantityDiv = bloc.querySelector('.quantity-input');
         const quantityField = bloc.querySelector('.quantity-field');
         
@@ -3147,16 +3224,19 @@ function checkAllBlocsValidated() {
     const validatedBlocs = document.querySelectorAll('.option-bloc.validated');
     
     if (allBlocs.length === validatedBlocs.length && allBlocs.length === 5) {
-        setTimeout(() => {
-            showOptionsSuccessPopup();
-        }, 500);
-    } else {
+    setTimeout(() => {
+        showValidationOptionsPopup();
+    }, 500);
+}
+
+
+ else {
         document.getElementById('prixfinal').style.display = 'none';
     }
 }
 
 // Afficher le popup de validation pour les options
-function showOptionsSuccessPopup() {
+function showValidationOptionsPopup() {
     let html = '';
     
     // Question 1
@@ -3172,8 +3252,26 @@ function showOptionsSuccessPopup() {
     // Question 3
     const q3Value = document.querySelector('input[name="question3"]:checked').value;
     if (q3Value === 'oui') {
-        const q3Qty = document.querySelector('[data-type="evening"]').value || '0';
-        html += `<div class="validation-list-item">Interventions après 18h : ${q3Qty} intervention(s)</div>`;
+        let prestationsAvant18h = [];
+        let prestationsApres18h = [];
+        
+        document.querySelectorAll('input[data-evening-radio]:checked').forEach(radio => {
+            const key = radio.getAttribute('name').replace('evening-', '');
+            if (cart[key] && cart[key].qty > 0) {
+                if (radio.value === 'oui') {
+                    prestationsApres18h.push(cart[key].name);
+                } else if (radio.value === 'non') {
+                    prestationsAvant18h.push(cart[key].name);
+                }
+            }
+        });
+        
+        if (prestationsApres18h.length > 0) {
+            html += `<div class="validation-list-item"><strong>Prestations APRÈS 18h :</strong><br>${prestationsApres18h.join('<br>')}</div>`;
+        }
+        if (prestationsAvant18h.length > 0) {
+            html += `<div class="validation-list-item"><strong>Prestations AVANT 18h :</strong><br>${prestationsAvant18h.join('<br>')}</div>`;
+        }
     } else {
         html += `<div class="validation-list-item">Interventions après 18h : ${q3Value === 'non' ? 'Non' : 'Non renseigné'}</div>`;
     }
@@ -3200,6 +3298,15 @@ function showOptionsSuccessPopup() {
     popupOverlay.classList.add('show');
     validationOptionsPopup.classList.add('show');
 }
+
+
+// Afficher le popup de validation pour les options
+function showOptionsSuccessPopup() {
+    popupOverlay.classList.add('show');
+    optionsSuccessPopup.classList.add('show');
+    startOptionsCountdown();
+}
+
 
 // Compte à rebours pour le popup des options
 function startOptionsCountdown() {
@@ -3281,15 +3388,8 @@ function calculateFinalPrice() {
         deplacementMajore = J * coutParDeplacement;
     }
     
-    let eveningInterventions = 0;
     let difficultAccess = 0;
     let paidParking = 0;
-    
-    const q3Select = document.querySelector('input[data-question="3"]:checked');
-    if (q3Select && q3Select.value === 'oui') {
-        const q3Field = document.querySelector('[data-type="evening"]');
-        eveningInterventions = parseInt(q3Field.value) || 0;
-    }
     
     const q4Select = document.querySelector('input[data-question="4"]:checked');
     if (q4Select && q4Select.value === 'oui') {
@@ -3303,20 +3403,40 @@ function calculateFinalPrice() {
         paidParking = parseInt(q5Field.value) || 0;
     }
     
-    // Calcul du panier de base
-    let cartTotal = 0;
-    for (const key in cart) {
-        cartTotal += cart[key].qty * cart[key].price;
-    }
+    // Calcul du panier de base séparé éligible/non-éligible
+   let cartTotalEligible = 0;
+   let cartTotalNonEligible = 0;
+   for (const key in cart) {
+       const itemTotal = cart[key].qty * cart[key].price;
+       if (cart[key].eligibleCreditImpot) {
+           cartTotalEligible += itemTotal;
+       } else {
+           cartTotalNonEligible += itemTotal;
+       }
+   }
+   let cartTotal = cartTotalEligible + cartTotalNonEligible;
     
     // Calcul des coûts
     const difficultAccessCost = difficultAccess * 5;
     const paidParkingCost = paidParking * 5;
-    const eveningCost = eveningInterventions > 0 ? (cartTotal * 0.20) : 0;
-    
-    // NOUVELLE FORMULE : Remise 50% uniquement sur (panier + majoration soirée)
-    const subtotalPrestations = cartTotal + eveningCost;
-    const prestationsRemisees = subtotalPrestations * 0.50;
+    let eveningCostEligible = 0;
+let eveningCostNonEligible = 0;
+document.querySelectorAll('input[data-evening-key][value="oui"]:checked').forEach(radio => {
+    const key = radio.getAttribute('data-evening-key');
+    if (cart[key]) {
+        const cost = (cart[key].qty * cart[key].price) * 0.20;
+        if (cart[key].eligibleCreditImpot) {
+            eveningCostEligible += cost;
+        } else {
+            eveningCostNonEligible += cost;
+        }
+    }
+});
+
+const eveningCost = eveningCostEligible + eveningCostNonEligible;
+const subtotalPrestationsEligibles = cartTotalEligible + eveningCostEligible;
+const prestationsRemisees = subtotalPrestationsEligibles * 0.50;
+const subtotalPrestations = cartTotal + eveningCost;
     
     // Options non remisées (avec déplacement majoré si applicable)
     const totalOptionsNonRemisees = (isDeplacementBarre ? deplacementMajore : 0) + difficultAccessCost + paidParkingCost;
@@ -3324,7 +3444,7 @@ function calculateFinalPrice() {
     // Total HT et Prix final
     const deplacementFinal = isDeplacementBarre ? 0 : deplacementBase;
     const totalHT = cartTotal + eveningCost + deplacementFinal + totalOptionsNonRemisees;
-    const finalPrice = prestationsRemisees + deplacementFinal + totalOptionsNonRemisees;
+    const finalPrice = prestationsRemisees + cartTotalNonEligible + eveningCostNonEligible + deplacementFinal + totalOptionsNonRemisees;
     
     // Affichage
     // Détail des prestations
@@ -3341,7 +3461,9 @@ function calculateFinalPrice() {
     }
     document.getElementById('prestationsDetailList').innerHTML = prestationsDetailHTML || '<div style="text-align: center; color: #999;">Aucune prestation</div>';
     
-    document.getElementById('cartTotalDisplay').textContent = `${cartTotal.toFixed(2)}€ HT`;
+    
+document.getElementById('cartTotalEligible').textContent = `${cartTotalEligible.toFixed(2)}€ HT ✅`;
+   document.getElementById('cartTotalNonEligible').textContent = `${cartTotalNonEligible.toFixed(2)}€ HT ❌`;
     
     // Affichage du déplacement (barré ou non)
     const deplacementElement = document.getElementById('deplacement');
@@ -3356,12 +3478,13 @@ function calculateFinalPrice() {
     
     // Prix avant/après remise
     document.getElementById('priceBeforeDiscount').textContent = `${subtotalPrestations.toFixed(2)}€ HT`;
-    document.getElementById('priceAfterDiscount').textContent = `${prestationsRemisees.toFixed(2)}€ HT`;
+    document.getElementById('priceAfterDiscount').textContent = `${(prestationsRemisees + cartTotalNonEligible + eveningCostNonEligible).toFixed(2)}€ HT`;
     
     // Afficher/masquer la ligne majoration soirée
     if (eveningCost > 0) {
+        const nbPrestationsSoiree = document.querySelectorAll('input[data-evening-key][value="oui"]:checked').length;
         document.getElementById('eveningLine').style.display = 'block';
-        document.getElementById('eveningDetail').textContent = `(${eveningInterventions} intervention${eveningInterventions > 1 ? 's' : ''}) = +${eveningCost.toFixed(2)}€ HT`;
+        document.getElementById('eveningDetail').textContent = `(${nbPrestationsSoiree} prestation${nbPrestationsSoiree > 1 ? 's' : ''}) = +${eveningCost.toFixed(2)}€ HT`;
     } else {
         document.getElementById('eveningLine').style.display = 'none';
     }
@@ -3381,7 +3504,27 @@ function calculateFinalPrice() {
         document.querySelector('#extraDaysLineFinal span:first-child').textContent = '├─ Déplacement majoré :';
     } else {
         document.getElementById('extraDaysLineFinal').style.display = 'none';
+   
     }
+    
+    // Affichage conditionnel du crédit d'impôt et total après crédit
+    const creditImpotBox = document.getElementById('creditImpotBox');
+    const totalApresCreditBox = document.getElementById('totalApresCreditBox');
+    
+    if (subtotalPrestationsEligibles > 0) {
+        creditImpotBox.style.display = 'block';
+        totalApresCreditBox.style.display = 'block';
+        
+        document.getElementById('creditDetail').innerHTML = `
+            <strong>Prestations éligibles :</strong> ${subtotalPrestationsEligibles.toFixed(2)}€ HT<br>
+            <strong>Crédit d'impôt (50%) :</strong> ${prestationsRemisees.toFixed(2)}€<br>
+            <strong>Votre économie :</strong> ${(subtotalPrestationsEligibles - prestationsRemisees).toFixed(2)}€
+        `;
+    } else {
+        creditImpotBox.style.display = 'none';
+        totalApresCreditBox.style.display = 'none';
+    }
+
     
     // Masquer ligne Q2 (ancienne)
     document.getElementById('longDistanceLineFinal').style.display = 'none';
@@ -4364,7 +4507,12 @@ function addSelectedToCart() {
     const [key, price] = value.split('|');
     const name = selectDisplay.textContent.trim();
     
-    cart[key] = { name: name, qty: 1, price: parseFloat(price) };
+    // Détecter automatiquement l'éligibilité depuis l'option sélectionnée
+    const selectedOption = document.querySelector(`.custom-option[data-value="${value}"]`);
+    const optionText = selectedOption ? (selectedOption.textContent || selectedOption.innerText) : '';
+    const eligible = optionText.includes('✅');
+    
+    cart[key] = { name: name, qty: 1, price: parseFloat(price), eligibleCreditImpot: eligible };
     updateCartDisplay();
     
     selectDisplay.innerHTML = 'Choisissez une prestation...';
@@ -4383,9 +4531,37 @@ function addSelectedToCart() {
         });
     }
 }
+
+// Fonction pour valider la question 3
+function validateQuestion3() {
+    const allEveningRadios = document.querySelectorAll('[data-evening-radio]');
+    const uniqueNames = new Set();
+    
+    allEveningRadios.forEach(radio => {
+        uniqueNames.add(radio.name);
+    });
+    
+    let allAnswered = true;
+    uniqueNames.forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        if (!checked || checked.value === '-') {
+            allAnswered = false;
+        }
+    });
+    
+    const bloc3 = document.querySelector('.option-bloc[data-bloc="3"]');
+    if (allAnswered && uniqueNames.size > 0) {
+        bloc3.classList.add('validated');
+    } else {
+        bloc3.classList.remove('validated');
+    }
+    
+    checkAllBlocsValidated();
+}
+
+
 </script>
 
 </body>
 </html>
-
 
