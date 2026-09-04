@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Porte 3D — 73 × 204 cm</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f4f4f2;font-family:Arial,sans-serif}canvas{display:block;width:100%;height:100%;touch-action:none}#info{position:fixed;left:20px;top:20px;color:#333;font-size:16px;line-height:1.55;max-width:310px}</style>
+</head>
+<body>
+<div id="info">- Tirant Gauche 73x204<br>- 1 point de sécurité ouverture grâce à l'outil carré( taille standard??)<br>- Sert à proteger l'acces à des compteurs Gaz dans une residence<br>- Des photos avec les dimensions sont disponibles en cliquant sur les paumelles et la serrure (nouvel onglet)<br>- Possibilité de zoomer et de tourner l'image à la souris<br>- Une vidéo est disponible : <a href="https://archive.org/download/video_20260904/%20Video.mp4" target="_blank">cliquer ici pour l’ouvrir</a></div><canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d'),base='https://nicolasszczot-dev.github.io/public/';
+const photos=['paumelle%20haute.jpeg','paumelle%20centrale.jpeg','paumelle%20basse.jpeg'],serrure='emplacement%20serrure.jpeg';let w,h,yaw=-.55,pitch=.13,zoom=1,drag=false,px=0,py=0,hot=[],over=null;
+function resize(){w=innerWidth;h=innerHeight;c.width=w*devicePixelRatio;c.height=h*devicePixelRatio;c.style.width=w+'px';c.style.height=h+'px';x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);draw()}addEventListener('resize',resize);
+function rot(p){let cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch),X=p[0]*cy-p[2]*sy,Z=p[0]*sy+p[2]*cy,Y=p[1]*cp-Z*sp;return[X,Y*cp-Z*sp,Y*sp+Z*cp]}function pr(p){p=rot(p);let s=460*zoom/(4.2-p[2]);return[w/2+p[0]*s,h/2-p[1]*s]}
+function poly(a,fill,stroke){x.beginPath();a.forEach((p,i)=>{p=pr(p);i?x.lineTo(...p):x.moveTo(...p)});x.closePath();if(fill){x.fillStyle=fill;x.fill()}if(stroke){x.strokeStyle=stroke;x.lineWidth=1;x.stroke()}}function line(a,color,width=2){x.beginPath();a.forEach((p,i)=>{p=pr(p);i?x.lineTo(...p):x.moveTo(...p)});x.strokeStyle=color;x.lineWidth=width;x.stroke()}
+function rectHit(a){let p=a.map(pr);return{minX:Math.min(...p.map(v=>v[0])),maxX:Math.max(...p.map(v=>v[0])),minY:Math.min(...p.map(v=>v[1])),maxY:Math.max(...p.map(v=>v[1]))}}function isOver(type,i){return over&&over.type===type&&(i===undefined||over.i===i)}
+function draw(){x.clearRect(0,0,w,h);x.fillStyle='#f4f4f2';x.fillRect(0,0,w,h);hot=[];const W=.73,H=2.04,T=.04,L=-W/2,R=W/2,B=-H/2,U=H/2,F=-T/2,K=T/2;
+poly([[L,B,F],[R,B,F],[R,U,F],[L,U,F]],'#f7f7f3','#b8b8b2');poly([[L,B,K],[L,B,F],[L,U,F],[L,U,K]],'#d9d9d4','#aaa9a3');poly([[R,B,F],[R,B,K],[R,U,K],[R,U,F]],'#deded8','#aaa9a3');poly([[L,U,F],[R,U,F],[R,U,K],[L,U,K]],'#e4e4df','#aaa9a3');poly([[L,B,K],[R,B,K],[R,U,K],[L,U,K]],'#e7e7e2','#aaa9a3');
+let q=pr([.285,.16,F-.003]),lockOver=isOver('lock');x.beginPath();x.arc(q[0],q[1],3.2*zoom,0,Math.PI*2);x.fillStyle=lockOver?'#d00':'#777';x.fill();hot.push({type:'lock',box:{minX:q[0]-40,maxX:q[0]+40,minY:q[1]-40,maxY:q[1]+40}});
+const y=.12,yy=.25,lc=lockOver?'#d00':'#8b8b86';poly([[R,y,K],[R,yy,K],[R,yy,K+.025],[R,y,K+.025]],lc,'#4e4e4a');poly([[R,y,K+.025],[R+.012,y+.01,K+.013],[R+.012,yy-.01,K+.013],[R,yy,K+.025]],lockOver?'#f55':'#bebeb8','#5d5d58');line([[R,y+.012,K+.027],[R,yy-.012,K+.027]],'#555',1);let cy=(y+yy)/2;poly([[R,cy-.018,K+.03],[R+.017,cy-.018,K+.03],[R+.017,cy+.018,K+.03],[R,cy+.018,K+.03]],lockOver?'#d00':'#4e4e4a','#333');poly([[R+.012,cy-.011,K+.032],[R+.03,cy-.011,K+.032],[R+.03,cy+.011,K+.032],[R+.012,cy+.011,K+.032]],lockOver?'#f55':'#c7c7c1','#555');
+[-.62,0,.62].forEach((v,i)=>{let a=[[L,v-.06,F],[L,v+.06,F],[L,v+.06,K+.025],[L,v-.06,K+.025]],on=isOver('hinge',i),b=rectHit(a),cx=(b.minX+b.maxX)/2,cy=(b.minY+b.maxY)/2,bw=(b.maxX-b.minX)*1.2,bh=(b.maxY-b.minY)*1.2;poly(a,on?'#d00':'#8e8e89','#595956');hot.push({type:'hinge',i,box:{minX:cx-bw/2,maxX:cx+bw/2,minY:cy-bh/2,maxY:cy+bh/2}})})}
+function hovered(e){let r=c.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;return hot.find(o=>mx>=o.box.minX&&mx<=o.box.maxX&&my>=o.box.minY&&my<=o.box.maxY)||null}function move(e){over=hovered(e);c.style.cursor=over?'pointer':drag?'grabbing':'grab';draw()}function openPhoto(){if(!over)return;window.open(base+(over.type==='hinge'?photos[over.i]:serrure),'_blank');}
+c.addEventListener('pointerdown',e=>{over=hovered(e);if(over)return;drag=true;px=e.clientX;py=e.clientY;c.setPointerCapture(e.pointerId);c.style.cursor='grabbing'});c.addEventListener('pointermove',e=>{if(drag){yaw+=(e.clientX-px)*.005;pitch=Math.max(-1.2,Math.min(1.2,pitch+(e.clientY-py)*.005));px=e.clientX;py=e.clientY;draw()}else move(e)});c.addEventListener('pointerup',e=>{if(drag){drag=false;move(e)}else openPhoto()});c.addEventListener('pointerleave',()=>{drag=false;over=null;draw()});c.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.45,Math.min(2.5,zoom*(e.deltaY>0?.9:1.1)));draw()},{passive:false});resize();
+</script>
+</body>
+</html>
